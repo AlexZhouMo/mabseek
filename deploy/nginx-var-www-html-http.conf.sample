@@ -1,0 +1,77 @@
+# MabSeek — Nginx 站点样例（Ubuntu / 阿里云 ECS，公网 IP + HTTP，无证书）
+#
+# 布局：项目根解压到 /var/www/html，docroot 指向其中的 public/ 子目录；
+#       app/ data/ bin/ 均在 public/ 之上，无法通过 URL 访问（纵深防御）。
+#
+# 部署：放到 /etc/nginx/sites-available/mabseek，再 ln -s 到 sites-enabled/。
+#       单独对本文件执行 `nginx -t` 会因缺少 http 上下文而报错，属正常。
+#
+# ⚠ 本样例「刻意不设」fastcgi_param HTTPS on：本站以 http 访问，若设了 HTTPS on，
+#   PHP 会给会话 Cookie 打上 Secure 标志，浏览器在 http 下不回传该 Cookie，
+#   每次请求都是新会话 → 登录必报「CSRF 校验失败」。等你配好 TLS 证书、改用 443
+#   访问时，再参考 deploy/nginx.conf.sample 启用 443 + HTTPS on。
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;                     # 用公网 IP 访问，接受任意 Host
+    server_tokens off;
+
+    root /var/www/html/public;         # 仅 public 对外；app/data/bin 在其上层不可达
+    index index.php;
+
+    client_max_body_size 3m;           # 与后台 2MB 上传上限对齐（略留余量）
+
+    # ---- 安全响应头（http 阶段不加 HSTS，避免把站点钉死为 https）----
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
+
+    # ---- 旧静态页 .html → .php 的 301（保留外链 / SEO）----
+    location = /index.html      { return 301 /; }
+    location = /technology.html { return 301 /technology.php; }
+    location = /agent.html      { return 301 /agent.php; }
+    location = /education.html  { return 301 /education.php; }
+    location = /forum.html      { return 301 /forum.php; }
+    location = /about.html      { return 301 /about.php; }
+
+    # ---- 上传目录：禁止执行任何 PHP（即便上传校验被绕过也不会被解析）----
+    location ^~ /assets/images/uploads/ {
+        location ~ \.php$ { deny all; }
+    }
+
+    # ---- CSS/JS 无版本号、随部署原地更新：允许缓存但每次用 ETag 校验 ----
+    #      避免部署后浏览器拿旧缓存显示错乱样式；未改动时返回 304，几乎零开销。
+    location ~* \.(?:css|js)$ {
+        add_header Cache-Control "no-cache" always;
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+
+    # ---- 隐藏文件（.git、.env 等）一律拒绝 ----
+    location ~ /\. { deny all; }
+
+    # ---- 服务端片段仅供页面 include，禁止直接访问 ----
+    location ^~ /partials/ { deny all; }
+
+    # ---- 路由：优先真实静态文件/目录，找不到即 404 ----
+    #      本站是「每页一个 .php」（about.php / forum.php…），导航也全用 .php，
+    #      不是前端控制器，故不把未知路径回退到 index.php（那会让任意垃圾路径
+    #      返回首页 200，语义/SEO 皆不佳）；直接 404 更准确。
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # ---- PHP-FPM ----
+    location ~ \.php$ {
+        try_files $uri =404;                           # 脚本不存在即 404，防 path-info 攻击
+        include fastcgi_params;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTP_PROXY "";                   # 防 httpoxy
+        # ⚠ 本站为 http：不要在这里加 fastcgi_param HTTPS on;（见文件顶部说明）
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;    # ← 改成你的实际 PHP 版本 socket
+        fastcgi_index index.php;
+        fastcgi_hide_header X-Powered-By;
+    }
+}

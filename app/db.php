@@ -1,0 +1,98 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/config.php';
+
+function db(): PDO {
+    static $pdo = null;
+    if ($pdo instanceof PDO) return $pdo;
+
+    $envDb = getenv('MABSEEK_DB');                 // 测试可用 :memory:
+    $dsnPath = $envDb ?: DB_PATH;
+    if ($dsnPath !== ':memory:' && !is_dir(dirname($dsnPath))) {
+        mkdir(dirname($dsnPath), 0750, true);
+    }
+    $pdo = new PDO('sqlite:' . $dsnPath, null, null, [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ]);
+    $pdo->exec('PRAGMA journal_mode = WAL');
+    $pdo->exec('PRAGMA foreign_keys = ON');
+    migrate($pdo);
+    return $pdo;
+}
+
+function migrate(PDO $pdo): void {
+    $pdo->exec(<<<SQL
+    CREATE TABLE IF NOT EXISTS news (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date_day TEXT NOT NULL, date_ym TEXT NOT NULL,
+      category TEXT NOT NULL, title TEXT NOT NULL, summary TEXT NOT NULL,
+      image TEXT, sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS forum_posts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      category TEXT NOT NULL, cover_type TEXT NOT NULL, cover_ref TEXT NOT NULL,
+      cover_variant TEXT DEFAULT '', toptag TEXT DEFAULT '',
+      title TEXT NOT NULL, tags TEXT DEFAULT '',
+      author_name TEXT NOT NULL, author_avatar_char TEXT NOT NULL,
+      author_avatar_style TEXT DEFAULT '', likes TEXT DEFAULT '',
+      sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS forum_hot (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      list TEXT NOT NULL, rank INTEGER NOT NULL, title TEXT NOT NULL,
+      category TEXT NOT NULL, heat TEXT NOT NULL,
+      sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS team_members (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL, affiliation TEXT NOT NULL, direction TEXT NOT NULL,
+      role_label TEXT NOT NULL, role_type TEXT NOT NULL,
+      avatar_char TEXT NOT NULL, avatar_variant TEXT DEFAULT '',
+      sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS partners (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL, mark TEXT NOT NULL, sub TEXT DEFAULT '',
+      logo_image TEXT, demo TEXT DEFAULT '',
+      sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS content_cards (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      grp TEXT NOT NULL, icon TEXT DEFAULT '', title TEXT NOT NULL,
+      body TEXT DEFAULT '', extra TEXT DEFAULT '',
+      sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS snippets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      skey TEXT NOT NULL UNIQUE, value TEXT NOT NULL DEFAULT '',
+      grp TEXT DEFAULT '', label TEXT DEFAULT '', type TEXT DEFAULT 'text',
+      sort INTEGER DEFAULT 0,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL,
+      must_change_password INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS login_attempts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ip TEXT NOT NULL, username TEXT NOT NULL, success INTEGER NOT NULL,
+      created_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS audit_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user TEXT NOT NULL, action TEXT NOT NULL, entity TEXT DEFAULT '',
+      entity_id TEXT DEFAULT '', ip TEXT DEFAULT '', created_at TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_attempts_ip ON login_attempts(ip, created_at);
+SQL);
+}
