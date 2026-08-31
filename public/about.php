@@ -16,7 +16,7 @@ $news = (new Collection('news'))->published();
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 <style>
 .news-tabs { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }
-.news-item { display:flex; gap:18px; padding:20px; background:#fff;border:1px solid var(--line);border-radius:var(--radius);margin-bottom:14px;box-shadow:var(--sh-sm);transition:.2s; cursor:pointer; }
+.news-item { display:flex; gap:18px; padding:20px; background:#fff;border:1px solid var(--line);border-radius:var(--radius);margin-bottom:14px;box-shadow:var(--sh-sm);transition:.2s; cursor:pointer; text-decoration:none; color:inherit; }
 .news-item:hover { transform:translateX(4px); box-shadow:var(--sh); border-color:var(--purple-100); }
 .news-item .date { flex:0 0 auto; text-align:center; width:64px; }
 .news-item .date .d { font-size:26px;font-weight:800;color:var(--purple); } .news-item .date .m { font-size:12px;color:var(--ink-3); }
@@ -135,7 +135,7 @@ $news = (new Collection('news'))->published();
     $tagClass = $it['category'] === 'res' ? 'tag green' : 'tag';
     $tagText  = ['res'=>'科研类','edu'=>'育人类','daily'=>'日常活动'][$it['category']] ?? '';
 ?>
-      <div class="news-item" data-nc="<?= e($it['category']) ?>" data-demo="打开新闻详情"><div class="date"><div class="d"><?= e($it['date_day']) ?></div><div class="m"><?= e($it['date_ym']) ?></div></div><div class="n-body"><span class="<?= $tagClass ?>" style="font-size:11px"><?= e($tagText) ?></span><h4><?= e($it['title']) ?></h4><p><?= e($it['summary']) ?></p></div></div>
+      <a class="news-item" href="news.php?id=<?= (int)$it['id'] ?>" data-nc="<?= e($it['category']) ?>"><div class="date"><div class="d"><?= e($it['date_day']) ?></div><div class="m"><?= e($it['date_ym']) ?></div></div><div class="n-body"><span class="<?= $tagClass ?>" style="font-size:11px"><?= e($tagText) ?></span><h4><?= e($it['title']) ?></h4><p><?= e($it['summary']) ?></p></div></a>
 <?php endforeach; ?>
     </div>
     <div class="text-center reveal" style="margin-top:26px"><button class="btn btn-outline" data-demo="正式版将展示完整新闻与活动列表"><?= snip('about.news.more') ?></button></div>

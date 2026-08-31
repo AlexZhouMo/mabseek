@@ -3,6 +3,7 @@ require __DIR__ . '/../app/bootstrap.php';
 $active = 'index'; $navOnDark = true; $contactHref = '#contact';
 $painCards = (new Collection('content_cards'))->published("grp = 'home_pain'");
 $partners  = (new Collection('partners'))->published();
+$recentNews = array_slice((new Collection('news'))->published(), 0, 4);
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -71,12 +72,12 @@ $partners  = (new Collection('partners'))->published();
       <h2 class="section-title reveal d1"><?= snip('home.news.title') ?></h2>
     </div>
     <div class="news-scroller reveal d2">
-<?php for ($n = 1; $n <= 4; $n++): ?>
-      <div class="news-card" data-demo="打开新闻详情：<?= $n === 1 ? '平台技术升级' : ($n === 2 ? '交互式课程上线' : ($n === 3 ? '顶刊发表' : '国际交流')) ?>">
-        <div class="nc-thumb"><?= snip("home.newscard.$n.thumb") ?></div>
-        <div class="nc-body"><div class="nc-date"><?= snip("home.newscard.$n.date") ?></div><h4><?= snip("home.newscard.$n.title") ?></h4><p><?= snip("home.newscard.$n.body") ?></p></div>
-      </div>
-<?php endfor; ?>
+<?php foreach ($recentNews as $n): ?>
+      <a class="news-card" href="news.php?id=<?= (int)$n['id'] ?>">
+        <div class="nc-thumb"><?php if (!empty($n['image'])): ?><img src="<?= e($n['image']) ?>" alt="<?= e($n['title']) ?>"><?php else: ?>🧬<?php endif; ?></div>
+        <div class="nc-body"><div class="nc-date"><?= e($n['date_ym']) ?></div><h4><?= e($n['title']) ?></h4><p><?= e($n['summary']) ?></p></div>
+      </a>
+<?php endforeach; ?>
     </div>
     <div class="text-center"><a href="about.php#news" class="link-more reveal"><?= snip('home.news.link') ?></a></div>
   </div>
