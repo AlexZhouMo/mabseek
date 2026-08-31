@@ -96,11 +96,13 @@ function migrate(PDO $pdo): void {
     );
     CREATE INDEX IF NOT EXISTS idx_attempts_ip ON login_attempts(ip, created_at);
 SQL);
-    add_column_if_missing($pdo, 'news', 'body', "body TEXT NOT NULL DEFAULT ''");
+    add_column_if_missing($pdo, 'news', "body TEXT NOT NULL DEFAULT ''");
 }
 
-/** 幂等补列：PRAGMA 判断列是否存在，缺失才 ALTER（SQLite 无 ADD COLUMN IF NOT EXISTS） */
-function add_column_if_missing(PDO $pdo, string $table, string $col, string $ddl): void {
+/** 幂等补列：从 $ddl 首词取列名，PRAGMA 判断是否存在,缺失才 ALTER。
+ *  注意：$table 与 $ddl 必须为代码内常量字面量，切勿传入用户输入（直接拼进 SQL）。 */
+function add_column_if_missing(PDO $pdo, string $table, string $ddl): void {
+    $col  = explode(' ', trim($ddl), 2)[0];
     $cols = $pdo->query("PRAGMA table_info($table)")->fetchAll(PDO::FETCH_COLUMN, 1);
     if (!in_array($col, $cols, true)) {
         $pdo->exec("ALTER TABLE $table ADD COLUMN $ddl");
