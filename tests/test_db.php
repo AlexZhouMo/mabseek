@@ -10,3 +10,21 @@ foreach (['audit_log','content_cards','forum_hot','forum_posts','login_attempts'
 }
 // PDO 严格模式
 check($pdo->getAttribute(PDO::ATTR_ERRMODE) === PDO::ERRMODE_EXCEPTION, 'ERRMODE_EXCEPTION set');
+
+// body 列存在（新库）
+$newsCols = $pdo->query("PRAGMA table_info(news)")->fetchAll(PDO::FETCH_COLUMN, 1);
+check(in_array('body', $newsCols, true), 'news.body 列存在');
+
+// 迁移幂等：重复 migrate 不报错、body 只有一列
+migrate($pdo);
+$cols2 = $pdo->query("PRAGMA table_info(news)")->fetchAll(PDO::FETCH_COLUMN, 1);
+check(count(array_keys($cols2, 'body')) === 1, '重复 migrate 后 body 仅一列');
+
+// Collection 能写读 body
+require_once __DIR__ . '/../app/repositories/Collection.php';
+$id = (new Collection('news'))->create([
+    'date_day'=>'01','date_ym'=>'2026·09','category'=>'res',
+    'title'=>'T','summary'=>'S','body'=>'<p>正文</p>','sort'=>0,'published'=>1,
+]);
+$row = (new Collection('news'))->find($id);
+check(($row['body'] ?? '') === '<p>正文</p>', 'Collection 读写 news.body');

@@ -8,6 +8,7 @@ $cfg = [
         ['name'=>'category', 'label'=>'分类',              'type'=>'select',   'options'=>['res'=>'科研类','edu'=>'育人类','daily'=>'日常活动'], 'required'=>true],
         ['name'=>'title',    'label'=>'标题',              'type'=>'text',     'required'=>true],
         ['name'=>'summary',  'label'=>'摘要',              'type'=>'textarea', 'required'=>true],
+        ['name'=>'body',     'label'=>'正文',              'type'=>'richtext'],
         ['name'=>'image',    'label'=>'配图(可选)',        'type'=>'image'],
         ['name'=>'sort',     'label'=>'排序',              'type'=>'text'],
         ['name'=>'published','label'=>'发布',              'type'=>'checkbox'],

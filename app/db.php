@@ -28,6 +28,7 @@ function migrate(PDO $pdo): void {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       date_day TEXT NOT NULL, date_ym TEXT NOT NULL,
       category TEXT NOT NULL, title TEXT NOT NULL, summary TEXT NOT NULL,
+      body TEXT NOT NULL DEFAULT '',
       image TEXT, sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
       created_at TEXT NOT NULL, updated_at TEXT NOT NULL
     );
@@ -95,4 +96,13 @@ function migrate(PDO $pdo): void {
     );
     CREATE INDEX IF NOT EXISTS idx_attempts_ip ON login_attempts(ip, created_at);
 SQL);
+    add_column_if_missing($pdo, 'news', 'body', "body TEXT NOT NULL DEFAULT ''");
+}
+
+/** 幂等补列：PRAGMA 判断列是否存在，缺失才 ALTER（SQLite 无 ADD COLUMN IF NOT EXISTS） */
+function add_column_if_missing(PDO $pdo, string $table, string $col, string $ddl): void {
+    $cols = $pdo->query("PRAGMA table_info($table)")->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (!in_array($col, $cols, true)) {
+        $pdo->exec("ALTER TABLE $table ADD COLUMN $ddl");
+    }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 final class Collection {
     // 各表允许写入的列（白名单，防批量赋值）
     private const COLUMNS = [
-        'news'          => ['date_day','date_ym','category','title','summary','image','sort','published'],
+        'news'          => ['date_day','date_ym','category','title','summary','image','sort','published','body'],
         'forum_posts'   => ['category','cover_type','cover_ref','cover_variant','toptag','title','tags','author_name','author_avatar_char','author_avatar_style','likes','sort','published'],
         'forum_hot'     => ['list','rank','title','category','heat','sort','published'],
         'team_members'  => ['name','affiliation','direction','role_label','role_type','avatar_char','avatar_variant','sort','published'],
