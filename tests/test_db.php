@@ -28,3 +28,4 @@ $id = (new Collection('news'))->create([
 ]);
 $row = (new Collection('news'))->find($id);
 check(($row['body'] ?? '') === '<p>正文</p>', 'Collection 读写 news.body');
+(new Collection('news'))->delete($id);   // 清理:共享 :memory: 连接,勿污染后续 test_repositories 的计数断言
