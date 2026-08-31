@@ -25,12 +25,12 @@
 # PHP-FPM 的 socket 路径（记下版本，后面 nginx 配置要用）
 ls /run/php/php*-fpm.sock
 # 确认扩展齐全：需要 pdo_sqlite、sodium(Argon2id)
-php -m | grep -Ei 'pdo_sqlite|sodium'
+php -m | grep -Ei 'pdo_sqlite|sodium|dom'
 # nginx / php-fpm 是否在跑
 systemctl status nginx --no-pager | head -3
 systemctl status php*-fpm --no-pager | head -3
 ```
-若 `pdo_sqlite` 或 `sodium` 缺失：`sudo apt-get install -y php-sqlite3 php-sodium && sudo systemctl restart php*-fpm`。
+若 `pdo_sqlite`、`sodium` 或 `dom` 缺失：`sudo apt-get install -y php-sqlite3 php-sodium php-xml && sudo systemctl restart php*-fpm`。
 
 > 阿里云控制台：确保安全组**入方向放行 80 端口**，否则公网访问不通。
 
