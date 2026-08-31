@@ -258,3 +258,17 @@
 @media (prefers-reduced-motion: reduce) {
   .admin * { transition: none !important; }
 }
+
+/* 富文本编辑器 */
+.rt-field { border: 1px solid var(--line, #e5e7eb); border-radius: 8px; overflow: hidden; }
+.rt-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; background: #f7f7f9; border-bottom: 1px solid var(--line, #e5e7eb); }
+.rt-btn { min-width: 34px; height: 30px; padding: 0 10px; border: 1px solid #d0d0d8; border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; line-height: 28px; }
+.rt-btn:hover { background: #eef0ff; border-color: #b9c0ff; }
+.rt-editor { min-height: 260px; padding: 14px 16px; outline: none; line-height: 1.7; font-size: 15px; }
+.rt-editor:focus { box-shadow: inset 0 0 0 2px rgba(120,110,240,.15); }
+.rt-editor img { max-width: 100%; height: auto; border-radius: 6px; }
+.rt-editor h2 { font-size: 20px; margin: 14px 0 8px; }
+.rt-editor h3 { font-size: 17px; margin: 12px 0 6px; }
+.rt-editor p { margin: 8px 0; }
+.rt-editor ul, .rt-editor ol { padding-left: 22px; margin: 8px 0; }
+.rt-editor blockquote { margin: 10px 0; padding: 6px 14px; border-left: 3px solid #b9c0ff; color: #555; background: #f7f7fb; }
