@@ -3,12 +3,17 @@
 # deploy-mabseek.sh —— 阿里云 Ubuntu 一键部署 / 更新 MabSeek（公网 IP + HTTP）
 #
 # 放置位置：服务器家目录 ~/deploy-mabseek.sh
-# 用法：
-#   sudo bash ~/deploy-mabseek.sh            # 拉取 main 最新代码并部署
-#   sudo bash ~/deploy-mabseek.sh <分支名>   # 部署指定分支（默认 main）
 #
-# 行为：
-#   1) 从 GitHub 拉取最新代码到 /opt/mabseek-src（首次自动 git clone，之后 fetch + reset --hard）
+# 两种模式：
+#   • 在线模式（不加参数）：从 GitHub 拉取最新代码后部署
+#       sudo bash ~/deploy-mabseek.sh
+#       sudo BRANCH=<分支名> bash ~/deploy-mabseek.sh      # 指定分支（默认 main）
+#   • 离线模式（追加压缩包路径）：解压本地 tar 包后部署（无需联网/无需 git）
+#       sudo bash ~/deploy-mabseek.sh /path/to/mabseek-deploy.tgz   # 含路径：按该路径找包
+#       sudo bash ~/deploy-mabseek.sh mabseek-deploy.tgz            # 纯文件名：须与本脚本同目录
+#
+# 行为（两模式共用）：
+#   1) 取得新代码到暂存区（在线=git 工作副本 /opt/mabseek-src；离线=临时解压目录）
 #   2) 把代码目录（app/ bin/ public/ deploy/）铺开到 /var/www/html
 #   3) 保留数据库（data/）与已上传图片（public/assets/images/uploads/）—— 历史数据不丢，并留一份备份
 #   4) 幂等 seed、刷新权限、重载 php-fpm/nginx、本机自检；全过程带时间戳详细日志
@@ -16,14 +21,14 @@
 # 幂等：seed.php 只补缺不删数据；migrate 用 CREATE TABLE IF NOT EXISTS。
 #       故本脚本可反复运行：首次建库+初始数据，之后仅更新代码、历史数据原样保留。
 #
-# 说明：仓库为公开仓库，git clone 走 HTTPS 无需认证。若日后转为私有仓库，
-#       需在服务器上为 root 配置 git 凭据（如 gh auth / PAT / 部署密钥）。
+# 说明：仓库为公开仓库，在线模式 git clone 走 HTTPS 无需认证。若日后转为私有仓库，
+#       需在服务器上为 root 配置 git 凭据（如 gh auth / PAT / 部署密钥），或改用离线模式。
 
 set -euo pipefail
 
 # ─────────────────────────── 配置 ───────────────────────────
-REPO_URL="https://github.com/AlexZhouMo/mabseek.git"   # GitHub 仓库
-BRANCH="${1:-main}"                  # 部署分支（可用第 1 个参数覆盖）
+REPO_URL="https://github.com/AlexZhouMo/mabseek.git"   # GitHub 仓库（在线模式）
+BRANCH="${BRANCH:-main}"             # 在线模式部署分支（可用环境变量覆盖）
 SRC_DIR="/opt/mabseek-src"           # 服务器上的 git 工作副本（仅存代码，不放业务数据）
 ROOT="/var/www/html"                 # 项目根 = docroot 的父目录
 DOCROOT_NAME="public"                # docroot 目录名（config.php 写死，勿改）
@@ -31,6 +36,7 @@ WEBUSER="www-data"                   # php-fpm / nginx 运行用户
 CODE_DIRS=(app bin public deploy)    # 每次部署要整体替换的代码目录
 DATA_DIR="$ROOT/data"                # 数据库目录（保留）
 UPLOAD_REL="public/assets/images/uploads"   # 上传目录（保留）
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)" # 本脚本所在目录（纯文件名离线包在此查找）
 
 # ─────────────────────────── 日志 ───────────────────────────
 if [ -t 1 ]; then C1=$'\033[1;36m'; CG=$'\033[1;32m'; CW=$'\033[1;33m'; CE=$'\033[1;31m'; C0=$'\033[0m'; else C1=; CG=; CW=; CE=; C0=; fi
@@ -43,26 +49,44 @@ die()  { printf '\n%s✘ 失败：%s%s\n' "$CE" "$*" "$C0" >&2; exit 1; }
 run()  { log "\$ $*"; "$@"; }
 # 在 SRC_DIR 内执行 git（带 safe.directory，避免 root 下的 dubious ownership 报错）
 gitc() { git -C "$SRC_DIR" -c safe.directory="$SRC_DIR" "$@"; }
+# 清理临时目录（离线解压区、上传暂存区）——变量未设时安全跳过
+cleanup_tmp() {
+  [ "${CLEAN_STAGE:-0}" = "1" ] && [ -n "${STAGE:-}" ] && rm -rf "$STAGE" 2>/dev/null || true
+  [ -n "${PRESERVE_UPLOADS:-}" ] && rm -rf "$PRESERVE_UPLOADS" 2>/dev/null || true
+}
 
-trap 'die "第 $LINENO 行命令返回非零，部署已中止（数据与旧站点未被破坏的部分保持原状）"' ERR
+trap 'cleanup_tmp; die "第 $LINENO 行命令返回非零，部署已中止（数据与旧站点未被破坏的部分保持原状）"' ERR
 
 BANNER_START="$(date '+%Y-%m-%d %H:%M:%S')"
 printf '%s\n' "════════════════════════════════════════════════"
 printf '  MabSeek 部署  %s\n' "$BANNER_START"
 printf '%s\n' "════════════════════════════════════════════════"
 
-# ─────────────────── 0. 基本前置 ───────────────────
+# ─────────────────── 0. 基本前置 + 模式判定 ───────────────────
 step "0/8 环境与参数检查"
 [ "$(id -u)" -eq 0 ] || die "请用 root 运行：sudo bash $0"
 ok "已具备 root 权限"
-ok "仓库 $REPO_URL"
-ok "分支 $BRANCH"
+
+PKG_ARG="${1:-}"
+if [ -n "$PKG_ARG" ]; then
+  MODE="offline"
+  # 纯文件名（不含 /）须与脚本同目录；含路径则按给定路径（绝对或相对当前目录）
+  if [[ "$PKG_ARG" == */* ]]; then PKG="$PKG_ARG"; else PKG="$SCRIPT_DIR/$PKG_ARG"; fi
+  [ -f "$PKG" ] || die "找不到离线包：$PKG（纯文件名需与脚本同目录 $SCRIPT_DIR）"
+  ok "离线模式，部署包：$PKG"
+else
+  MODE="git"
+  ok "在线模式，仓库 $REPO_URL（分支 $BRANCH）"
+fi
 
 # ─────────────────── 1. 依赖检查 ───────────────────
-step "1/8 依赖检查（git / PHP / 扩展 / php-fpm / nginx）"
+DEP_LABEL="PHP / 扩展 / php-fpm / nginx"; [ "$MODE" = "git" ] && DEP_LABEL="git / $DEP_LABEL"
+step "1/8 依赖检查（$DEP_LABEL）"
 
-command -v git >/dev/null 2>&1 || die "未安装 git（apt-get install -y git）"
-ok "git $(git --version | sed 's/^git version //')"
+if [ "$MODE" = "git" ]; then
+  command -v git >/dev/null 2>&1 || die "在线模式需 git（apt-get install -y git），或改用离线模式：sudo bash $0 <包路径>"
+  ok "git $(git --version | sed 's/^git version //')"
+fi
 
 command -v php >/dev/null 2>&1 || die "未安装 php（apt-get install -y php-fpm php-cli）"
 PHP_VER="$(php -r 'echo PHP_VERSION;')"
@@ -85,33 +109,45 @@ if [ -n "$FPM_SOCK" ]; then ok "php-fpm socket：$FPM_SOCK"; else warn "未发�
 FPM_SVC="$(systemctl list-unit-files --type=service 2>/dev/null | grep -oE 'php[0-9.]+-fpm\.service' | head -1 || true)"
 [ -n "$FPM_SVC" ] && ok "php-fpm 服务：$FPM_SVC" || warn "未识别 php-fpm 服务名，稍后跳过 opcache 重载"
 
-# ─────────────────── 2. 从 GitHub 拉取最新代码 ───────────────────
-step "2/8 从 GitHub 拉取代码到 $SRC_DIR"
-run mkdir -p "$(dirname "$SRC_DIR")"
-if [ -d "$SRC_DIR/.git" ]; then
-  log "已存在工作副本，执行 fetch + reset --hard origin/$BRANCH"
-  run gitc remote set-url origin "$REPO_URL"
-  run gitc fetch --prune origin
-  run gitc checkout -B "$BRANCH" "origin/$BRANCH"
-  run gitc reset --hard "origin/$BRANCH"
-  run gitc clean -fd            # 清理未跟踪的游离文件（SRC_DIR 仅存代码，无业务数据）
-else
-  if [ -e "$SRC_DIR" ]; then
-    ASIDE="${SRC_DIR}.bak-$(date '+%Y%m%d-%H%M%S')"
-    warn "$SRC_DIR 存在但非 git 仓库，移到 $ASIDE 后重新 clone"
-    run mv "$SRC_DIR" "$ASIDE"
+# ─────────────────── 2. 取得新代码到暂存区 ───────────────────
+STAGE=""          # 暂存区：内含 app/ bin/ public/ deploy/
+CLEAN_STAGE=0     # 1=部署后删除暂存区（离线临时目录要删；git 工作副本要留）
+if [ "$MODE" = "git" ]; then
+  step "2/8 从 GitHub 拉取代码到 $SRC_DIR"
+  run mkdir -p "$(dirname "$SRC_DIR")"
+  if [ -d "$SRC_DIR/.git" ]; then
+    log "已存在工作副本，执行 fetch + reset --hard origin/$BRANCH"
+    run gitc remote set-url origin "$REPO_URL"
+    run gitc fetch --prune origin
+    run gitc checkout -B "$BRANCH" "origin/$BRANCH"
+    run gitc reset --hard "origin/$BRANCH"
+    run gitc clean -fd            # 清理未跟踪的游离文件（SRC_DIR 仅存代码，无业务数据）
+  else
+    if [ -e "$SRC_DIR" ]; then
+      ASIDE="${SRC_DIR}.bak-$(date '+%Y%m%d-%H%M%S')"
+      warn "$SRC_DIR 存在但非 git 仓库，移到 $ASIDE 后重新 clone"
+      run mv "$SRC_DIR" "$ASIDE"
+    fi
+    log "首次 clone（分支 $BRANCH）"
+    run git clone --branch "$BRANCH" "$REPO_URL" "$SRC_DIR"
   fi
-  log "首次 clone（分支 $BRANCH）"
-  run git clone --branch "$BRANCH" "$REPO_URL" "$SRC_DIR"
+  STAGE="$SRC_DIR"
+  VERSION="git $(gitc log --oneline -1 2>/dev/null || echo '未知')"
+  ok "已同步到最新提交：$VERSION"
+else
+  step "2/8 解压离线包到临时目录"
+  STAGE="$(mktemp -d /tmp/mabseek-stage.XXXXXX)"
+  CLEAN_STAGE=1
+  run tar -xzf "$PKG" -C "$STAGE"
+  VERSION="离线包 $(basename "$PKG")"
+  ok "已解压：$VERSION"
 fi
-COMMIT="$(gitc log --oneline -1 2>/dev/null || echo '未知')"
-ok "已同步到最新提交：$COMMIT"
 
-# 校验拉取内容完整
+# 校验暂存区内容完整
 for d in "${CODE_DIRS[@]}"; do
-  [ -d "$SRC_DIR/$d" ] || die "仓库缺少 $d/，拉取可能不完整"
+  [ -d "$STAGE/$d" ] || die "代码缺少 $d/，来源可能不完整"
 done
-[ -f "$SRC_DIR/bin/seed.php" ] && [ -f "$SRC_DIR/public/admin.php" ] || die "仓库缺少关键文件（seed.php / admin.php）"
+[ -f "$STAGE/bin/seed.php" ] && [ -f "$STAGE/public/admin.php" ] || die "代码缺少关键文件（seed.php / admin.php）"
 ok "代码内容校验通过"
 
 # ─────────────────── 3. 备份历史数据 ───────────────────
@@ -134,16 +170,15 @@ if [ -d "$ROOT/$UPLOAD_REL" ]; then
   cp -a "$ROOT/$UPLOAD_REL/." "$PRESERVE_UPLOADS/" 2>/dev/null || true
   ok "已暂存上传图片 $(find "$PRESERVE_UPLOADS" -type f | wc -l | tr -d ' ') 个文件"
 fi
-trap 'rm -rf "$PRESERVE_UPLOADS" 2>/dev/null; die "第 $LINENO 行命令返回非零，部署已中止"' ERR
 
 # ─────────────────── 4. 铺开新代码（保留 data/ 与上传） ───────────────────
-step "4/8 替换代码（从 $SRC_DIR 复制，保留 data/）"
+step "4/8 替换代码（从暂存区复制，保留 data/）"
 run mkdir -p "$ROOT"
 for d in "${CODE_DIRS[@]}"; do
   [ -e "$ROOT/$d" ] && { log "删除旧 $d/"; rm -rf "${ROOT:?}/$d"; }
 done
 for d in "${CODE_DIRS[@]}"; do
-  run cp -a "$SRC_DIR/$d" "$ROOT/$d"     # cp（非 mv）：git 工作副本保持完整，供下次更新
+  run cp -a "$STAGE/$d" "$ROOT/$d"     # cp（非 mv）：暂存区/工作副本保持完整
 done
 ok "新代码已就位：${CODE_DIRS[*]}"
 
@@ -153,8 +188,8 @@ if [ -n "$(ls -A "$PRESERVE_UPLOADS" 2>/dev/null || true)" ]; then
   cp -a "$PRESERVE_UPLOADS/." "$ROOT/$UPLOAD_REL/" 2>/dev/null || true
   ok "已恢复上传图片到 $UPLOAD_REL"
 fi
-rm -rf "$PRESERVE_UPLOADS"
-trap 'die "第 $LINENO 行命令返回非零，部署已中止"' ERR
+cleanup_tmp                            # 删除离线临时解压区与上传暂存区（git 工作副本保留）
+STAGE=""; CLEAN_STAGE=0; PRESERVE_UPLOADS=""
 
 # ─────────────────── 5. 初始化 / 迁移数据库 ───────────────────
 step "5/8 数据库 seed（幂等：建表+补缺，绝不删历史数据）"
@@ -216,7 +251,7 @@ fi
 
 printf '\n%s════════════════════════════════════════════════%s\n' "$CG" "$C0"
 printf '%s  部署完成%s  开始 %s  结束 %s\n' "$CG" "$C0" "$BANNER_START" "$(date '+%Y-%m-%d %H:%M:%S')"
-printf '  代码版本：%s\n' "$COMMIT"
+printf '  代码版本：%s\n' "$VERSION"
 [ "$FIRST_DEPLOY" -eq 0 ] && printf '  数据已保留；本次备份：%s\n' "$BACKUP"
 printf '  浏览器访问：http://<公网IP>/admin.php\n'
 printf '%s════════════════════════════════════════════════%s\n' "$CG" "$C0"

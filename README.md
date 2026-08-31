@@ -78,8 +78,8 @@ php tests/run.php
 
 面向 Ubuntu + nginx + php-fpm 的 HTTP 部署，详见 [deploy/DEPLOY-ubuntu-http.md](deploy/DEPLOY-ubuntu-http.md)。
 
-- [deploy/pack-mac.sh](deploy/pack-mac.sh) — 在本机打包发布产物。
-- [deploy/deploy-mabseek.sh](deploy/deploy-mabseek.sh) — 部署到目标服务器。
+- [deploy/deploy-mabseek.sh](deploy/deploy-mabseek.sh) — 服务器上的一键部署/更新脚本，双模式：**不加参数**从 GitHub 拉取最新代码部署；**追加压缩包路径**则解压本地 tar 包部署（离线/无 git 环境；纯文件名需与脚本同目录）。两种模式都保留数据库与上传图片，并自动备份。
+- [deploy/pack-mac.sh](deploy/pack-mac.sh) — 在本机打包出 `mabseek-deploy.tgz`，供上面的离线模式使用。
 - [deploy/nginx-var-www-html-http.conf.sample](deploy/nginx-var-www-html-http.conf.sample) — nginx 站点样例（HTTP；`*.html → *.php` 301；上传目录禁执行 PHP；安全响应头）。启用 HTTPS 时在此基础上增加 443 server 块。
 
 nginx 文档根务必指向 `public/`，切勿指向项目根目录，以保持 Web 根隔离。

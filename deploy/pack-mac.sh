@@ -4,7 +4,7 @@
 #
 # 用法：
 #   cd /Users/zhoumo/Documents/Claude/mabseek
-#   ./deploy/pack-mac.sh                 # 输出到 /tmp/mabseek-deploy.tgz
+#   ./deploy/pack-mac.sh                 # 输出到 deploy/mabseek-deploy.tgz
 #   ./deploy/pack-mac.sh ~/Desktop/x.tgz # 自定义输出路径
 #
 # 打包内容：app bin public deploy（含本目录下的部署脚本）
@@ -55,7 +55,8 @@ SIZE="?"
 ok "打包完成: $OUT (${SIZE})"
 
 echo
-log "下一步：把包和部署脚本一起上传到服务器的家目录"
+log "下一步（离线部署）：把包和部署脚本一起上传到服务器的家目录"
 printf '    %sscp %s deploy/deploy-mabseek.sh <user>@<公网IP>:~/%s\n' "$C2" "$OUT" "$C0"
-log "然后在服务器上执行："
-printf '    %ssudo bash ~/deploy-mabseek.sh%s\n' "$C2" "$C0"
+log "然后在服务器上执行（离线模式：追加包文件名，与脚本同在 ~）："
+printf '    %ssudo bash ~/deploy-mabseek.sh mabseek-deploy.tgz%s\n' "$C2" "$C0"
+log "（若服务器可联网，也可不打包，直接 sudo bash ~/deploy-mabseek.sh 走 git 在线部署）"

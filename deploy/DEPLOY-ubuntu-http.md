@@ -36,9 +36,11 @@ systemctl status php*-fpm --no-pager | head -3
 
 ---
 
-## 1. 一键部署 / 更新（在服务器上，从 GitHub 拉取）
+## 1. 一键部署 / 更新（在服务器上）
 
-把 `deploy/deploy-mabseek.sh` 放到服务器家目录 `~`，之后每次更新只需再跑一遍它：
+把 `deploy/deploy-mabseek.sh` 放到服务器家目录 `~`，之后每次更新只需再跑一遍它。脚本支持两种模式：
+
+**① 在线模式（不加参数，从 GitHub 拉取）** —— 推荐日常使用：
 
 ```bash
 # 首次：把脚本放到 ~（二选一）
@@ -48,12 +50,20 @@ curl -fsSL https://raw.githubusercontent.com/AlexZhouMo/mabseek/main/deploy/depl
 
 # 一键部署 / 更新（拉 main 最新代码并自动部署）
 sudo bash ~/deploy-mabseek.sh
-#   部署指定分支：sudo bash ~/deploy-mabseek.sh <分支名>
+#   指定分支：sudo BRANCH=<分支名> bash ~/deploy-mabseek.sh
 ```
 
-脚本自动完成：从 GitHub 拉取最新代码到 `/opt/mabseek-src`（首次 `git clone`，之后 `fetch` + `reset --hard`）→ 铺开到 `/var/www/html` → **保留 `data/` 数据库与 `public/assets/images/uploads/` 上传图片**，并在 `/var/www/mabseek-backup-<时间戳>` 留一份备份 → 幂等 `seed` → 刷新权限 → 重载 php-fpm/nginx → 本机自检。可反复运行，历史数据不丢。
+**② 离线模式（追加压缩包路径，解压本地 tar 包）** —— 服务器无法联网/无 git 时：
 
-> 前置：服务器需先装好 `git`、`php-fpm`（含 `pdo_sqlite`、`sodium` 扩展）、`nginx`，并放行 80 端口（见第 0 步）。仓库为公开仓库，拉取无需认证；若日后转私有，需为服务器上的 root 配置 git 凭据。
+```bash
+# 在本机用 deploy/pack-mac.sh 打出 mabseek-deploy.tgz，scp 到服务器后：
+sudo bash ~/deploy-mabseek.sh /path/to/mabseek-deploy.tgz   # 含路径：按该路径找包
+sudo bash ~/deploy-mabseek.sh mabseek-deploy.tgz            # 纯文件名：须与脚本同一目录（~）
+```
+
+两种模式**取得代码之后的动作完全一致**：铺开到 `/var/www/html` → **保留 `data/` 数据库与 `public/assets/images/uploads/` 上传图片**，并在 `/var/www/mabseek-backup-<时间戳>` 留一份备份 → 幂等 `seed` → 刷新权限 → 重载 php-fpm/nginx → 本机自检。可反复运行，历史数据不丢。在线模式的 git 工作副本存于 `/opt/mabseek-src`（首次 `git clone`，之后 `fetch` + `reset --hard`）。
+
+> 前置：服务器需先装好 `php-fpm`（含 `pdo_sqlite`、`sodium` 扩展）、`nginx`，并放行 80 端口（见第 0 步）；在线模式另需 `git`。仓库为公开仓库，在线拉取无需认证；若日后转私有，需为服务器上的 root 配置 git 凭据，或改用离线模式。
 > **首次部署**还要手动装一次 nginx 站点配置（第 4 步），装好后脚本自检即通过；之后的更新脚本会自动重载 nginx，无需再动。
 
 > 下面第 2–6 步是脚本内部动作的原理说明与排错参考。**常规更新无需手动执行**；唯一需要手动做一次的是第 4 步（首次配置 nginx）。
