@@ -38,6 +38,7 @@
     }
 
     function uploadImage(file) {
+      if (!window.fetch) { alert('当前浏览器不支持图片上传'); return; }
       var token = form.querySelector('input[name="_csrf"]');
       var data = new FormData();
       data.append('file', file);
@@ -47,7 +48,10 @@
         .then(function (r) { return r.json(); })
         .then(function (res) {
           if (res && res.ok && res.url) {
-            document.execCommand('insertHTML', false, '<img src="' + res.url + '" alt="">');
+            var img = document.createElement('img');
+            img.src = res.url;
+            img.alt = '';
+            document.execCommand('insertHTML', false, img.outerHTML);
           } else {
             alert('图片上传失败：' + ((res && res.error) || '未知错误'));
           }
