@@ -573,3 +573,14 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
   .hot-title { white-space: normal; }
   .hot-cat { display: none; }
 }
+
+/* 新闻详情正文 */
+.article-body { font-size: 16px; line-height: 1.85; color: var(--ink-2, #333); }
+.article-body h2 { font-size: 22px; margin: 26px 0 12px; }
+.article-body h3 { font-size: 18px; margin: 20px 0 10px; }
+.article-body p { margin: 14px 0; }
+.article-body ul, .article-body ol { padding-left: 24px; margin: 14px 0; }
+.article-body li { margin: 6px 0; }
+.article-body a { color: var(--purple, #6b5bff); text-decoration: underline; }
+.article-body img { max-width: 100%; height: auto; border-radius: 10px; margin: 16px 0; display: block; }
+.article-body blockquote { margin: 18px 0; padding: 10px 18px; border-left: 4px solid var(--purple-100, #cfd0ff); background: var(--purple-050, #f4f4ff); color: var(--ink-2, #444); }
