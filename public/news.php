@@ -48,7 +48,7 @@ if ($item === null) {
 ?>
 <article class="section">
   <div class="container" style="max-width:820px">
-    <div class="breadcrumb reveal"><a href="index.php">首页</a> / <a href="about.php#news">新闻与活动</a> / <?= e($item['title']) ?></div>
+    <div class="breadcrumb reveal"><a href="index.php">首页</a> / <a href="about.php#news">新闻与活动</a></div>
     <div class="reveal" style="margin:14px 0 10px">
       <?php if ($tagText !== ''): ?><span class="<?= $tagClass ?>" style="font-size:12px"><?= e($tagText) ?></span><?php endif; ?>
       <span style="color:var(--ink-3);font-size:13px;margin-left:10px"><?= e($item['date_ym']) ?> · <?= e($item['date_day']) ?></span>
