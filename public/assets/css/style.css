@@ -575,7 +575,9 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 }
 
 /* 新闻详情正文 */
-.article-body { font-size: 16px; line-height: 1.85; color: var(--ink-2, #333); }
+.article-body { font-size: 16px; line-height: 1.85; color: var(--ink-2, #333); margin-top: 26px; min-height: 300px; }
+.article-body > :first-child { margin-top: 0; }
+.article-body > :last-child { margin-bottom: 0; }
 .article-body h2 { font-size: 22px; margin: 26px 0 12px; }
 .article-body h3 { font-size: 18px; margin: 20px 0 10px; }
 .article-body p { margin: 14px 0; }
