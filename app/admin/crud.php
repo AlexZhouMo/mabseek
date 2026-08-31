@@ -83,6 +83,7 @@ function admin_crud_save(array $cfg, string $m): void
             }
         } elseif ($type === 'richtext') {
             $data[$name] = sanitize_html((string)($_POST[$name] ?? ''));
+            if (!empty($f['required']) && strip_tags($data[$name]) === '') $errors[] = $f['label'];
         } elseif ($type === 'select') {
             $val = (string)($_POST[$name] ?? '');
             $opts = $f['options'] ?? [];
@@ -227,6 +228,7 @@ function admin_crud_form(array $cfg, string $m): void
     <?= csrf_field() ?>
     <input type="hidden" name="id" value="<?= $id ?>">
     <input type="hidden" name="_managed" value="<?= e($managedAll) ?>">
+<?php $needsRtScript = false; ?>
 <?php foreach ($cfg['fields'] as $f):
         $name = $f['name'];
         $type = $f['type'];
@@ -262,7 +264,7 @@ function admin_crud_form(array $cfg, string $m): void
         <div class="rt-editor" contenteditable="true"><?= $rt ?></div>
         <textarea name="<?= e($name) ?>" class="rt-source" hidden><?= e($rt) ?></textarea>
       </div>
-      <script src="assets/js/richtext.js" defer></script>
+      <?php $needsRtScript = true; ?>
 <?php elseif ($type === 'textarea'): ?>
       <textarea name="<?= e($name) ?>" rows="4" class="textarea" <?= $req ?>><?= e($cur) ?></textarea>
 <?php elseif ($type === 'select'): ?>
@@ -286,6 +288,9 @@ function admin_crud_form(array $cfg, string $m): void
 <?php endif; ?>
     </div>
 <?php endforeach; ?>
+<?php if ($needsRtScript): ?>
+    <script src="assets/js/richtext.js" defer></script>
+<?php endif; ?>
     <div class="form-actions">
       <button class="abtn abtn-primary" type="submit">保存</button>
       <a href="admin.php?m=<?= e($m) ?>" class="cancel">取消</a>
