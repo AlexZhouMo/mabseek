@@ -5,7 +5,7 @@
 
 布局（关键）：
 ```
-/var/www/html/            ← 项目根（tar 解压到这里）
+/var/www/html/            ← 项目根（deploy-mabseek.sh 铺开到这里）
 ├── public/               ← nginx docroot，唯一对外目录
 │   ├── index.php admin.php ...
 │   ├── assets/  partials/
@@ -36,44 +36,31 @@ systemctl status php*-fpm --no-pager | head -3
 
 ---
 
-## 1. 本地打包（在你的 Mac 上，项目目录内）
+## 1. 一键部署 / 更新（在服务器上，从 GitHub 拉取）
 
-排除开发库、git、文档、缓存等，只打 4 个目录：
+把 `deploy/deploy-mabseek.sh` 放到服务器家目录 `~`，之后每次更新只需再跑一遍它：
 
 ```bash
-cd /Users/zhoumo/Documents/Claude/mabseek
-COPYFILE_DISABLE=1 tar \
-  --exclude='.DS_Store' --exclude='.git' --exclude='node_modules' \
-  --exclude='*.sqlite' --exclude='*.sqlite-*' \
-  -czf /tmp/mabseek-deploy.tgz \
-  app bin public deploy
-ls -lh /tmp/mabseek-deploy.tgz
+# 首次：把脚本放到 ~（二选一）
+scp deploy/deploy-mabseek.sh <user>@<公网IP>:~        # 从本机推
+#   或在服务器上直接从仓库取：
+curl -fsSL https://raw.githubusercontent.com/AlexZhouMo/mabseek/main/deploy/deploy-mabseek.sh -o ~/deploy-mabseek.sh
+
+# 一键部署 / 更新（拉 main 最新代码并自动部署）
+sudo bash ~/deploy-mabseek.sh
+#   部署指定分支：sudo bash ~/deploy-mabseek.sh <分支名>
 ```
-> 不打包 `data/` 里的 sqlite —— 生产库将由服务器上的 seed 全新生成。
+
+脚本自动完成：从 GitHub 拉取最新代码到 `/opt/mabseek-src`（首次 `git clone`，之后 `fetch` + `reset --hard`）→ 铺开到 `/var/www/html` → **保留 `data/` 数据库与 `public/assets/images/uploads/` 上传图片**，并在 `/var/www/mabseek-backup-<时间戳>` 留一份备份 → 幂等 `seed` → 刷新权限 → 重载 php-fpm/nginx → 本机自检。可反复运行，历史数据不丢。
+
+> 前置：服务器需先装好 `git`、`php-fpm`（含 `pdo_sqlite`、`sodium` 扩展）、`nginx`，并放行 80 端口（见第 0 步）。仓库为公开仓库，拉取无需认证；若日后转私有，需为服务器上的 root 配置 git 凭据。
+> **首次部署**还要手动装一次 nginx 站点配置（第 4 步），装好后脚本自检即通过；之后的更新脚本会自动重载 nginx，无需再动。
+
+> 下面第 2–6 步是脚本内部动作的原理说明与排错参考。**常规更新无需手动执行**；唯一需要手动做一次的是第 4 步（首次配置 nginx）。
 
 ---
 
-## 2. 上传到服务器
-
-把 `<user>@<公网IP>` 换成你的实际值：
-
-```bash
-scp /tmp/mabseek-deploy.tgz <user>@<公网IP>:/tmp/
-```
-
----
-
-## 3. 解压到 /var/www/html（在服务器上）
-
-```bash
-sudo mkdir -p /var/www/html
-sudo tar -xzf /tmp/mabseek-deploy.tgz -C /var/www/html
-ls /var/www/html          # 应看到 app bin public deploy
-```
-
----
-
-## 4. 目录与权限
+## 2. 目录与权限
 
 原则：源码只读、`data/` 与上传目录对 www-data 可写。
 
@@ -93,7 +80,7 @@ sudo chmod 750 /var/www/html/data /var/www/html/public/assets/images/uploads
 
 ---
 
-## 5. 初始化数据库（全新 seed）
+## 3. 初始化数据库（全新 seed）
 
 以 www-data 身份运行,保证生成的库文件属主正确:
 
@@ -107,7 +94,7 @@ seed 会创建管理员 **admin / mabseek2026**,并置 `must_change_password=1`(
 
 ---
 
-## 6. 安装 nginx 站点配置
+## 4. 安装 nginx 站点配置
 
 样例已随包上传到 `/var/www/html/deploy/nginx-var-www-html-http.conf.sample`。
 
@@ -132,7 +119,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ---
 
-## 7. 验证（在服务器上，本机自测）
+## 5. 验证（在服务器上，本机自测）
 
 ```bash
 # 首页与后台应 200
@@ -165,7 +152,7 @@ curl -s -b "$JAR" -c "$JAR" -X POST http://127.0.0.1/admin.php \
 
 ---
 
-## 8. 以后启用 HTTPS（有证书时）
+## 6. 以后启用 HTTPS（有证书时）
 
 1. 证书就绪后,在现有 HTTP 样例 `deploy/nginx-var-www-html-http.conf.sample` 基础上增加 443 server 块(443 + 80→301 跳转 + 安全头)。
 2. **仅在 443 的 PHP location 里**加回 `fastcgi_param HTTPS on;` —— 此时浏览器走 https,
@@ -178,7 +165,7 @@ curl -s -b "$JAR" -c "$JAR" -X POST http://127.0.0.1/admin.php \
 ## 常见问题
 
 - **登录报「CSRF 校验失败」**:多半是 nginx 里误加了 `fastcgi_param HTTPS on;`(http 场景),
-  或浏览器用了缓存/后退键回放旧登录页。先按第 6 步核对配置,再用无痕窗口打开全新登录页。
+  或浏览器用了缓存/后退键回放旧登录页。先按第 4 步核对配置,再用无痕窗口打开全新登录页。
 - **上传图片 500 / 无法写入**:检查 `data/` 和 `public/assets/images/uploads/` 属主是否为
-  `www-data`、权限 750(第 4 步)。
-- **502 Bad Gateway**:socket 路径填错。按第 0 步 `ls /run/php/` 的实际值改第 6 步。
+  `www-data`、权限 750(第 2 步)。
+- **502 Bad Gateway**:socket 路径填错。按第 0 步 `ls /run/php/` 的实际值改第 4 步。
