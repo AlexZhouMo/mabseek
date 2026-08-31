@@ -79,7 +79,7 @@ function sanitize_attrs(DOMElement $el, string $tag): void {
         $src = trim($el->getAttribute('src'));
         $alt = $el->getAttribute('alt');
         sanitize_strip_attrs($el);
-        if ($src !== '' && str_starts_with($src, UPLOAD_URL . '/')) {   // 仅站内上传图
+        if ($src !== '' && str_starts_with($src, UPLOAD_URL . '/') && strpos($src, '..') === false) {   // 仅站内上传图，且无路径穿越
             $el->setAttribute('src', $src);
             $el->setAttribute('alt', $alt);
         } else {
