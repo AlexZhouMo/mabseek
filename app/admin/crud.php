@@ -4,12 +4,30 @@ declare(strict_types=1);
 // 由 public/admin.php 在输出前 require_once；模块（如 news.php）声明 $cfg 后调用 admin_crud($cfg)。
 // 写操作（save/delete）在处理起始先清空外壳缓冲并校验 CSRF，随后重定向（PRG）。
 require_once __DIR__ . '/upload.php';
+require_once __DIR__ . '/../html_sanitizer.php';
 
 function admin_crud(array $cfg): void
 {
     // 与 admin.php 同法从请求派生模块键（已净化为 [a-z_]），用于构造 URL
     $m = preg_replace('/[^a-z_]/', '', (string)($_GET['m'] ?? ''));
     $a = (string)($_GET['a'] ?? 'list');
+
+    if ($a === 'upload') {
+        while (ob_get_level() > 0) { ob_end_clean(); }
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+            http_response_code(405); header('Allow: POST'); exit('Method Not Allowed');
+        }
+        csrf_verify_or_die();
+        header('Content-Type: application/json; charset=utf-8');
+        try {
+            $url = handle_upload('file');
+            echo json_encode($url !== null ? ['ok'=>true,'url'=>$url] : ['ok'=>false,'error'=>'未选择文件'], JSON_UNESCAPED_UNICODE);
+        } catch (\RuntimeException $ex) {
+            http_response_code(400);
+            echo json_encode(['ok'=>false,'error'=>$ex->getMessage()], JSON_UNESCAPED_UNICODE);
+        }
+        exit;
+    }
 
     if ($a === 'save' || $a === 'delete') {
         while (ob_get_level() > 0) { ob_end_clean(); }  // 丢弃外壳已缓冲输出，稍后干净重定向
@@ -63,6 +81,8 @@ function admin_crud_save(array $cfg, string $m): void
             } elseif (array_key_exists($name, $_POST)) {
                 $data[$name] = trim((string)$_POST[$name]);           // 隐藏字段回传的现有路径 → 保留
             }
+        } elseif ($type === 'richtext') {
+            $data[$name] = sanitize_html((string)($_POST[$name] ?? ''));
         } elseif ($type === 'select') {
             $val = (string)($_POST[$name] ?? '');
             $opts = $f['options'] ?? [];
@@ -117,7 +137,7 @@ function admin_crud_list(array $cfg, string $m): void
     // 列表数据列：排除 checkbox / image，以及由「发布 · 排序」控件统一管理的 published/sort，避免重复成列
     $listFields = array_filter(
         $cfg['fields'],
-        fn($f) => $f['type'] !== 'checkbox' && $f['type'] !== 'image'
+        fn($f) => $f['type'] !== 'checkbox' && $f['type'] !== 'image' && $f['type'] !== 'richtext'
                && $f['name'] !== 'published' && $f['name'] !== 'sort'
     );
     $listFields = array_values($listFields);
@@ -225,7 +245,25 @@ function admin_crud_form(array $cfg, string $m): void
       </label>
 <?php else: ?>
       <label class="field-label"><?= e((string)$f['label']) ?></label>
-<?php if ($type === 'textarea'): ?>
+<?php if ($type === 'richtext'):
+        $rt = sanitize_html($cur);   // 即使 old() 回填未净化内容，渲染前再净化，杜绝后台自 XSS
+?>
+      <div class="rt-field" data-rt>
+        <div class="rt-toolbar">
+          <button type="button" class="rt-btn" data-cmd="bold" title="加粗"><b>B</b></button>
+          <button type="button" class="rt-btn" data-cmd="italic" title="斜体"><i>I</i></button>
+          <button type="button" class="rt-btn" data-cmd="formatBlock" data-val="h2">H2</button>
+          <button type="button" class="rt-btn" data-cmd="formatBlock" data-val="h3">H3</button>
+          <button type="button" class="rt-btn" data-cmd="insertUnorderedList" title="无序列表">• 列表</button>
+          <button type="button" class="rt-btn" data-cmd="insertOrderedList" title="有序列表">1. 列表</button>
+          <button type="button" class="rt-btn" data-cmd="createLink" title="链接">链接</button>
+          <button type="button" class="rt-btn" data-rt-image title="插入图片">插入图片</button>
+        </div>
+        <div class="rt-editor" contenteditable="true"><?= $rt ?></div>
+        <textarea name="<?= e($name) ?>" class="rt-source" hidden><?= e($rt) ?></textarea>
+      </div>
+      <script src="assets/js/richtext.js" defer></script>
+<?php elseif ($type === 'textarea'): ?>
       <textarea name="<?= e($name) ?>" rows="4" class="textarea" <?= $req ?>><?= e($cur) ?></textarea>
 <?php elseif ($type === 'select'): ?>
       <select name="<?= e($name) ?>" class="select" <?= $req ?>>
