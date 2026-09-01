@@ -60,5 +60,25 @@ check(auth_verify_credentials('m_alice', 'abc12345') === false, '改密后旧密
 // 注入韧性：含 SQL 元字符原样处理、正常拒绝、无异常
 check(member_username_taken("x' OR '1'='1") === false, '注入串不导致 SQL 错误、按普通字符串处理');
 
+// ── 后台会员管理 ──
+member_set_status($mid, 'disabled');
+check(member_get($mid)['status'] === 'disabled', '停用生效');
+member_set_status($mid, 'active');
+check(member_get($mid)['status'] === 'active', '启用生效');
+
+$tmp = member_reset_password($mid);
+check(strlen($tmp) >= 10, '重置返回临时密码明文');
+check(auth_verify_credentials('m_alice', $tmp) === true, '临时密码可登录');
+check((int)member_get($mid)['must_change_password'] === 1, '重置后置位 must_change_password');
+
+$list = member_list();
+check(is_array($list), 'member_list 返回数组');
+check(!array_key_exists('password_hash', $list[0] ?? ['x'=>1]), 'member_list 不含 password_hash');
+
+$before = count(member_list());
+member_delete($mid);
+check(member_get($mid) === null, '删除后账号消失');
+check(count(member_list()) === $before - 1, '列表减少一条');
+
 // 清理共享库
 db()->prepare('DELETE FROM users WHERE username = ? COLLATE NOCASE')->execute(['m_alice']);

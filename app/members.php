@@ -85,3 +85,29 @@ function member_change_password(int $id, string $newPass): void {
     db()->prepare('UPDATE users SET password_hash = ?, must_change_password = 0, updated_at = ? WHERE id = ?')
         ->execute([password_hash($newPass, PASSWORD_ARGON2ID), iso_now(), $id]);
 }
+
+// ── 后台会员管理（C）──
+function member_set_status(int $id, string $status): void {
+    $status = $status === 'disabled' ? 'disabled' : 'active';   // 只允许两值
+    db()->prepare("UPDATE users SET status = ?, updated_at = ? WHERE id = ? AND role = 'member'")
+        ->execute([$status, iso_now(), $id]);
+}
+function member_delete(int $id): void {
+    db()->prepare("DELETE FROM users WHERE id = ? AND role = 'member'")->execute([$id]);
+}
+/** 重置密码：CSPRNG 生成临时密码，写哈希 + must_change_password=1，返回明文（仅本次展示一次，不落库明文、不入日志） */
+function member_reset_password(int $id): string {
+    $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';   // 去除易混字符
+    $tmp = '';
+    for ($i = 0; $i < 12; $i++) $tmp .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+    db()->prepare("UPDATE users SET password_hash = ?, must_change_password = 1, updated_at = ? WHERE id = ? AND role = 'member'")
+        ->execute([password_hash($tmp, PASSWORD_ARGON2ID), iso_now(), $id]);
+    return $tmp;
+}
+/** 仅列 role='member'，不含 password_hash */
+function member_list(): array {
+    return db()->query(
+        "SELECT id, username, email, phone, nickname, status, created_at
+         FROM users WHERE role = 'member' ORDER BY id DESC"
+    )->fetchAll();
+}
