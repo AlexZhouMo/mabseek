@@ -248,23 +248,13 @@ function admin_crud_form(array $cfg, string $m): void
 <?php else: ?>
       <label class="field-label"><?= e((string)$f['label']) ?></label>
 <?php if ($type === 'richtext'):
-        $rt = sanitize_html($cur);   // 即使 old() 回填未净化内容，渲染前再净化，杜绝后台自 XSS
+        $rtName      = $name;
+        $rtValue     = $cur;
+        $rtUploadUrl = 'admin.php?m=news&a=upload';
+        $rtRequired  = !empty($f['required']);
+        include __DIR__ . '/../../public/partials/richtext-field.php';
+        $needsRtScript = true;
 ?>
-      <div class="rt-field" data-rt>
-        <div class="rt-toolbar">
-          <button type="button" class="rt-btn" data-cmd="bold" title="加粗"><b>B</b></button>
-          <button type="button" class="rt-btn" data-cmd="italic" title="斜体"><i>I</i></button>
-          <button type="button" class="rt-btn" data-cmd="formatBlock" data-val="h2">H2</button>
-          <button type="button" class="rt-btn" data-cmd="formatBlock" data-val="h3">H3</button>
-          <button type="button" class="rt-btn" data-cmd="insertUnorderedList" title="无序列表">• 列表</button>
-          <button type="button" class="rt-btn" data-cmd="insertOrderedList" title="有序列表">1. 列表</button>
-          <button type="button" class="rt-btn" data-cmd="createLink" title="链接">链接</button>
-          <button type="button" class="rt-btn" data-rt-image title="插入图片">插入图片</button>
-        </div>
-        <div class="rt-editor" contenteditable="true"><?= $rt ?></div>
-        <textarea name="<?= e($name) ?>" class="rt-source" hidden><?= e($rt) ?></textarea>
-      </div>
-      <?php $needsRtScript = true; ?>
 <?php elseif ($type === 'textarea'): ?>
       <textarea name="<?= e($name) ?>" rows="4" class="textarea" <?= $req ?>><?= e($cur) ?></textarea>
 <?php elseif ($type === 'select'): ?>

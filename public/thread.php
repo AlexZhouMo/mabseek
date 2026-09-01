@@ -38,7 +38,7 @@ $active = 'forum'; $navOnDark = false;
   <span class="eyebrow"><?= e($catLabel) ?></span>
   <h1 style="margin:10px 0 8px"><?= e($t['title']) ?></h1>
   <p style="color:var(--ink-3);font-size:14px;margin-bottom:24px"><?= e($author) ?> · <?= e($t['created_at']) ?></p>
-  <article style="line-height:1.9;color:var(--ink-2)"><?= nl2br(e($t['body'])) ?></article>
+  <article style="line-height:1.9;color:var(--ink-2)"><?= sanitize_html($t['body']) ?></article>
 <?php if ($isOwner): ?>
   <div style="display:flex;gap:10px;margin-top:32px">
     <a class="btn btn-outline" href="thread-edit.php?id=<?= (int)$t['id'] ?>">编辑</a>

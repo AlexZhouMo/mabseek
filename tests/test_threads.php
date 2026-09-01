@@ -14,6 +14,12 @@ check(thread_validate_body('正文内容') === true, 'body 合法');
 check(thread_validate_body('') === false, 'body 空被拒');
 check(thread_validate_body(str_repeat('字', 5001)) === false, 'body 过长被拒');
 
+// 富文本：按"净化后纯文本"长度计（标签/图片不计入）
+check(thread_validate_body('<p>正文内容</p>') === true, 'HTML 正文按纯文本计=合法');
+check(thread_validate_body('<img src="x.png">') === false, '仅图片(纯文本为空)被拒');
+check(thread_validate_body('<p>' . str_repeat('字', 5000) . '</p>') === true, 'HTML 纯文本 5000 通过');
+check(thread_validate_body('<p>' . str_repeat('字', 5001) . '</p>') === false, 'HTML 纯文本 5001 被拒');
+
 check(thread_valid_category('pit') === true, 'category 合法');
 check(thread_valid_category('nope') === false, 'category 非法被拒');
 
