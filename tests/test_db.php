@@ -42,3 +42,27 @@ add_column_if_missing($pdo, 't_addcol', "note TEXT NOT NULL DEFAULT ''");
 $tc2 = $pdo->query("PRAGMA table_info(t_addcol)")->fetchAll(PDO::FETCH_COLUMN, 1);
 check(count(array_keys($tc2, 'note')) === 1, 'add_column_if_missing 幂等：note 仍一列');
 $pdo->exec("DROP TABLE t_addcol");   // 清理，勿污染共享库
+
+// ── 会员体系迁移断言 ──
+$ucols = $pdo->query("PRAGMA table_info(users)")->fetchAll(PDO::FETCH_COLUMN, 1);
+foreach (['email','phone','nickname','role','status'] as $c) {
+    check(in_array($c, $ucols, true), "users.$c 列存在");
+}
+// 唯一索引存在
+$idx = $pdo->query("SELECT name FROM sqlite_master WHERE type='index'")->fetchAll(PDO::FETCH_COLUMN);
+foreach (['idx_users_username','idx_users_email','idx_users_phone'] as $i) {
+    check(in_array($i, $idx, true), "索引存在: $i");
+}
+// 迁移幂等：重复 migrate 不新增重复列
+migrate($pdo);
+$ucols2 = $pdo->query("PRAGMA table_info(users)")->fetchAll(PDO::FETCH_COLUMN, 1);
+check(count(array_keys($ucols2, 'role')) === 1, '重复 migrate 后 role 仅一列');
+// role 回填：seed 管理员用户名的行被置为 admin
+$pdo->prepare('DELETE FROM users WHERE username = ? COLLATE NOCASE')->execute([SEED_ADMIN_USER]);  // 清 test_auth 遗留的共享库行
+$pdo->prepare('INSERT INTO users(username,password_hash,role,status,created_at,updated_at) VALUES(?,?,?,?,?,?)')
+    ->execute([SEED_ADMIN_USER, 'x', 'member', 'active', date('c'), date('c')]);
+migrate($pdo);
+$r = $pdo->prepare('SELECT role FROM users WHERE username = ? COLLATE NOCASE');
+$r->execute([SEED_ADMIN_USER]);
+check($r->fetchColumn() === 'admin', 'migrate 幂等回填 seed 管理员 role=admin');
+$pdo->prepare('DELETE FROM users WHERE username = ? COLLATE NOCASE')->execute([SEED_ADMIN_USER]);  // 清理共享库

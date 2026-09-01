@@ -80,8 +80,13 @@ function migrate(PDO $pdo): void {
     );
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL,
+      username TEXT NOT NULL UNIQUE COLLATE NOCASE, password_hash TEXT NOT NULL,
       must_change_password INTEGER NOT NULL DEFAULT 0,
+      email TEXT NOT NULL DEFAULT '',
+      phone TEXT NOT NULL DEFAULT '',
+      nickname TEXT NOT NULL DEFAULT '',
+      role TEXT NOT NULL DEFAULT 'member',
+      status TEXT NOT NULL DEFAULT 'active',
       created_at TEXT NOT NULL, updated_at TEXT NOT NULL
     );
     CREATE TABLE IF NOT EXISTS login_attempts (
@@ -97,6 +102,21 @@ function migrate(PDO $pdo): void {
     CREATE INDEX IF NOT EXISTS idx_attempts_ip ON login_attempts(ip, created_at);
 SQL);
     add_column_if_missing($pdo, 'news', "body TEXT NOT NULL DEFAULT ''");
+    // 老库增量补列（新库已带；均为代码常量，无用户输入）
+    add_column_if_missing($pdo, 'users', "email TEXT NOT NULL DEFAULT ''");
+    add_column_if_missing($pdo, 'users', "phone TEXT NOT NULL DEFAULT ''");
+    add_column_if_missing($pdo, 'users', "nickname TEXT NOT NULL DEFAULT ''");
+    add_column_if_missing($pdo, 'users', "role TEXT NOT NULL DEFAULT 'member'");
+    add_column_if_missing($pdo, 'users', "status TEXT NOT NULL DEFAULT 'active'");
+    // 唯一索引：username 大小写不敏感唯一（对老库亦生效，无需重建表）；email/phone 部分唯一（空值不冲突）
+    $pdo->exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users(username COLLATE NOCASE)");
+    $pdo->exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email COLLATE NOCASE) WHERE email <> ''");
+    $pdo->exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone ON users(phone) WHERE phone <> ''");
+    // 升级陷阱防护：新增 role 默认 'member' 会把老库管理员锁在后台外，故以 SEED_ADMIN_USER 常量为键幂等回填
+    $pdo->prepare("UPDATE users SET role='admin' WHERE username = ? COLLATE NOCASE AND role <> 'admin'")
+        ->execute([SEED_ADMIN_USER]);
+    $pdo->prepare("UPDATE users SET status='active' WHERE username = ? COLLATE NOCASE AND status = ''")
+        ->execute([SEED_ADMIN_USER]);
 }
 
 /** 幂等补列：从 $ddl 首词取列名，PRAGMA 判断是否存在,缺失才 ALTER。
