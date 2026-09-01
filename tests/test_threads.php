@@ -41,6 +41,28 @@ $injTitle = "x'; DROP TABLE forum_threads;--";
 $tid2 = thread_create($uid, 'bio', $injTitle, 'body-or-1-eq-1');
 check(thread_get($tid2)['title'] === $injTitle, '注入串原样入库、参数化生效');
 
+// ── 作者越权校验 ──
+$oid = $uid;                                        // 帖主
+db()->prepare('INSERT INTO users(username,password_hash,role,status,created_at,updated_at) VALUES(?,?,?,?,?,?)')
+    ->execute(['t_other', 'x', 'member', 'active', $now, $now]);
+$other = (int)db()->lastInsertId();
+
+$editTid = thread_create($oid, 'pit', '原标题', '原正文');
+check(thread_update($editTid, $other, 'pit', '篡改', '篡改') === false, '非作者更新被拒');
+check(thread_get($editTid)['title'] === '原标题', '数据未被越权修改');
+check(thread_update($editTid, $oid, 'bio', '新标题', '新正文') === true, '作者本人更新成功');
+check(thread_get($editTid)['title'] === '新标题', '作者更新生效');
+check(thread_delete($editTid, $other) === false, '非作者删除被拒');
+check(thread_delete($editTid, $oid) === true, '作者本人删除成功');
+check(thread_get($editTid) === null, '删除后消失');
+
+// ── 限流 ──
+check(thread_recent_count_by_user($oid, 60) >= 1, '近 60 秒发帖计数>=1');
+check(thread_can_post_now($oid) === false, '刚发过帖 → 60 秒内不可再发');
+
+db()->prepare('DELETE FROM forum_threads WHERE user_id = ?')->execute([$other]);
+db()->prepare('DELETE FROM users WHERE id = ?')->execute([$other]);
+
 // 清理
 db()->prepare('DELETE FROM forum_threads WHERE user_id = ?')->execute([$uid]);
 db()->prepare('DELETE FROM users WHERE id = ?')->execute([$uid]);
