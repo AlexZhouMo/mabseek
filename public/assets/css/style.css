@@ -366,7 +366,7 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 }
 /* 文字实际内容再收窄，避开右侧图案 */
 .hero-c .hero-c-inner > * { max-width: min(560px, 52vw); }
-.hero-c h1 { font-size: clamp(30px, 5.4vw, 62px); line-height: 1.14; color: #fff; }
+.hero-c h1 { font-size: clamp(30px, 5.4vw, 62px); line-height: 1.14; color: #fff; margin-top: 22px; }
 .hero-c .hero-c-sub { color: var(--ink-on-dark-2); font-size: clamp(15px,2vw,19px); margin-top: 20px; }
 .hero-c .hero-c-cta { display: inline-flex; margin-top: 28px; }
 
