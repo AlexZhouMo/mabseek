@@ -15,14 +15,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $in['category'] = (string)($_POST['category'] ?? '');
     $in['title']    = (string)($_POST['title'] ?? '');
     $in['body']     = (string)($_POST['body'] ?? '');
+    $cleanBody      = sanitize_html($in['body']);      // 服务端权威净化
 
     if (($me['status'] ?? '') !== 'active')            $err = '账号已被停用，无法发帖。';
     elseif (!thread_valid_category($in['category']))   $err = '请选择有效分类。';
     elseif (!thread_validate_title($in['title']))      $err = '标题需 1–120 字。';
-    elseif (!thread_validate_body($in['body']))        $err = '正文需 1–5000 字。';
+    elseif (!thread_validate_body($cleanBody))         $err = '正文需 1–5000 字。';
     elseif (!thread_can_post_now($uid))                $err = '发帖过于频繁，请稍后再试。';
     else {
-        $tid = thread_create($uid, $in['category'], $in['title'], $in['body']);
+        $tid = thread_create($uid, $in['category'], $in['title'], $cleanBody);
         audit('thread_create', 'thread', (string)$tid);
         redirect('thread.php?id=' . $tid);
     }
@@ -60,14 +61,18 @@ $active = 'forum'; $navOnDark = false;
         <input class="input" type="text" name="title" maxlength="120" value="<?= e($in['title']) ?>" required autofocus>
       </div>
       <div class="field">
-        <label>正文（纯文本，≤5000 字）</label>
-        <textarea class="input" name="body" rows="10" maxlength="5000" required><?= e($in['body']) ?></textarea>
+        <label>正文（支持富文本，≤5000 字）</label>
+<?php
+        $rtName = 'body'; $rtValue = $in['body']; $rtUploadUrl = 'upload.php'; $rtRequired = true;
+        include __DIR__ . '/partials/richtext-field.php';
+?>
       </div>
       <button class="btn btn-purple auth-submit" type="submit">发布</button>
     </form>
     <div class="auth-alt"><a href="forum.php">取消，返回论坛</a></div>
   </div>
 </div>
+<script src="assets/js/richtext.js" defer></script>
 <?php include __DIR__ . '/partials/footer.php'; ?>
 </body>
 </html>
