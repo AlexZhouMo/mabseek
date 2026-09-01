@@ -336,18 +336,48 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
   .nav--on-dark.open .nav-links { background: #0d1122; border-bottom-color: var(--line-dark); }
 }
 
-/* 首页英雄区（排布 C：标题上居中 + 动画全屏背景 + 右下角 CTA） */
-.hero-c { position: relative; min-height: 88vh; display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-start; text-align: center; overflow: hidden;
-  padding: calc(var(--nav-h) + 72px) 24px 40px; background: var(--bg-dark); }
-#antibody-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; }
-.hero-c .hero-c-inner { position: relative; z-index: 2; max-width: 900px; }
-.hero-c h1 { font-size: clamp(30px, 5.4vw, 62px); line-height: 1.14; color: #fff; }
+/* 首页英雄区：图片背景（图案锚右）+ 左对齐文字 */
+.hero-c {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  align-items: center;                 /* 竖向居中 */
+  overflow: hidden;
+  padding: calc(var(--nav-h) + 72px) 24px 40px;
+  background-color: var(--bg-dark);    /* 兜底：图未加载时不塌陷 */
+  background-image: url('../images/hero-home.jpg');
+  background-size: cover;
+  background-position: right center;   /* 焦点锚右，抗体不被裁没 */
+  background-repeat: no-repeat;
+}
+/* 左侧深色渐变遮罩：保证文字可读，同时右侧抗体透出（颜色对齐 --bg-dark #070A14 = rgb(7,10,20)） */
+.hero-c::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(90deg,
+    rgba(7,10,20,.92) 0%, rgba(7,10,20,.72) 32%, rgba(7,10,20,.42) 55%, rgba(7,10,20,0) 78%);
+}
+.hero-c .hero-c-inner {
+  position: relative; z-index: 2;
+  width: 100%;
+  max-width: var(--maxw);              /* 站点容器最大宽度（现为 1200px），与页面栅格一致 */
+  margin: 0 auto;
+  text-align: left;
+}
+/* 文字实际内容再收窄，避开右侧图案 */
+.hero-c .hero-c-inner > * { max-width: min(560px, 52vw); }
+.hero-c h1 { font-size: clamp(30px, 5.4vw, 62px); line-height: 1.14; color: #fff; margin-top: 22px; }
 .hero-c .hero-c-sub { color: var(--ink-on-dark-2); font-size: clamp(15px,2vw,19px); margin-top: 20px; }
-.hero-c .hero-c-cta { position: absolute; right: 28px; bottom: 28px; z-index: 3; }
+.hero-c .hero-c-cta { display: inline-flex; margin-top: 28px; }
+
 @media (max-width: 720px) {
   .hero-c { min-height: 92vh; }
-  .hero-c .hero-c-cta { right: 50%; transform: translateX(50%); bottom: 22px; }
+  /* 窄屏：加强遮罩、文字占满，抗体作氛围隐约可见 */
+  .hero-c::before {
+    background: linear-gradient(90deg,
+      rgba(7,10,20,.95) 0%, rgba(7,10,20,.88) 55%, rgba(7,10,20,.7) 100%);
+  }
+  .hero-c .hero-c-inner > * { max-width: 100%; }
 }
 
 /* L3 四大痛点四格 */
