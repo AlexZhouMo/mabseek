@@ -52,50 +52,54 @@ $active = ''; $navOnDark = false;
 </head>
 <body>
 <?php include __DIR__ . '/partials/nav.php'; ?>
-<main class="container" style="max-width:460px;margin:48px auto">
-  <h1 style="margin-bottom:20px">注册会员</h1>
-  <form method="post" action="register.php" autocomplete="off">
-    <?= csrf_field() ?>
-    <div style="position:absolute;left:-9999px" aria-hidden="true">
-      <label>请勿填写<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-    </div>
-    <div class="field">
-      <label>用户名</label>
-      <input class="input" type="text" name="username" value="<?= e($in['username']) ?>" required>
-      <?php if (isset($errors['username'])): ?><small style="color:#c0392b"><?= e($errors['username']) ?></small><?php endif; ?>
-    </div>
-    <div class="field">
-      <label>密码（8–32 位，含字母与数字）</label>
-      <input class="input" type="password" name="password" required autocomplete="new-password">
-      <?php if (isset($errors['password'])): ?><small style="color:#c0392b"><?= e($errors['password']) ?></small><?php endif; ?>
-    </div>
-    <div class="field">
-      <label>邮箱（可选）</label>
-      <input class="input" type="email" name="email" value="<?= e($in['email']) ?>">
-      <?php if (isset($errors['email'])): ?><small style="color:#c0392b"><?= e($errors['email']) ?></small><?php endif; ?>
-    </div>
-    <div class="field">
-      <label>手机号（可选）</label>
-      <input class="input" type="text" name="phone" value="<?= e($in['phone']) ?>">
-      <?php if (isset($errors['phone'])): ?><small style="color:#c0392b"><?= e($errors['phone']) ?></small><?php endif; ?>
-    </div>
-    <div class="field">
-      <label>昵称（可选）</label>
-      <input class="input" type="text" name="nickname" value="<?= e($in['nickname']) ?>">
-      <?php if (isset($errors['nickname'])): ?><small style="color:#c0392b"><?= e($errors['nickname']) ?></small><?php endif; ?>
-    </div>
-    <div class="field">
-      <label>验证码</label>
-      <div style="display:flex;gap:10px;align-items:center">
-        <input class="input" type="text" name="captcha" required style="flex:1">
-        <img src="captcha.php" alt="验证码" onclick="this.src='captcha.php?'+Date.now()" style="cursor:pointer;height:40px" title="点击刷新">
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-brand"><span class="logo">🧬</span><span>MabSeek</span></div>
+    <div class="auth-title">注册会员</div>
+    <div class="auth-sub">加入 MabSeek 社区，参与论坛讨论与分享。</div>
+    <form method="post" action="register.php" autocomplete="off">
+      <?= csrf_field() ?>
+      <div style="position:absolute;left:-9999px" aria-hidden="true">
+        <label>请勿填写<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
       </div>
-      <?php if (isset($errors['captcha'])): ?><small style="color:#c0392b"><?= e($errors['captcha']) ?></small><?php endif; ?>
-    </div>
-    <button class="btn btn-purple" type="submit">注册并登录</button>
-    <p style="margin-top:14px">已有账号？<a href="login.php">去登录</a></p>
-  </form>
-</main>
+      <div class="field">
+        <label>用户名</label>
+        <input class="input" type="text" name="username" value="<?= e($in['username']) ?>" required autofocus>
+        <?php if (isset($errors['username'])): ?><div class="auth-field-err"><?= e($errors['username']) ?></div><?php endif; ?>
+      </div>
+      <div class="field">
+        <label>密码（8–32 位，含字母与数字）</label>
+        <input class="input" type="password" name="password" required autocomplete="new-password">
+        <?php if (isset($errors['password'])): ?><div class="auth-field-err"><?= e($errors['password']) ?></div><?php endif; ?>
+      </div>
+      <div class="field">
+        <label>邮箱（可选）</label>
+        <input class="input" type="email" name="email" value="<?= e($in['email']) ?>">
+        <?php if (isset($errors['email'])): ?><div class="auth-field-err"><?= e($errors['email']) ?></div><?php endif; ?>
+      </div>
+      <div class="field">
+        <label>手机号（可选）</label>
+        <input class="input" type="text" name="phone" value="<?= e($in['phone']) ?>">
+        <?php if (isset($errors['phone'])): ?><div class="auth-field-err"><?= e($errors['phone']) ?></div><?php endif; ?>
+      </div>
+      <div class="field">
+        <label>昵称（可选）</label>
+        <input class="input" type="text" name="nickname" value="<?= e($in['nickname']) ?>">
+        <?php if (isset($errors['nickname'])): ?><div class="auth-field-err"><?= e($errors['nickname']) ?></div><?php endif; ?>
+      </div>
+      <div class="field">
+        <label>验证码</label>
+        <div class="auth-captcha">
+          <input class="input" type="text" name="captcha" required>
+          <img src="captcha.php" alt="验证码" onclick="this.src='captcha.php?'+Date.now()" title="点击刷新">
+        </div>
+        <?php if (isset($errors['captcha'])): ?><div class="auth-field-err"><?= e($errors['captcha']) ?></div><?php endif; ?>
+      </div>
+      <button class="btn btn-purple auth-submit" type="submit">注册并登录</button>
+    </form>
+    <div class="auth-alt">已有账号？<a href="login.php">去登录</a></div>
+  </div>
+</div>
 <?php include __DIR__ . '/partials/footer.php'; ?>
 </body>
 </html>
