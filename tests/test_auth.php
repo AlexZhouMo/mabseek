@@ -32,3 +32,17 @@ check(auth_must_change_password('admin') === true, 'must_change flag reads true'
 auth_change_password('admin', 'newsecret');
 check(auth_must_change_password('admin') === false, 'change_password clears must_change flag');
 check(auth_verify_credentials('admin', 'newsecret') === true, 'new password verifies after change');
+
+// ── 角色与鉴权辅助 ──
+$pdo->exec("UPDATE users SET role='admin' WHERE username='admin'");
+check(auth_user_role('admin') === 'admin', 'auth_user_role 读取 admin 角色');
+check(auth_user_role('ADMIN') === 'admin', 'auth_user_role 大小写不敏感');
+check(auth_user_role('ghost') === '', '不存在用户返回空角色');
+
+$_SESSION = [];
+$_SESSION['role'] = 'admin';
+check(auth_is_admin() === true, 'role=admin 通过 auth_is_admin');
+$_SESSION['role'] = 'member';
+check(auth_is_admin() === false, 'role=member 不通过 auth_is_admin');
+$_SESSION = [];
+check(auth_is_admin() === false, '无会话不通过 auth_is_admin');
