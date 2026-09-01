@@ -271,6 +271,7 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 @media (max-width: 960px) {
   /* 中等宽度（平板/小笔记本）：菜单项挤不下会折行错位，提前收进汉堡菜单 */
   .nav-links, .nav-actions .btn { display: none; }
+  .nav-actions .btn.nav-auth { display: inline-flex; }   /* 会员入口在移动端保持可见（登录/注册 或 账号），不随其它按钮收进汉堡 */
   .nav-toggle { display: block; }
   .nav.open .nav-links {
     display: flex; flex-direction: column; position: absolute; top: var(--nav-h); left: 0; right: 0;

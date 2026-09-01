@@ -21,9 +21,9 @@ $links = [
     </nav>
     <div class="nav-actions">
 <?php if (!empty($_SESSION['uid'])): ?>
-      <a href="account.php" class="btn btn-ghost">👤 <?= e($_SESSION['nick'] ?? $_SESSION['uid']) ?></a>
+      <a href="account.php" class="btn btn-ghost nav-auth">👤 <?= e($_SESSION['nick'] ?? $_SESSION['uid']) ?></a>
 <?php else: ?>
-      <a href="login.php" class="btn btn-ghost">登录 / 注册</a>
+      <a href="login.php" class="btn btn-ghost nav-auth">登录 / 注册</a>
 <?php endif; ?>
       <a href="<?= e($contactHref) ?>" class="btn btn-green">联系我们</a>
     </div>
