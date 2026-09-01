@@ -1,0 +1,69 @@
+<?php
+require __DIR__ . '/../app/bootstrap.php';
+header('Cache-Control: no-store, must-revalidate');
+member_check();
+
+$me = member_find_by_username((string)($_SESSION['uid'] ?? ''));
+if (!$me) { auth_logout(); redirect('login.php'); }
+$uid = (int)$me['id'];
+
+$err = null;
+$in = ['category' => 'pit', 'title' => '', 'body' => ''];
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    csrf_verify_or_die();
+    $in['category'] = (string)($_POST['category'] ?? '');
+    $in['title']    = (string)($_POST['title'] ?? '');
+    $in['body']     = (string)($_POST['body'] ?? '');
+
+    if (($me['status'] ?? '') !== 'active')            $err = '账号已被停用，无法发帖。';
+    elseif (!thread_valid_category($in['category']))   $err = '请选择有效分类。';
+    elseif (!thread_validate_title($in['title']))      $err = '标题需 1–120 字。';
+    elseif (!thread_validate_body($in['body']))        $err = '正文需 1–5000 字。';
+    elseif (!thread_can_post_now($uid))                $err = '发帖过于频繁，请稍后再试。';
+    else {
+        $tid = thread_create($uid, $in['category'], $in['title'], $in['body']);
+        audit('thread_create', 'thread', (string)$tid);
+        redirect('thread.php?id=' . $tid);
+    }
+}
+$active = 'forum'; $navOnDark = false;
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>发帖 · MabSeek 论坛</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<?php include __DIR__ . '/partials/nav.php'; ?>
+<main class="container" style="max-width:640px;margin:48px auto">
+  <h1 style="margin-bottom:20px">发布帖子</h1>
+  <?php if ($err): ?><p style="color:#c0392b"><?= e($err) ?></p><?php endif; ?>
+  <form method="post" action="thread-new.php">
+    <?= csrf_field() ?>
+    <div class="field">
+      <label>分类</label>
+      <select class="input" name="category" required>
+<?php foreach (THREAD_CATEGORIES as $k => $label): ?>
+        <option value="<?= e($k) ?>"<?= $in['category'] === $k ? ' selected' : '' ?>><?= e($label) ?></option>
+<?php endforeach; ?>
+      </select>
+    </div>
+    <div class="field">
+      <label>标题（≤120 字）</label>
+      <input class="input" type="text" name="title" maxlength="120" value="<?= e($in['title']) ?>" required>
+    </div>
+    <div class="field">
+      <label>正文（纯文本，≤5000 字）</label>
+      <textarea class="input" name="body" rows="10" maxlength="5000" required><?= e($in['body']) ?></textarea>
+    </div>
+    <button class="btn btn-purple" type="submit">发布</button>
+    <a href="forum.php" style="margin-left:12px">取消</a>
+  </form>
+</main>
+<?php include __DIR__ . '/partials/footer.php'; ?>
+</body>
+</html>

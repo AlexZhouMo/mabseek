@@ -66,3 +66,16 @@ $r = $pdo->prepare('SELECT role FROM users WHERE username = ? COLLATE NOCASE');
 $r->execute([SEED_ADMIN_USER]);
 check($r->fetchColumn() === 'admin', 'migrate 幂等回填 seed 管理员 role=admin');
 $pdo->prepare('DELETE FROM users WHERE username = ? COLLATE NOCASE')->execute([SEED_ADMIN_USER]);  // 清理共享库
+
+// ── forum_threads 迁移断言 ──
+$tables2 = $pdo->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
+check(in_array('forum_threads', $tables2, true), 'forum_threads 表存在');
+$tcols = $pdo->query("PRAGMA table_info(forum_threads)")->fetchAll(PDO::FETCH_COLUMN, 1);
+foreach (['user_id','category','title','body','status','created_at','updated_at'] as $c) {
+    check(in_array($c, $tcols, true), "forum_threads.$c 列存在");
+}
+$idx2 = $pdo->query("SELECT name FROM sqlite_master WHERE type='index'")->fetchAll(PDO::FETCH_COLUMN);
+check(in_array('idx_threads_status_created', $idx2, true), '索引 idx_threads_status_created 存在');
+migrate($pdo);
+$tcols2 = $pdo->query("PRAGMA table_info(forum_threads)")->fetchAll(PDO::FETCH_COLUMN, 1);
+check(count(array_keys($tcols2, 'title')) === 1, '重复 migrate 后 title 仅一列');

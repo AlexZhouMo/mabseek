@@ -117,6 +117,18 @@ SQL);
         ->execute([SEED_ADMIN_USER]);
     $pdo->prepare("UPDATE users SET status='active' WHERE username = ? COLLATE NOCASE AND status = ''")
         ->execute([SEED_ADMIN_USER]);
+    $pdo->exec(<<<SQL
+    CREATE TABLE IF NOT EXISTS forum_threads (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      category TEXT NOT NULL,
+      title TEXT NOT NULL,
+      body TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'published',
+      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    SQL);
+    $pdo->exec("CREATE INDEX IF NOT EXISTS idx_threads_status_created ON forum_threads(status, created_at DESC)");
 }
 
 /** 幂等补列：从 $ddl 首词取列名，PRAGMA 判断是否存在,缺失才 ALTER。
