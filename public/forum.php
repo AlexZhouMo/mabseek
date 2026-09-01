@@ -6,6 +6,8 @@ $hotDay  = array_values(array_filter($hotAll, fn($r) => $r['list'] === 'day'));
 $hotWeek = array_values(array_filter($hotAll, fn($r) => $r['list'] === 'week'));
 $posts   = (new Collection('forum_posts'))->published();
 $lines   = (new Collection('content_cards'))->published("grp='forum_line'");
+$threads = thread_list_published(20);
+$threadPostHref = auth_check() ? 'thread-new.php' : 'login.php';
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -136,6 +138,35 @@ $lines   = (new Collection('content_cards'))->published("grp='forum_line'");
 <?php endforeach; ?>
     </div>
     <div class="text-center" style="margin-top:20px"><button class="btn btn-outline" data-demo="正式版将加载更多推荐内容"><?= snip('forum.feed.loadmore') ?></button></div>
+  </div>
+</section>
+
+<!-- ============ 会员发布 ============ -->
+<section class="section" id="threads">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:16px;flex-wrap:wrap">
+      <div>
+        <span class="eyebrow">会员发布</span>
+        <h2 class="section-title">会员们最近发了什么</h2>
+      </div>
+      <a class="btn btn-purple" href="<?= e($threadPostHref) ?>">发帖</a>
+    </div>
+<?php if (!$threads): ?>
+    <p style="color:var(--ink-3)">还没有会员帖子，<a href="<?= e($threadPostHref) ?>">来发第一帖</a>。</p>
+<?php else: ?>
+    <div class="thread-list">
+<?php foreach ($threads as $t):
+      $author = ($t['author_nickname'] ?? '') !== '' ? $t['author_nickname'] : ($t['author_username'] ?? '');
+      $catLabel = THREAD_CATEGORIES[$t['category']] ?? $t['category'];
+?>
+      <a class="thread-item card" href="thread.php?id=<?= (int)$t['id'] ?>" style="display:block;padding:18px 20px;margin-bottom:12px;text-decoration:none;color:inherit">
+        <div style="font-size:12px;color:var(--purple);font-weight:700"><?= e($catLabel) ?></div>
+        <h4 style="margin:6px 0;font-size:16px"><?= e($t['title']) ?></h4>
+        <div style="font-size:13px;color:var(--ink-3)"><?= e($author) ?> · <?= e($t['created_at']) ?></div>
+      </a>
+<?php endforeach; ?>
+    </div>
+<?php endif; ?>
   </div>
 </section>
 
