@@ -19,7 +19,11 @@ mabseek/
 │   ├── technology.php   技术平台
 │   ├── agent.php        Antibody Agent
 │   ├── education.php    教育
-│   ├── forum.php        论坛
+│   ├── forum.php        论坛（会员发帖 · 富文本）
+│   ├── thread-new.php   发帖（富文本编辑器 + 图片上传）
+│   ├── thread-edit.php  编辑本人帖
+│   ├── thread.php       帖子详情（直出净化后 HTML）
+│   ├── upload.php       会员图片上传端点（登录 + CSRF，复用图片校验）
 │   ├── about.php        了解我们
 │   ├── admin.php        管理后台入口
 │   └── assets/          静态资源（css/js/images，含 uploads/ 上传目录）
@@ -29,6 +33,9 @@ mabseek/
 │   ├── db.php           PDO 连接 + 幂等建表迁移（CREATE TABLE IF NOT EXISTS）
 │   ├── auth.php         登录校验、会话、登录失败锁定、审计日志
 │   ├── csrf.php         CSRF 令牌
+│   ├── members.php      会员账号（注册/登录/状态）
+│   ├── threads.php      论坛帖子（校验/发布/治理，正文按纯文本长度校验）
+│   ├── html_sanitizer.php  富文本白名单净化（DOM 白名单，仅放行站内上传图）
 │   ├── helpers.php      转义/时间/客户端 IP 等工具
 │   ├── admin/           后台各功能模块
 │   └── repositories/    数据访问层
@@ -63,8 +70,15 @@ php -S localhost:8778 -t public
 - 全站表单 **CSRF** 令牌校验。
 - **登录失败锁定**：单 (IP, 用户) 连续失败 5 次 或 单 IP 15 分钟内失败 20 次即锁定 15 分钟（防用户名轮换绕过与 Argon2id 资源耗尽）。
 - 会话硬化：登录后 `session_regenerate_id`、绑定 User-Agent、空闲 30 分钟 / 绝对 8 小时超时。
-- 上传限制：≤ 2MB，仅 `jpeg` / `png` / `webp`。
+- 上传限制：≤ 2MB，仅 `jpeg` / `png` / `webp`（通过 finfo 嗅探 + `getimagesize` 校验，随机文件名落盘）。
+- **富文本净化**：新闻正文与论坛帖子的富文本一律经服务端 DOM 白名单净化（`app/html_sanitizer.php`）后落库、且渲染前再净化一次；仅放行站内上传图片，外链图与脚本/事件属性一律剥离。
 - 关键操作写入审计日志。
+
+## 会员与论坛
+
+- 会员可注册/登录，在论坛发帖、编辑与删除本人帖子。
+- 发帖/编辑复用与后台新闻相同的富文本编辑器（工具栏 + 图片插入）；正文按「净化后纯文本」长度校验（1–5000 字，标签与图片不计入），停用账号禁止发帖与上传。
+- 会员图片经独立端点 `public/upload.php`（会员登录 + CSRF + 复用后台图片校验）上传，与管理员上传端点隔离。
 
 ## 测试
 
