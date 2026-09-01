@@ -25,3 +25,63 @@ function member_validate_phone(string $v): bool {
 function member_validate_nickname(string $v): bool {
     return mb_strlen($v) <= 30;
 }
+
+// ── 查询 ──
+function member_find_by_username(string $u): ?array {
+    $q = db()->prepare('SELECT * FROM users WHERE username = ? COLLATE NOCASE LIMIT 1');
+    $q->execute([$u]);
+    return $q->fetch() ?: null;
+}
+function member_get(int $id): ?array {
+    $q = db()->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
+    $q->execute([$id]);
+    return $q->fetch() ?: null;
+}
+
+// ── 唯一性（NOCASE；空值不判重；可排除自身 id）──
+function member_username_taken(string $u, ?int $excludeId = null): bool {
+    $sql = 'SELECT COUNT(*) FROM users WHERE username = ? COLLATE NOCASE';
+    $p = [$u];
+    if ($excludeId !== null) { $sql .= ' AND id <> ?'; $p[] = $excludeId; }
+    $q = db()->prepare($sql); $q->execute($p);
+    return (int)$q->fetchColumn() > 0;
+}
+function member_email_taken(string $e, ?int $excludeId = null): bool {
+    if ($e === '') return false;
+    $sql = 'SELECT COUNT(*) FROM users WHERE email = ? COLLATE NOCASE';
+    $p = [$e];
+    if ($excludeId !== null) { $sql .= ' AND id <> ?'; $p[] = $excludeId; }
+    $q = db()->prepare($sql); $q->execute($p);
+    return (int)$q->fetchColumn() > 0;
+}
+function member_phone_taken(string $ph, ?int $excludeId = null): bool {
+    if ($ph === '') return false;
+    $sql = 'SELECT COUNT(*) FROM users WHERE phone = ?';
+    $p = [$ph];
+    if ($excludeId !== null) { $sql .= ' AND id <> ?'; $p[] = $excludeId; }
+    $q = db()->prepare($sql); $q->execute($p);
+    return (int)$q->fetchColumn() > 0;
+}
+
+// ── 注册（硬编码 role/status，绝不接受请求传入）──
+function member_register(string $username, string $password, string $email, string $phone, string $nickname): int {
+    $now = iso_now();
+    db()->prepare(
+        'INSERT INTO users(username,password_hash,must_change_password,email,phone,nickname,role,status,created_at,updated_at)
+         VALUES(?,?,0,?,?,?,\'member\',\'active\',?,?)'
+    )->execute([
+        $username, password_hash($password, PASSWORD_ARGON2ID),
+        $email, $phone, $nickname, $now, $now,
+    ]);
+    return (int)db()->lastInsertId();
+}
+
+// ── 账号自助 ──
+function member_update_profile(int $id, string $email, string $phone, string $nickname): void {
+    db()->prepare('UPDATE users SET email = ?, phone = ?, nickname = ?, updated_at = ? WHERE id = ?')
+        ->execute([$email, $phone, $nickname, iso_now(), $id]);
+}
+function member_change_password(int $id, string $newPass): void {
+    db()->prepare('UPDATE users SET password_hash = ?, must_change_password = 0, updated_at = ? WHERE id = ?')
+        ->execute([password_hash($newPass, PASSWORD_ARGON2ID), iso_now(), $id]);
+}
