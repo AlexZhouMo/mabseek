@@ -26,5 +26,8 @@ const UPLOAD_ALLOWED   = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/we
 const SEED_ADMIN_USER = 'admin';
 const SEED_ADMIN_PASS = 'mabseek2026';            // 仅 seed 时哈希入库，绝不落库明文
 
+// ── 验证码 ──
+const CAPTCHA_TTL = 600;                          // 图形验证码有效期 10 分钟
+
 // ── 环境（生产设 false）──
 const APP_DEBUG = false;
