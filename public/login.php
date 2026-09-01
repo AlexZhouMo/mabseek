@@ -54,32 +54,36 @@ $active = ''; $navOnDark = false;
 </head>
 <body>
 <?php include __DIR__ . '/partials/nav.php'; ?>
-<main class="container" style="max-width:420px;margin:48px auto">
-  <h1 style="margin-bottom:20px">会员登录</h1>
-  <?php if ($error): ?><p style="color:#c0392b"><?= e($error) ?></p><?php endif; ?>
-  <form method="post" action="login.php">
-    <?= csrf_field() ?>
-    <div class="field">
-      <label>用户名</label>
-      <input class="input" type="text" name="username" value="<?= e($oldUser) ?>" required>
-    </div>
-    <div class="field">
-      <label>密码</label>
-      <input class="input" type="password" name="password" required autocomplete="current-password">
-    </div>
-    <?php if ($needCaptcha): ?>
-    <div class="field">
-      <label>验证码</label>
-      <div style="display:flex;gap:10px;align-items:center">
-        <input class="input" type="text" name="captcha" required style="flex:1">
-        <img src="captcha.php" alt="验证码" onclick="this.src='captcha.php?'+Date.now()" style="cursor:pointer;height:40px" title="点击刷新">
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-brand"><span class="logo">🧬</span><span>MabSeek</span></div>
+    <div class="auth-title">欢迎回来</div>
+    <div class="auth-sub">登录后可发帖、管理你的账号资料。</div>
+    <?php if ($error): ?><div class="auth-error"><?= e($error) ?></div><?php endif; ?>
+    <form method="post" action="login.php">
+      <?= csrf_field() ?>
+      <div class="field">
+        <label>用户名</label>
+        <input class="input" type="text" name="username" value="<?= e($oldUser) ?>" required autofocus>
       </div>
-    </div>
-    <?php endif; ?>
-    <button class="btn btn-purple" type="submit">登录</button>
-    <p style="margin-top:14px">还没有账号？<a href="register.php">去注册</a></p>
-  </form>
-</main>
+      <div class="field">
+        <label>密码</label>
+        <input class="input" type="password" name="password" required autocomplete="current-password">
+      </div>
+<?php if ($needCaptcha): ?>
+      <div class="field">
+        <label>验证码</label>
+        <div class="auth-captcha">
+          <input class="input" type="text" name="captcha" required>
+          <img src="captcha.php" alt="验证码" onclick="this.src='captcha.php?'+Date.now()" title="点击刷新">
+        </div>
+      </div>
+<?php endif; ?>
+      <button class="btn btn-purple auth-submit" type="submit">登录</button>
+    </form>
+    <div class="auth-alt">还没有账号？<a href="register.php">去注册</a></div>
+  </div>
+</div>
 <?php include __DIR__ . '/partials/footer.php'; ?>
 </body>
 </html>

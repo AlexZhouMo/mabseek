@@ -56,39 +56,41 @@ $active = ''; $navOnDark = false;
 </head>
 <body>
 <?php include __DIR__ . '/partials/nav.php'; ?>
-<main class="container" style="max-width:560px;margin:48px auto">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <h1>账号中心</h1>
-    <form method="post" action="logout.php"><?= csrf_field() ?><button class="btn btn-ghost" type="submit">退出登录</button></form>
+<div class="auth-wrap" style="align-items:flex-start">
+  <div style="width:100%;max-width:560px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div class="auth-title" style="margin:0">账号中心</div>
+      <form method="post" action="logout.php"><?= csrf_field() ?><button class="btn btn-ghost nav-auth" type="submit">退出登录</button></form>
+    </div>
+    <?php if ($msg): ?><div class="auth-error" style="background:var(--green-100);border-color:var(--green-400);color:#0a7a5c"><?= e($msg) ?></div><?php endif; ?>
+    <?php if ($err): ?><div class="auth-error"><?= e($err) ?></div><?php endif; ?>
+
+    <div class="auth-card wide" style="margin-bottom:20px">
+      <div class="auth-section-title">基本资料</div>
+      <p style="color:var(--ink-3);font-size:13px;margin-bottom:16px">用户名：<?= e($me['username']) ?>（不可修改）</p>
+      <form method="post" action="account.php">
+        <?= csrf_field() ?>
+        <input type="hidden" name="do" value="profile">
+        <div class="field"><label>邮箱</label><input class="input" type="email" name="email" value="<?= e($me['email']) ?>"></div>
+        <div class="field"><label>手机号</label><input class="input" type="text" name="phone" value="<?= e($me['phone']) ?>"></div>
+        <div class="field"><label>昵称</label><input class="input" type="text" name="nickname" value="<?= e($me['nickname']) ?>"></div>
+        <button class="btn btn-purple auth-submit" type="submit">保存资料</button>
+      </form>
+    </div>
+
+    <div class="auth-card wide">
+      <div class="auth-section-title">修改密码</div>
+      <form method="post" action="account.php">
+        <?= csrf_field() ?>
+        <input type="hidden" name="do" value="password">
+        <div class="field"><label>当前密码</label><input class="input" type="password" name="current" required autocomplete="current-password"></div>
+        <div class="field"><label>新密码（8–32 位，含字母与数字）</label><input class="input" type="password" name="new" required autocomplete="new-password"></div>
+        <div class="field"><label>确认新密码</label><input class="input" type="password" name="confirm" required autocomplete="new-password"></div>
+        <button class="btn btn-purple auth-submit" type="submit">修改密码</button>
+      </form>
+    </div>
   </div>
-  <?php if ($msg): ?><p style="color:#12b98c"><?= e($msg) ?></p><?php endif; ?>
-  <?php if ($err): ?><p style="color:#c0392b"><?= e($err) ?></p><?php endif; ?>
-
-  <section style="margin-top:24px">
-    <h3>基本资料</h3>
-    <p style="color:#888">用户名：<?= e($me['username']) ?>（不可修改）</p>
-    <form method="post" action="account.php">
-      <?= csrf_field() ?>
-      <input type="hidden" name="do" value="profile">
-      <div class="field"><label>邮箱</label><input class="input" type="email" name="email" value="<?= e($me['email']) ?>"></div>
-      <div class="field"><label>手机号</label><input class="input" type="text" name="phone" value="<?= e($me['phone']) ?>"></div>
-      <div class="field"><label>昵称</label><input class="input" type="text" name="nickname" value="<?= e($me['nickname']) ?>"></div>
-      <button class="btn btn-purple" type="submit">保存资料</button>
-    </form>
-  </section>
-
-  <section style="margin-top:32px">
-    <h3>修改密码</h3>
-    <form method="post" action="account.php">
-      <?= csrf_field() ?>
-      <input type="hidden" name="do" value="password">
-      <div class="field"><label>当前密码</label><input class="input" type="password" name="current" required autocomplete="current-password"></div>
-      <div class="field"><label>新密码（8–32 位，含字母与数字）</label><input class="input" type="password" name="new" required autocomplete="new-password"></div>
-      <div class="field"><label>确认新密码</label><input class="input" type="password" name="confirm" required autocomplete="new-password"></div>
-      <button class="btn btn-purple" type="submit">修改密码</button>
-    </form>
-  </section>
-</main>
+</div>
 <?php include __DIR__ . '/partials/footer.php'; ?>
 </body>
 </html>
