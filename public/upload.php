@@ -10,6 +10,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
 }
 csrf_verify_or_die();
 header('Content-Type: application/json; charset=utf-8');
+
+// 与发帖一致：停用账号不得上传（防被停用会员绕过发帖限制堆积图片）
+$me = member_find_by_username((string)($_SESSION['uid'] ?? ''));
+if (!$me || ($me['status'] ?? '') !== 'active') {
+    http_response_code(403);
+    echo json_encode(['ok' => false, 'error' => '账号已被停用，无法上传。'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 try {
     $url = handle_upload('file');
     echo json_encode(
