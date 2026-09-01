@@ -4,6 +4,7 @@
     var source = field.querySelector('.rt-source');
     var form = field.closest('form');
     if (!editor || !source || !form) return;
+    var uploadUrl = field.getAttribute('data-upload-url') || 'admin.php?m=news&a=upload';
 
     // 工具栏命令
     field.querySelectorAll('.rt-btn[data-cmd]').forEach(function (btn) {
@@ -44,7 +45,7 @@
       data.append('file', file);
       if (token) data.append('_csrf', token.value);
       editor.focus();
-      fetch('admin.php?m=news&a=upload', { method: 'POST', body: data })
+      fetch(uploadUrl, { method: 'POST', body: data })
         .then(function (r) { return r.json(); })
         .then(function (res) {
           if (res && res.ok && res.url) {
