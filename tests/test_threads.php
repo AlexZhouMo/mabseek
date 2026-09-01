@@ -63,6 +63,23 @@ check(thread_can_post_now($oid) === false, '刚发过帖 → 60 秒内不可再�
 db()->prepare('DELETE FROM forum_threads WHERE user_id = ?')->execute([$other]);
 db()->prepare('DELETE FROM users WHERE id = ?')->execute([$other]);
 
+// ── 后台治理 + 级联删除 ──
+$aTid = thread_create($oid, 'pit', '待治理帖', '正文');
+thread_set_status($aTid, 'hidden');
+check(thread_get_public($aTid) === null, '下架后公开详情不可见');
+$ids = array_column(thread_list_published(50), 'id');
+check(!in_array($aTid, $ids, true), '下架后不在公开列表');
+check(count(thread_admin_list()) >= 1, '后台列表含全部(含 hidden)');
+thread_set_status($aTid, 'published');
+check(thread_get_public($aTid) !== null, '恢复后公开可见');
+thread_admin_delete($aTid);
+check(thread_get($aTid) === null, '后台删除生效');
+
+// 级联：删帖主 → 其帖随外键消失
+$cTid = thread_create($oid, 'bio', '级联测试', '正文');
+db()->prepare('DELETE FROM users WHERE id = ?')->execute([$oid]);
+check(thread_get($cTid) === null, '删除会员级联删除其帖');
+
 // 清理
 db()->prepare('DELETE FROM forum_threads WHERE user_id = ?')->execute([$uid]);
 db()->prepare('DELETE FROM users WHERE id = ?')->execute([$uid]);

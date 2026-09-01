@@ -57,3 +57,17 @@ function thread_can_post_now(int $userId): bool {
     if (thread_recent_count_by_user($userId, 86400) >= THREAD_RATE_DAILY_MAX) return false;
     return true;
 }
+function thread_admin_list(): array {
+    return db()->query(
+        "SELECT t.*, u.nickname AS author_nickname, u.username AS author_username
+         FROM forum_threads t LEFT JOIN users u ON u.id = t.user_id
+         ORDER BY t.created_at DESC, t.id DESC")->fetchAll();
+}
+function thread_set_status(int $id, string $status): void {
+    $status = $status === 'hidden' ? 'hidden' : 'published';
+    db()->prepare('UPDATE forum_threads SET status = ?, updated_at = ? WHERE id = ?')
+        ->execute([$status, iso_now(), $id]);
+}
+function thread_admin_delete(int $id): void {
+    db()->prepare('DELETE FROM forum_threads WHERE id = ?')->execute([$id]);
+}
