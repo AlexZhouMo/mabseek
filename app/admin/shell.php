@@ -11,6 +11,7 @@ $adminMenu = [
     'cards'       => '内容卡片',
     'snippets'    => '文案片段',
     'members'     => '会员管理',
+    'threads'     => '论坛发帖',
     'password'    => '修改密码',
 ];
 ?>
