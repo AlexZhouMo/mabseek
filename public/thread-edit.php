@@ -56,32 +56,36 @@ $active = 'forum'; $navOnDark = false;
 </head>
 <body>
 <?php include __DIR__ . '/partials/nav.php'; ?>
-<main class="container" style="max-width:640px;margin:48px auto">
-  <h1 style="margin-bottom:20px">编辑帖子</h1>
-  <?php if ($err): ?><p style="color:#c0392b"><?= e($err) ?></p><?php endif; ?>
-  <form method="post" action="thread-edit.php?id=<?= (int)$id ?>">
-    <?= csrf_field() ?>
-    <input type="hidden" name="act" value="update">
-    <div class="field">
-      <label>分类</label>
-      <select class="input" name="category" required>
+<div class="auth-wrap">
+  <div class="auth-card wide">
+    <div class="auth-brand"><span class="logo">🧬</span><span>MabSeek</span></div>
+    <div class="auth-title">编辑帖子</div>
+    <div class="auth-sub">修改后保存即更新。</div>
+    <?php if ($err): ?><div class="auth-error"><?= e($err) ?></div><?php endif; ?>
+    <form method="post" action="thread-edit.php?id=<?= (int)$id ?>">
+      <?= csrf_field() ?>
+      <input type="hidden" name="act" value="update">
+      <div class="field">
+        <label>分类</label>
+        <select class="input" name="category" required>
 <?php foreach (THREAD_CATEGORIES as $k => $label): ?>
-        <option value="<?= e($k) ?>"<?= $in['category'] === $k ? ' selected' : '' ?>><?= e($label) ?></option>
+          <option value="<?= e($k) ?>"<?= $in['category'] === $k ? ' selected' : '' ?>><?= e($label) ?></option>
 <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="field">
-      <label>标题（≤120 字）</label>
-      <input class="input" type="text" name="title" maxlength="120" value="<?= e($in['title']) ?>" required>
-    </div>
-    <div class="field">
-      <label>正文（纯文本，≤5000 字）</label>
-      <textarea class="input" name="body" rows="10" maxlength="5000" required><?= e($in['body']) ?></textarea>
-    </div>
-    <button class="btn btn-purple" type="submit">保存</button>
-    <a href="thread.php?id=<?= (int)$id ?>" style="margin-left:12px">取消</a>
-  </form>
-</main>
+        </select>
+      </div>
+      <div class="field">
+        <label>标题（≤120 字）</label>
+        <input class="input" type="text" name="title" maxlength="120" value="<?= e($in['title']) ?>" required autofocus>
+      </div>
+      <div class="field">
+        <label>正文（纯文本，≤5000 字）</label>
+        <textarea class="input" name="body" rows="10" maxlength="5000" required><?= e($in['body']) ?></textarea>
+      </div>
+      <button class="btn btn-purple auth-submit" type="submit">保存</button>
+    </form>
+    <div class="auth-alt"><a href="thread.php?id=<?= (int)$id ?>">取消</a></div>
+  </div>
+</div>
 <?php include __DIR__ . '/partials/footer.php'; ?>
 </body>
 </html>
