@@ -9,8 +9,8 @@ $pdo = db();
 $has = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 if ((int)$has === 0) {
     $now = iso_now();
-    $pdo->prepare('INSERT INTO users(username,password_hash,must_change_password,created_at,updated_at) VALUES(?,?,1,?,?)')
-        ->execute([SEED_ADMIN_USER, password_hash(SEED_ADMIN_PASS, PASSWORD_ARGON2ID), $now, $now]);
+    $pdo->prepare('INSERT INTO users(username,password_hash,must_change_password,role,status,created_at,updated_at) VALUES(?,?,1,?,?,?,?)')
+        ->execute([SEED_ADMIN_USER, password_hash(SEED_ADMIN_PASS, PASSWORD_ARGON2ID), 'admin', 'active', $now, $now]);
     echo "  + admin created\n";
 } else {
     echo "  = users exist, skip\n";

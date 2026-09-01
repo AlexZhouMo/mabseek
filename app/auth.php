@@ -4,7 +4,7 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
 
 function auth_verify_credentials(string $user, string $pass): bool {
-    $row = db()->prepare('SELECT password_hash FROM users WHERE username = ? LIMIT 1');
+    $row = db()->prepare('SELECT password_hash FROM users WHERE username = ? COLLATE NOCASE LIMIT 1');
     $row->execute([$user]);
     $hash = $row->fetchColumn();
     if ($hash === false) {
@@ -44,9 +44,26 @@ function auth_is_locked(string $ip, string $user): bool {
 function auth_login_user(string $user): void {
     session_regenerate_id(true);               // 防会话固定
     $_SESSION['uid']  = $user;
+    $_SESSION['role'] = auth_user_role($user);
     $_SESSION['ua']   = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 200);
     $_SESSION['last'] = time();
     $_SESSION['born'] = time();
+}
+
+function auth_user_role(string $user): string {
+    $q = db()->prepare('SELECT role FROM users WHERE username = ? COLLATE NOCASE LIMIT 1');
+    $q->execute([$user]);
+    $r = $q->fetchColumn();
+    return $r === false ? '' : (string)$r;
+}
+
+function auth_is_admin(): bool {
+    return ($_SESSION['role'] ?? '') === 'admin';
+}
+
+/** 会员页硬闸：未登录跳前台登录页；不校验 role（管理员亦可访问自己的账号页） */
+function member_check(): void {
+    if (!auth_check()) redirect('login.php');
 }
 
 function auth_logout(): void {
@@ -76,12 +93,12 @@ function audit(string $action, string $entity = '', string $entityId = ''): void
 }
 
 function auth_must_change_password(string $user): bool {
-    $q = db()->prepare('SELECT must_change_password FROM users WHERE username = ? LIMIT 1');
+    $q = db()->prepare('SELECT must_change_password FROM users WHERE username = ? COLLATE NOCASE LIMIT 1');
     $q->execute([$user]);
     return (int)$q->fetchColumn() === 1;
 }
 
 function auth_change_password(string $user, string $newPass): void {
-    db()->prepare('UPDATE users SET password_hash = ?, must_change_password = 0, updated_at = ? WHERE username = ?')
+    db()->prepare('UPDATE users SET password_hash = ?, must_change_password = 0, updated_at = ? WHERE username = ? COLLATE NOCASE')
         ->execute([password_hash($newPass, PASSWORD_ARGON2ID), iso_now(), $user]);
 }

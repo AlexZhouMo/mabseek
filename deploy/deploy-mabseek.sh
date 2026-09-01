@@ -93,10 +93,10 @@ PHP_VER="$(php -r 'echo PHP_VERSION;')"
 ok "PHP $PHP_VER"
 
 MISSING=""
-for ext in pdo_sqlite sodium dom; do
+for ext in pdo_sqlite sodium dom gd; do
   if php -m | grep -qi "^$ext$"; then ok "PHP 扩展 $ext"; else MISSING="$MISSING $ext"; fi
 done
-[ -z "$MISSING" ] || die "缺少 PHP 扩展:$MISSING （apt-get install -y php-sqlite3 php-sodium php-xml && systemctl restart php*-fpm）"
+[ -z "$MISSING" ] || die "缺少 PHP 扩展:$MISSING （apt-get install -y php-sqlite3 php-sodium php-xml php-gd && systemctl restart php*-fpm）"
 
 command -v nginx >/dev/null 2>&1 || die "未安装 nginx（apt-get install -y nginx）"
 ok "nginx $(nginx -v 2>&1 | sed 's#.*/##')"

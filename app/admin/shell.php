@@ -10,6 +10,7 @@ $adminMenu = [
     'partners'    => '合作伙伴',
     'cards'       => '内容卡片',
     'snippets'    => '文案片段',
+    'members'     => '会员管理',
     'password'    => '修改密码',
 ];
 ?>
