@@ -19,7 +19,14 @@ $links = [
       <a href="<?= $href ?>"<?= $active === $key ? ' class="active"' : '' ?>><?= $label ?></a>
 <?php endforeach; ?>
     </nav>
-    <div class="nav-actions"><a href="<?= e($contactHref) ?>" class="btn btn-green">联系我们</a></div>
+    <div class="nav-actions">
+<?php if (!empty($_SESSION['uid'])): ?>
+      <a href="account.php" class="btn btn-ghost">👤 <?= e($_SESSION['nick'] ?? $_SESSION['uid']) ?></a>
+<?php else: ?>
+      <a href="login.php" class="btn btn-ghost">登录 / 注册</a>
+<?php endif; ?>
+      <a href="<?= e($contactHref) ?>" class="btn btn-green">联系我们</a>
+    </div>
     <button class="nav-toggle" aria-label="菜单"><span></span><span></span><span></span></button>
   </div>
 </header>
