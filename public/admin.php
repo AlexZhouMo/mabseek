@@ -19,8 +19,8 @@ if (($_GET['action'] ?? '') === 'logout') {
     redirect('admin.php');
 }
 
-// 未登录 → 登录流程
-if (!auth_check()) {
+// 未登录（或非管理员会话）→ 登录流程
+if (!auth_check() || !auth_is_admin()) {
     $error = null;
     $oldUser = '';
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -32,7 +32,7 @@ if (!auth_check()) {
         $ip = client_ip();
         if (auth_is_locked($ip, $u)) {                     // ① 锁定检查先于验证：防 Argon2id 资源耗尽 + 计时旁路
             $error = '尝试过于频繁，请 15 分钟后再试。';
-        } elseif ($u !== '' && auth_verify_credentials($u, $p)) {
+        } elseif ($u !== '' && auth_verify_credentials($u, $p) && auth_user_role($u) === 'admin') {
             auth_record_attempt($ip, $u, true);
             auth_login_user($u);
             audit('login');
@@ -49,7 +49,7 @@ if (!auth_check()) {
 
 // 已登录 → 模块路由（白名单）
 $module = preg_replace('/[^a-z_]/', '', (string)($_GET['m'] ?? 'dashboard'));
-$allowed = ['dashboard','news','forum_posts','forum_hot','team','partners','cards','snippets','password'];
+$allowed = ['dashboard','news','forum_posts','forum_hot','team','partners','cards','snippets','members','password'];
 if (!in_array($module, $allowed, true)) $module = 'dashboard';
 
 // ③ 强制改密：初始密码未改前，除改密模块外一律重定向（集中风控，保护所有模块）
