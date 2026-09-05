@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../app/bootstrap.php';
-$active = 'about'; $navOnDark = false; $contactHref = '#contact';
+$active = 'about'; $navOnDark = false; $navSolidDark = true; $contactHref = '#contact';
 $team = (new Collection('team_members'))->published();
 $achv = (new Collection('content_cards'))->published("grp = 'about_achievement'");
 $news = (new Collection('news'))->published();
@@ -31,6 +31,7 @@ $news = (new Collection('news'))->published();
 .leads { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:22px; }
 .lead-card { display:flex; gap:18px; align-items:flex-start; background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--sh-sm); }
 .lead-card .ph { flex:0 0 84px; width:84px; height:84px; border-radius:16px; background:var(--grad-brand); color:#fff; display:grid; place-items:center; font-size:34px; font-weight:800; }
+.lead-card img.ph { object-fit:cover; object-position:center top; }
 .lead-card .ph.g2 { background:linear-gradient(135deg,#12D6A0,#4b6bff); }
 .lead-card .nm { font-size:20px; font-weight:800; }
 .lead-card .aff { font-size:13px; color:var(--ink-3); margin:2px 0 10px; }
@@ -72,11 +73,14 @@ $news = (new Collection('news'))->published();
     <p class="section-sub reveal d2"><?= snip('about.team.sub') ?></p>
     <div class="leads reveal d1">
 <?php foreach ($team as $m):
-    $phClass = 'ph' . ($m['avatar_variant'] !== '' ? ' ' . e($m['avatar_variant']) : '');
     $roleClass = 'role' . ($m['role_type'] === 'ai' ? ' green' : '');
 ?>
       <div class="lead-card">
-        <div class="<?= $phClass ?>"><?= e($m['avatar_char']) ?></div>
+        <?php if (!empty($m['avatar_img'])): ?>
+        <img class="ph" src="<?= e($m['avatar_img']) ?>" alt="<?= e($m['name']) ?>">
+        <?php else: ?>
+        <div class="ph"><?= e($m['avatar_char']) ?></div>
+        <?php endif; ?>
         <div>
           <div class="nm"><?= e($m['name']) ?></div>
           <div class="aff"><?= e($m['affiliation']) ?></div>
@@ -179,7 +183,13 @@ $news = (new Collection('news'))->published();
       <h2 class="section-title reveal d1"><?= snip_raw('about.contact.title') ?></h2>
       <p class="section-sub reveal d2" style="margin:10px auto 0"><?= snip('about.contact.sub') ?></p>
     </div>
-    <form class="feedback reveal d2" id="contact-form">
+    <?php include __DIR__ . '/partials/feedback-notice.php'; ?>
+    <form class="feedback reveal d2" id="contact-form" method="post" action="feedback.php">
+      <?= csrf_field() ?>
+      <input type="hidden" name="from" value="about.php">
+      <div style="position:absolute;left:-9999px" aria-hidden="true">
+        <label>请勿填写<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
       <div class="fb-row">
         <input type="text" name="name" placeholder="你的称呼" required>
         <input type="email" name="email" placeholder="邮箱" required>

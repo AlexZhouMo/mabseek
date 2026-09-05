@@ -5,11 +5,10 @@ final class Collection {
     // 各表允许写入的列（白名单，防批量赋值）
     private const COLUMNS = [
         'news'          => ['date_day','date_ym','category','title','summary','image','sort','published','body'],
-        'forum_posts'   => ['category','cover_type','cover_ref','cover_variant','toptag','title','tags','author_name','author_avatar_char','author_avatar_style','likes','sort','published'],
-        'forum_hot'     => ['list','rank','title','category','heat','sort','published'],
-        'team_members'  => ['name','affiliation','direction','role_label','role_type','avatar_char','avatar_variant','sort','published'],
+        'team_members'  => ['name','affiliation','direction','role_label','role_type','avatar_char','avatar_img','sort','published'],
         'partners'      => ['name','mark','sub','logo_image','demo','sort','published'],
         'content_cards' => ['grp','icon','title','body','extra','sort','published'],
+        'edu_reviews'   => ['title','summary','cover','body','sort','published'],
     ];
 
     public function __construct(private string $table) {

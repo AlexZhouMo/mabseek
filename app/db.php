@@ -32,28 +32,11 @@ function migrate(PDO $pdo): void {
       image TEXT, sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
       created_at TEXT NOT NULL, updated_at TEXT NOT NULL
     );
-    CREATE TABLE IF NOT EXISTS forum_posts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      category TEXT NOT NULL, cover_type TEXT NOT NULL, cover_ref TEXT NOT NULL,
-      cover_variant TEXT DEFAULT '', toptag TEXT DEFAULT '',
-      title TEXT NOT NULL, tags TEXT DEFAULT '',
-      author_name TEXT NOT NULL, author_avatar_char TEXT NOT NULL,
-      author_avatar_style TEXT DEFAULT '', likes TEXT DEFAULT '',
-      sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
-      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
-    );
-    CREATE TABLE IF NOT EXISTS forum_hot (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      list TEXT NOT NULL, rank INTEGER NOT NULL, title TEXT NOT NULL,
-      category TEXT NOT NULL, heat TEXT NOT NULL,
-      sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
-      created_at TEXT NOT NULL, updated_at TEXT NOT NULL
-    );
     CREATE TABLE IF NOT EXISTS team_members (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL, affiliation TEXT NOT NULL, direction TEXT NOT NULL,
       role_label TEXT NOT NULL, role_type TEXT NOT NULL,
-      avatar_char TEXT NOT NULL, avatar_variant TEXT DEFAULT '',
+      avatar_char TEXT NOT NULL, avatar_img TEXT NOT NULL DEFAULT '',
       sort INTEGER DEFAULT 0, published INTEGER DEFAULT 1,
       created_at TEXT NOT NULL, updated_at TEXT NOT NULL
     );
@@ -129,6 +112,39 @@ SQL);
     );
     SQL);
     $pdo->exec("CREATE INDEX IF NOT EXISTS idx_threads_status_created ON forum_threads(status, created_at DESC)");
+    add_column_if_missing($pdo, 'forum_threads', "cover TEXT NOT NULL DEFAULT ''");   // 老库补列（须在建表后）
+    add_column_if_missing($pdo, 'team_members', "avatar_img TEXT NOT NULL DEFAULT ''");   // 老库补列：团队成员头像图
+
+    $pdo->exec(<<<SQL
+    CREATE TABLE IF NOT EXISTS edu_reviews (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title      TEXT NOT NULL,
+      summary    TEXT NOT NULL DEFAULT '',
+      cover      TEXT NOT NULL DEFAULT '',
+      body       TEXT NOT NULL DEFAULT '',
+      sort       INTEGER DEFAULT 0,
+      published  INTEGER DEFAULT 1,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+    SQL);
+
+    $pdo->exec(<<<SQL
+    CREATE TABLE IF NOT EXISTS feedback (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name       TEXT NOT NULL,
+      email      TEXT NOT NULL,
+      message    TEXT NOT NULL,
+      status     TEXT NOT NULL DEFAULT 'new',
+      ip         TEXT DEFAULT '',
+      created_at TEXT NOT NULL
+    );
+    SQL);
+    $pdo->exec("CREATE INDEX IF NOT EXISTS idx_feedback_created ON feedback(created_at DESC)");
+
+    // 下线论坛 CMS 假数据模块：删除遗留表（幂等；数据无价值，老库亦自动清除）
+    $pdo->exec("DROP TABLE IF EXISTS forum_posts");
+    $pdo->exec("DROP TABLE IF EXISTS forum_hot");
 }
 
 /** 幂等补列：从 $ddl 首词取列名，PRAGMA 判断是否存在,缺失才 ALTER。

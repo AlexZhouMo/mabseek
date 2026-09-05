@@ -43,10 +43,17 @@ seed_collection('news', [
     ['date_day'=>'04','date_ym'=>'2026·04','category'=>'edu','title'=>'学生斩获学术竞赛奖项，人才培养成果显著','summary'=>'科普讲座与公益授课走进高校，扩大科学影响力。','image'=>null,'sort'=>5,'published'=>1],
 ]);
 
+// ── 2b) edu_reviews（教育往期回顾，3 条示例）──
+seed_collection('edu_reviews', [
+    ['title'=>'《疫苗的力量》公开课回顾','summary'=>'首期公开课全程实录，从免疫基础到抗体机制的系统讲解，反响热烈。','cover'=>'','body'=>'<p>本期公开课系统讲解了疫苗与免疫的基础知识，涵盖免疫系统识别抗原、抗体中和机制、疫苗免疫应答等核心内容。现场提问踊跃，课后反馈良好。</p>','sort'=>1,'published'=>1],
+    ['title'=>'抗体设计工作坊纪实','summary'=>'从序列设计到亲和力预测的完整流程实践，学员动手体验 AI 辅助虚拟筛选。','cover'=>'','body'=>'<p>抗体设计工作坊聚焦从序列设计到亲和力预测的完整流程，学员动手实践 AI 辅助的虚拟筛选，深入理解干湿闭环验证的关键环节与成药性评估要点。</p>','sort'=>2,'published'=>1],
+    ['title'=>'学术讲座 · AI 驱动的抗体发现','summary'=>'邀请领域专家分享 AI 大模型在抗体发现中的最新进展与实践经验。','cover'=>'','body'=>'<p>讲座回顾了近年 AI 在抗体发现领域的突破，结合实验室实际案例探讨了大模型辅助设计的落地路径。</p>','sort'=>3,'published'=>1],
+]);
+
 // ── 3) team_members（about.html 双负责人，逐字）──
 seed_collection('team_members', [
-    ['name'=>'张林琦','affiliation'=>'清华大学 · 实验室负责人','direction'=>'长期从事抗体工程、疫苗研发与病毒免疫研究，为 MabSeek 奠定抗体科学与湿实验验证的专业根基。','role_label'=>'科学负责人 · 抗体 / 疫苗 / 病毒免疫','role_type'=>'science','avatar_char'=>'张','avatar_variant'=>'','sort'=>1,'published'=>1],
-    ['name'=>'马维英','affiliation'=>'清华大学 · 实验室负责人','direction'=>'深耕人工智能、大模型与机器学习，为 MabSeek 的 AI 抗体设计、预测与分析能力提供核心算法支撑。','role_label'=>'AI 负责人 · 人工智能 / 大模型 / 机器学习','role_type'=>'ai','avatar_char'=>'马','avatar_variant'=>'g2','sort'=>2,'published'=>1],
+    ['name'=>'张林琦','affiliation'=>'清华大学 · 实验室负责人','direction'=>'长期从事抗体工程、疫苗研发与病毒免疫研究，为 MabSeek 奠定抗体科学与湿实验验证的专业根基。','role_label'=>'科学负责人 · 抗体 / 疫苗 / 病毒免疫','role_type'=>'science','avatar_char'=>'张','avatar_img'=>'assets/images/team/zhang.png','sort'=>1,'published'=>1],
+    ['name'=>'马维英','affiliation'=>'清华大学 · 实验室负责人','direction'=>'深耕人工智能、大模型与机器学习，为 MabSeek 的 AI 抗体设计、预测与分析能力提供核心算法支撑。','role_label'=>'AI 负责人 · 人工智能 / 大模型 / 机器学习','role_type'=>'ai','avatar_char'=>'马','avatar_img'=>'assets/images/team/ma.png','sort'=>2,'published'=>1],
 ]);
 
 // ── 4) partners（index.html logo 墙，逐字）──
@@ -55,34 +62,6 @@ seed_collection('partners', [
     ['name'=>'北京大学','mark'=>'北','sub'=>'','logo_image'=>null,'demo'=>'北京大学联合实验室详情','sort'=>2,'published'=>1],
     ['name'=>'Eijkman 研究所','mark'=>'EJ','sub'=>'印度尼西亚','logo_image'=>null,'demo'=>'Eijkman 研究所合作','sort'=>3,'published'=>1],
     ['name'=>'PRA 国际联盟','mark'=>'PRA','sub'=>'','logo_image'=>null,'demo'=>'PRA 国际联盟合作','sort'=>4,'published'=>1],
-]);
-
-// ── 5) forum_hot（forum.html #hot，每日 6 + 每周 6，逐字）──
-seed_collection('forum_hot', [
-    ['list'=>'day','rank'=>1,'title'=>'顶刊拆解：双抗结构设计的三种范式与踩坑','category'=>'# 文献精读','heat'=>'🔥 1.2k','sort'=>1,'published'=>1],
-    ['list'=>'day','rank'=>2,'title'=>'ELISA 总是背景高？这 5 个洗板细节 90% 的人忽略了','category'=>'# 实验踩坑','heat'=>'🔥 980','sort'=>2,'published'=>1],
-    ['list'=>'day','rank'=>3,'title'=>'AlphaFold3 跑 Nb 表位分析：参数与结果解读实录','category'=>'# 生信工具','heat'=>'🔥 856','sort'=>3,'published'=>1],
-    ['list'=>'day','rank'=>4,'title'=>'抗体序列特征分析：从 FASTA 到可视化的一条龙脚本','category'=>'# 生信工具','heat'=>'🔥 742','sort'=>4,'published'=>1],
-    ['list'=>'day','rank'=>5,'title'=>'细胞培养污染排查手册：那些论文里不写的坑','category'=>'# 实验踩坑','heat'=>'🔥 610','sort'=>5,'published'=>1],
-    ['list'=>'day','rank'=>6,'title'=>'ADC 偶联比 DAR 老是不稳定？记录一次踩坑复盘','category'=>'# 实验踩坑','heat'=>'🔥 523','sort'=>6,'published'=>1],
-    ['list'=>'week','rank'=>1,'title'=>'2026 抗体研发岗求职时间线 + 面经合集（持续更新）','category'=>'# 求职招聘','heat'=>'🔥 5.6k','sort'=>7,'published'=>1],
-    ['list'=>'week','rank'=>2,'title'=>'纳米抗体（VHH）综述：为什么它是 AI 设计的最佳试验田','category'=>'# 文献精读','heat'=>'🔥 4.8k','sort'=>8,'published'=>1],
-    ['list'=>'week','rank'=>3,'title'=>'顶刊拆解：双抗结构设计的三种范式与踩坑','category'=>'# 文献精读','heat'=>'🔥 4.2k','sort'=>9,'published'=>1],
-    ['list'=>'week','rank'=>4,'title'=>'抗体序列特征分析：从 FASTA 到可视化的一条龙脚本','category'=>'# 生信工具','heat'=>'🔥 3.9k','sort'=>10,'published'=>1],
-    ['list'=>'week','rank'=>5,'title'=>'ELISA 总是背景高？这 5 个洗板细节 90% 的人忽略了','category'=>'# 实验踩坑','heat'=>'🔥 3.1k','sort'=>11,'published'=>1],
-    ['list'=>'week','rank'=>6,'title'=>'AlphaFold3 跑 Nb 表位分析：参数与结果解读实录','category'=>'# 生信工具','heat'=>'🔥 2.7k','sort'=>12,'published'=>1],
-]);
-
-// ── 6) forum_posts（forum.html #feed，8 条，逐字）──
-seed_collection('forum_posts', [
-    ['category'=>'proto','cover_type'=>'img','cover_ref'=>'assets/images/forum-protocol.png','cover_variant'=>'','toptag'=>'# Protocol','title'=>'ELISA 总是背景高？这 5 个洗板细节 90% 的人忽略了','tags'=>'#实验踩坑,#Protocol分享','author_name'=>'资深博后 · 李','author_avatar_char'=>'博','author_avatar_style'=>'','likes'=>'❤️ 328','sort'=>1,'published'=>1],
-    ['category'=>'bio','cover_type'=>'img','cover_ref'=>'assets/images/forum-bioinfo.png','cover_variant'=>'g2','toptag'=>'# 生信工具','title'=>'抗体序列特征分析：从 FASTA 到可视化的一条龙脚本','tags'=>'#生信工具,#Protocol分享','author_name'=>'生信小王','author_avatar_char'=>'生','author_avatar_style'=>'background:var(--grad-green);color:#04352a','likes'=>'❤️ 501','sort'=>2,'published'=>1],
-    ['category'=>'paper','cover_type'=>'grad','cover_ref'=>'📄','cover_variant'=>'g3','toptag'=>'','title'=>'顶刊拆解：双抗结构设计的三种范式与踩坑','tags'=>'#文献精读,#前沿热点','author_name'=>'某 PI · 匿名','author_avatar_char'=>'PI','author_avatar_style'=>'','likes'=>'❤️ 742','sort'=>3,'published'=>1],
-    ['category'=>'pit','cover_type'=>'img','cover_ref'=>'assets/images/forum-adc.png','cover_variant'=>'','toptag'=>'# 前沿','title'=>'ADC 偶联比 DAR 老是不稳定？记录一次踩坑复盘','tags'=>'#实验踩坑,#ADC','author_name'=>'产业老兵','author_avatar_char'=>'产','author_avatar_style'=>'background:var(--grad-green);color:#04352a','likes'=>'❤️ 289','sort'=>4,'published'=>1],
-    ['category'=>'job','cover_type'=>'grad','cover_ref'=>'💼','cover_variant'=>'','toptag'=>'','title'=>'2026 抗体研发岗求职时间线 + 面经合集（持续更新）','tags'=>'#求职招聘,#科研生活','author_name'=>'校友 · 张','author_avatar_char'=>'校','author_avatar_style'=>'','likes'=>'❤️ 613','sort'=>5,'published'=>1],
-    ['category'=>'paper','cover_type'=>'grad','cover_ref'=>'🦠','cover_variant'=>'g2','toptag'=>'','title'=>'纳米抗体（VHH）综述：为什么它是 AI 设计的最佳试验田','tags'=>'#文献精读,#纳米抗体','author_name'=>'研一萌新','author_avatar_char'=>'研','author_avatar_style'=>'','likes'=>'❤️ 176','sort'=>6,'published'=>1],
-    ['category'=>'pit','cover_type'=>'grad','cover_ref'=>'🔬','cover_variant'=>'g3','toptag'=>'','title'=>'细胞培养污染排查手册：那些论文里不写的坑','tags'=>'#实验踩坑,#避坑指南','author_name'=>'养细胞的人','author_avatar_char'=>'养','author_avatar_style'=>'background:var(--grad-green);color:#04352a','likes'=>'❤️ 455','sort'=>7,'published'=>1],
-    ['category'=>'bio','cover_type'=>'grad','cover_ref'=>'🧠','cover_variant'=>'','toptag'=>'','title'=>'AlphaFold3 跑 Nb 表位分析：参数与结果解读实录','tags'=>'#生信工具,#AI制药','author_name'=>'算法同学','author_avatar_char'=>'算','author_avatar_style'=>'','likes'=>'❤️ 388','sort'=>8,'published'=>1],
 ]);
 
 // ── 7) content_cards（各分组，逐字）──
@@ -126,7 +105,7 @@ $S = [
     ['home.pain.title','抗体发现行业的四大痛点，<span class="txt-neon">各有解法</span>','home','痛点 标题(含标记)','textarea'],
     ['home.pain.cta','查看实际案例 →','home','痛点 按钮','text'],
     ['home.news.eyebrow','我们的近况','home','近况 眉题','text'],
-    ['home.news.title','新闻 · 发表 · 活动','home','近况 标题','text'],
+    ['home.news.title','新闻 · 活动','home','近况 标题','text'],
     ['home.news.link','进入「了解我们」查看全部近况 →','home','近况 链接','text'],
     ['home.contact.eyebrow','合作伙伴 · 联系我们','home','联系 眉题','text'],
     ['home.contact.title','与顶尖机构<span class="txt-neon">共建生态</span>','home','联系 标题(含标记)','textarea'],
@@ -249,7 +228,7 @@ $S_edu = [
     ['edu.banner.tag','精品课程','education','课程 Banner 标签','text'],
     ['edu.banner.title','《疫苗的力量》','education','课程 Banner 标题','text'],
     ['edu.banner.sub','元视频 + 交互式知识图谱体系 · 精准适配学生、疫苗研发从业者、接种人群与新手父母','education','课程 Banner 副标题','textarea'],
-    ['edu.video.eyebrow','1 · 课时播放专区','education','课时播放 眉题','text'],
+    ['edu.video.eyebrow','课时播放专区','education','课时播放 眉题','text'],
     ['edu.video.title','元视频点播 + 实时弹幕 + 专属留言区','education','课时播放 标题','text'],
     ['edu.kg.eyebrow','2 · 教学核心工具','education','知识图谱 眉题','text'],
     ['edu.kg.title','分层交互式知识图谱','education','知识图谱 标题','text'],

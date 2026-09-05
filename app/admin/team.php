@@ -9,7 +9,7 @@ $cfg = [
         ['name'=>'role_label', 'label'=>'角色标签', 'type'=>'text', 'required'=>true],
         ['name'=>'role_type', 'label'=>'角色类型', 'type'=>'select', 'options'=>['science'=>'科研方向', 'ai'=>'AI 方向'], 'required'=>true],
         ['name'=>'avatar_char', 'label'=>'头像字', 'type'=>'text', 'required'=>true],
-        ['name'=>'avatar_variant', 'label'=>'头像样式', 'type'=>'select', 'options'=>[''=>'默认', 'g2'=>'样式2']],
+        ['name'=>'avatar_img', 'label'=>'头像图片（可选，留空用默认文字头像）', 'type'=>'image'],
         ['name'=>'sort', 'label'=>'排序', 'type'=>'text'],
         ['name'=>'published', 'label'=>'发布', 'type'=>'checkbox'],
     ],
