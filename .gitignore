@@ -8,4 +8,4 @@ public/assets/images/_backup/
 deploy/*.tgz
 .superpowers/
 .claude/
-docs/
+docs/superpowers/
