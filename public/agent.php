@@ -193,10 +193,10 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
 <!-- CTA -->
 <section class="section-sm">
   <div class="container">
-    <div class="reveal" style="background:var(--grad-brand);border-radius:var(--radius-lg);padding:56px 40px;text-align:center;color:#fff;box-shadow:var(--sh-lg)">
-      <h2 style="font-size:clamp(26px,3.6vw,38px)"><?= snip('agent.cta.title') ?></h2>
-      <p style="opacity:.92;font-size:17px;margin:14px auto 26px;max-width:560px"><?= snip('agent.cta.sub') ?></p>
-      <a href="#try" class="btn btn-green btn-lg"><?= snip('agent.cta.btn') ?></a>
+    <div class="reveal agent-cta">
+      <h2 style="font-size:clamp(26px,3.6vw,38px);color:#fff;position:relative;z-index:1"><?= snip('agent.cta.title') ?></h2>
+      <p style="color:var(--ink-on-dark-2);font-size:17px;margin:14px auto 26px;max-width:560px;position:relative;z-index:1"><?= snip('agent.cta.sub') ?></p>
+      <a href="#try" class="btn btn-green btn-lg" style="position:relative;z-index:1"><?= snip('agent.cta.btn') ?></a>
     </div>
   </div>
 </section>
