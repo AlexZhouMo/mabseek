@@ -72,15 +72,6 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
 .lesson-card .meta .foot { display:flex; justify-content:space-between; align-items:center; margin-top:12px; }
 .mini-link { color:var(--purple); font-weight:700; font-size:13px; }
 
-/* 知识图谱布局 */
-.kg-layout { display:grid; grid-template-columns: 1.4fr 1fr; gap:28px; align-items:center; }
-#kg { background:linear-gradient(180deg,#fbfbff,#f4f5fc); border:1px solid var(--line); border-radius:var(--radius); padding:10px; }
-#kg-panel { background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px; box-shadow:var(--sh-sm); min-height:220px; }
-.layer-list { display:grid; gap:14px; margin-top:22px; }
-.layer { display:flex; gap:14px; padding:16px; border-radius:14px; border:1px solid var(--line); background:#fff; }
-.layer .num { width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:800;color:#fff;flex:0 0 auto; }
-.layer h4 { font-size:15px; } .layer p { font-size:13px;color:var(--ink-3);margin-top:3px; }
-
 /* 折叠资源 */
 .accordion { border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:#fff; }
 .acc-item { border-bottom:1px solid var(--line); }

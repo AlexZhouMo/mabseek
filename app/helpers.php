@@ -4,9 +4,6 @@ declare(strict_types=1);
 function e(?string $s): string {
     return htmlspecialchars($s ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
-function nl2br_e(?string $s): string {
-    return nl2br(e($s));
-}
 function iso_now(): string {
     return date('c');
 }
