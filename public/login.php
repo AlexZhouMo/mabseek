@@ -33,7 +33,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             auth_login_user($row['username']);        // 存库中规范用户名
             $_SESSION['nick'] = ($row['nickname'] ?? '') !== '' ? $row['nickname'] : $row['username'];
             audit('member_login');
-            redirect('account.php');
+            redirect(auth_post_login_dest($row));     // email 已填→首页；空→补全页
         }
     } else {
         auth_record_attempt($ip, $u, false);

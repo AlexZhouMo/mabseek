@@ -46,3 +46,17 @@ $_SESSION['role'] = 'member';
 check(auth_is_admin() === false, 'role=member 不通过 auth_is_admin');
 $_SESSION = [];
 check(auth_is_admin() === false, '无会话不通过 auth_is_admin');
+
+// ── 登录后跳转目标:email 已填进首页,空则进补全页 ──
+check(auth_post_login_dest(['email' => 'a@b.com']) === 'index.php',
+    'email 已填 → index.php');
+check(auth_post_login_dest(['email' => '']) === 'account.php?complete=1',
+    'email 空字符串 → 补全页');
+check(auth_post_login_dest(['email' => '   ']) === 'account.php?complete=1',
+    'email 纯空白 → 补全页(trim 后为空)');
+check(auth_post_login_dest(['email' => null]) === 'account.php?complete=1',
+    'email 为 null → 补全页');
+check(auth_post_login_dest([]) === 'account.php?complete=1',
+    '无 email 键 → 补全页');
+check(auth_post_login_dest(null) === 'account.php?complete=1',
+    'row 为 null → 补全页(防御)');
