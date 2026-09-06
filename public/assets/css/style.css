@@ -126,6 +126,14 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
   position: relative; overflow: hidden;
 }
 .brand .logo svg { width: 22px; height: 22px; }
+/* 图片 logo：导航栏白底加紫色底衬保证白字可读；页脚深色底直接透明显示 */
+.brand-logo { display: block; height: 52px; width: auto; }
+.nav .brand-logo {
+  height: 46px; padding: 7px 14px; border-radius: 13px;
+  background: var(--grad-brand); box-shadow: var(--sh-purple);
+}
+.nav--on-dark .brand-logo { background: transparent; box-shadow: none; padding: 0; height: 52px; }
+.footer .brand-logo { height: 56px; }
 .brand small { display: block; font-size: 11px; font-weight: 600; color: var(--ink-3); letter-spacing: .06em; }
 .nav-links { display: flex; align-items: center; gap: 4px; }
 .nav-links a {
@@ -325,6 +333,8 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 
 /* 深色页面顶部导航：hero 上透明，滚动后实底深色 */
 .nav--on-dark { background: transparent; backdrop-filter: none; }
+/* 实心深色导航：顶部即不透明（复用 nav--on-dark 的白字/logo/按钮规则） */
+.nav--solid-dark { background: rgba(7,10,20,.92); backdrop-filter: blur(16px) saturate(160%); border-bottom-color: rgba(255,255,255,.08); }
 .nav--on-dark .brand,
 .nav--on-dark .nav-links a { color: rgba(255,255,255,.9); }
 .nav--on-dark .nav-links a:hover,
@@ -469,6 +479,7 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
               radial-gradient(50% 60% at 80% 70%, rgba(0,224,164,.30), transparent 60%), #0d1122; }
 .pillar-media::after { content: ""; position: absolute; inset: 0;
   background-image: radial-gradient(rgba(255,255,255,.12) 1px, transparent 1px); background-size: 22px 22px; }
+.pillar-media img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; display: block; }
 .section-light .pillar-media { border-color: var(--line); }
 @media (max-width: 860px) {
   .pillar { grid-template-columns: 1fr; gap: 28px; }
@@ -683,3 +694,8 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 
 /* 帖子详情正文中的用户上传图片防溢出 */
 main article img { max-width: 100%; height: auto; border-radius: 6px; }
+
+/* 反馈提交结果提示条（#contact 表单上方，深色区适配） */
+.fb-notice { max-width: 640px; margin: 0 auto 18px; padding: 12px 18px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; text-align: center; }
+.fb-notice.fb-ok { background: var(--green-100); color: #06795a; border: 1px solid #b6f2e2; }
+.fb-notice.fb-err { background: #fdecea; color: #c0392b; border: 1px solid #f5c6c0; }

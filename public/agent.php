@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../app/bootstrap.php';
-$active = 'agent'; $navOnDark = false; $contactHref = 'index.php#contact';
+$active = 'agent'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
 $caps   = (new Collection('content_cards'))->published("grp='agent_capability'");
 $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
 ?>
@@ -159,10 +159,10 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
       <div class="flow-step wet"><div class="n" style="background:var(--grad-green);color:#04352a">🔬</div><h4>功能验证</h4><p>结合活性与功能实验验证</p><span class="tag-mini" style="background:var(--green-100);color:#06a97c">湿 · 实验</span><span class="flow-arrow">→</span></div>
       <div class="flow-step" style="background:var(--grad-brand)"><div class="n" style="background:rgba(255,255,255,.2)">📦</div><h4 style="color:#fff">结果交付</h4><p style="color:rgba(255,255,255,.85)">数据回流，与 AI 预测双向溯源</p><span class="tag-mini" style="background:rgba(255,255,255,.2);color:#fff">闭环</span></div>
     </div>
-    <div id="wetlab" class="reveal d1" style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--sh)">
+    <div id="wetlab" class="reveal d1" style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;background:#0d1122;border:1px solid var(--line-dark);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--sh-lg)">
       <div>
-        <h3 style="font-size:24px"><?= snip('agent.wetlab.title') ?></h3>
-        <p style="color:var(--ink-3);margin-top:10px"><?= snip('agent.wetlab.body') ?></p>
+        <h3 style="font-size:24px;color:#fff"><?= snip('agent.wetlab.title') ?></h3>
+        <p style="color:var(--ink-on-dark-2);margin-top:10px"><?= snip('agent.wetlab.body') ?></p>
         <div class="tag-row" style="margin-top:16px"><span class="tag">表达纯化</span><span class="tag">亲和力测定</span><span class="tag green">功能验证</span><span class="tag">结构解析</span></div>
         <a href="#" class="btn btn-green" style="margin-top:20px" data-demo="正式版将开放在线下单">🧪 一键下单湿实验</a>
       </div>

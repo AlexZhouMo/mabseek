@@ -92,7 +92,7 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
         </ul>
         <a href="agent.php" class="link-more"><?= snip('tech.p1.link') ?></a>
       </div>
-      <div class="pillar-media" aria-hidden="true"></div>
+      <div class="pillar-media"><img src="assets/images/tech-data.png" alt="数据训练" onerror="this.remove()"></div>
     </div>
   </div>
 </section>
@@ -113,7 +113,7 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
         </ul>
         <a href="agent.php" class="link-more"><?= snip('tech.p2.link') ?></a>
       </div>
-      <div class="pillar-media" aria-hidden="true"></div>
+      <div class="pillar-media"><img src="assets/images/tech-ai.png" alt="AI 算法" onerror="this.remove()"></div>
     </div>
   </div>
 </section>
@@ -134,7 +134,7 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
         </ul>
         <a href="agent.php" class="link-more"><?= snip('tech.p3.link') ?></a>
       </div>
-      <div class="pillar-media" aria-hidden="true"></div>
+      <div class="pillar-media"><img src="assets/images/tech-wetlab.png" alt="自动化湿实验" onerror="this.remove()"></div>
     </div>
   </div>
 </section>
