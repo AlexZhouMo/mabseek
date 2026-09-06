@@ -45,7 +45,9 @@ mabseek/
 │   ├── admin/           后台各功能模块
 │   └── repositories/    数据访问层
 ├── bin/
-│   └── seed.php         幂等初始化：建库、建管理员账号、灌入初始内容
+│   ├── seed.php                  幂等初始化：建库、建管理员账号、灌入初始内容
+│   ├── migrate-images-webp.php   幂等迁移：库中静态图片路径 .png/.jpg → .webp（保护上传图）
+│   └── migrate-contact-email.php 幂等迁移：订正 snippets 中的历史联系邮箱
 ├── data/              ← SQLite 数据库文件所在（git 忽略，运行时生成）
 ├── deploy/            ← 部署脚本与样例（见「部署」）
 ├── docs/              ← 架构文档、UI 规范
@@ -95,6 +97,7 @@ php -S localhost:8778 -t public
 ## 站点配图
 
 - 全站配图为 AI 生成的深色科技风插画（紫 + 荧光绿渐变），统一收纳于 `public/assets/images/`；团队真实头像置于 `assets/images/team/`。
+- 静态配图均采用 **WebP** 格式（较 PNG/JPG 显著减小体积、加载更快），照片型质量 q82、logo 与头像 q90 保留透明。数据库里存量的图片路径由 `bin/migrate-images-webp.php` 在部署时幂等迁移，仅替换存在对应 WebP 的引用，不动 `uploads/` 下的用户上传图。
 
 ## 测试
 
