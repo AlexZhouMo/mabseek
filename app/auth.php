@@ -50,6 +50,15 @@ function auth_login_user(string $user): void {
     $_SESSION['born'] = time();
 }
 
+/**
+ * 登录成功后的跳转目标:必填字段(email)已填 → 首页;否则 → 账号中心补全页。
+ * 仅判非空(trim 后),不做格式校验;主要为历史空 email 账号引导补全。
+ */
+function auth_post_login_dest(?array $row): string {
+    $email = trim((string)($row['email'] ?? ''));
+    return $email === '' ? 'account.php?complete=1' : 'index.php';
+}
+
 function auth_user_role(string $user): string {
     $q = db()->prepare('SELECT role FROM users WHERE username = ? COLLATE NOCASE LIMIT 1');
     $q->execute([$user]);
