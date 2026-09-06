@@ -89,7 +89,7 @@ $S = [
     ['footer.brand.tagline','清华团队 × AI 大模型，让抗体发现从反复试错变成精准编程。','common','页脚品牌简介','textarea'],
     ['footer.copyright','© 2026 MabSeek 抗体求索 · 清华大学医学院实验室. 保留所有权利。','common','页脚版权行','text'],
     ['footer.slogan','紫 + 荧光绿 · 科技与趣味的平衡','common','页脚标语','text'],
-    ['contact.email','contact@mabseek.org','common','联系邮箱','text'],
+    ['contact.email','m13673741782@163.com','common','联系邮箱','text'],
     ['contact.org','清华大学医学院','common','联系单位','text'],
 
     // index.html
@@ -290,7 +290,7 @@ $S_about = [
     // 联系我们
     ['about.contact.eyebrow','联系我们','about','联系我们 眉题','text'],
     ['about.contact.title','寻求合作 · 加入我们 · <span class="txt-neon">使用平台</span>','about','联系我们 标题(含标记)','textarea'],
-    ['about.contact.sub','contact@mabseek.org · 清华大学医学院','about','联系我们 说明','text'],
+    ['about.contact.sub','m13673741782@163.com · 清华大学医学院','about','联系我们 说明','text'],
 ];
 foreach ($S_about as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(about): " . count($S_about) . " seeded (idempotent)\n";

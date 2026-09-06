@@ -220,6 +220,20 @@ else
   warn "未找到 bin/migrate-images-webp.php，跳过图片路径迁移（旧版代码可忽略）"
 fi
 
+# ─────────────────── 5c. 订正联系邮箱 ───────────────────
+# 联系邮箱存于 snippets 表随页面渲染；保留下来的历史库里可能仍是旧邮箱，就地订正。
+# 脚本幂等：仅替换仍含旧邮箱的记录，不动后台改过的其它文案，无旧值时 0 改动。
+step "5c/9 订正数据库中的联系邮箱（幂等，仅替换旧邮箱）"
+if [ -f "$ROOT/bin/migrate-contact-email.php" ]; then
+  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-contact-email.php"; then
+    ok "联系邮箱订正完成"
+  else
+    die "联系邮箱订正失败，请检查上面的 PHP 报错"
+  fi
+else
+  warn "未找到 bin/migrate-contact-email.php，跳过邮箱订正（旧版代码可忽略）"
+fi
+
 # ─────────────────── 6. 刷新权限 ───────────────────
 step "6/9 刷新权限（源码只读，data 与上传目录可写）"
 run chown -R root:root "$ROOT"
