@@ -66,7 +66,7 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
     </div>
     <?php if ($msg): ?><div class="auth-error" style="background:var(--green-100);border-color:var(--green-400);color:#0a7a5c"><?= e($msg) ?></div><?php endif; ?>
     <?php if ($err): ?><div class="auth-error"><?= e($err) ?></div><?php endif; ?>
-    <?php if ($needEmail): ?><div class="auth-error">请先补全邮箱,以便正常使用完整功能。</div><?php endif; ?>
+    <?php if ($needEmail): ?><div class="auth-error" style="background:var(--green-100);border-color:var(--green-400);color:#0a7a5c">请先补全邮箱,以便正常使用完整功能。</div><?php endif; ?>
 
     <div class="auth-card wide" style="margin-bottom:20px">
       <div class="auth-section-title">基本资料</div>
