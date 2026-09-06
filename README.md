@@ -114,6 +114,10 @@ php tests/run.php
 
 nginx 文档根务必指向 `public/`，切勿指向项目根目录，以保持 Web 根隔离。
 
+### 提交前检查（持续集成保障）
+
+提交到 GitHub 前，须确认一键部署脚本能让本次改动在生产环境正常集成。重点：数据库内容改动（`data/` 不进 git、seed 有数据即跳过）必须配套 `seed.php` 种子更新 + 幂等迁移脚本（`bin/migrate-*.php`）+ 接入 `deploy-mabseek.sh`；静态资源须确认已入库且引用已更新；迁移脚本须幂等且不误伤用户数据；在线 / 离线两种部署模式都要覆盖。完整规则见 [CLAUDE.md](CLAUDE.md)。
+
 ## 文档
 
 - [docs/architecture.md](docs/architecture.md) — 架构说明
