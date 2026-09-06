@@ -3,7 +3,7 @@
   <div class="container">
     <div class="footer-grid">
       <div>
-        <div class="brand"><img class="brand-logo" src="assets/images/logo.png" alt="MabSeek 抗体求索 · 清华大学医学院"></div>
+        <div class="brand"><img class="brand-logo" src="assets/images/logo.webp" alt="MabSeek 抗体求索 · 清华大学医学院"></div>
         <p><?= snip('footer.brand.tagline') ?></p>
         <div class="footer-social" style="margin-top:18px">
           <span title="微信" data-demo="扫码关注 MabSeek 公众号">💬</span>

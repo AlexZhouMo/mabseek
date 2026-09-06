@@ -97,7 +97,7 @@ $news = (new Collection('news'))->published();
     </div>
     <p class="reveal" style="font-size:13px;color:var(--ink-3);margin-top:16px"><?= snip('about.team.disclaimer') ?></p>
     <div class="loc-block reveal">
-      <div class="loc-media"><img src="assets/images/location.png" alt="MabSeek 实验室位置" onerror="var p=this.parentElement;p.classList.add('grad');p.innerHTML='🏛️'"></div>
+      <div class="loc-media"><img src="assets/images/location.webp" alt="MabSeek 实验室位置" onerror="var p=this.parentElement;p.classList.add('grad');p.innerHTML='🏛️'"></div>
       <div class="loc-cap"><?= snip('about.loc.cap') ?></div>
     </div>
   </div>
@@ -118,7 +118,7 @@ $news = (new Collection('news'))->published();
         </ul>
         <a href="agent.php" class="btn btn-purple" style="margin-top:20px"><?= snip('about.platform.btn') ?></a>
       </div>
-      <div class="intl-media reveal d1"><img src="assets/images/agent-hero.png" alt="MabSeek 平台" onerror="this.parentElement.style.display='none'"></div>
+      <div class="intl-media reveal d1"><img src="assets/images/agent-hero.webp" alt="MabSeek 平台" onerror="this.parentElement.style.display='none'"></div>
     </div>
   </div>
 </section>
@@ -155,7 +155,7 @@ $news = (new Collection('news'))->published();
       <p class="section-sub reveal d2"><?= snip('about.intl.sub') ?></p>
     </div>
     <div class="intl">
-      <div class="intl-media reveal"><img src="assets/images/international.png" alt="国际科研合作" onerror="this.parentElement.style.background='var(--grad-brand)';this.parentElement.style.minHeight='320px'"></div>
+      <div class="intl-media reveal"><img src="assets/images/international.webp" alt="国际科研合作" onerror="this.parentElement.style.background='var(--grad-brand)';this.parentElement.style.minHeight='320px'"></div>
       <div class="reveal d1">
         <div class="card" style="margin-bottom:16px">
           <h3 style="font-size:18px"><?= snip('about.intl.cn_id_title') ?></h3>

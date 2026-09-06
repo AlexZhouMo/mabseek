@@ -118,7 +118,7 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
 <section class="section" style="padding-top:40px">
   <div class="container">
     <div class="course-banner reveal">
-      <img src="assets/images/education-banner.png" alt="疫苗的力量 课程主视觉">
+      <img src="assets/images/education-banner.webp" alt="疫苗的力量 课程主视觉">
       <div class="overlay">
         <div>
           <span class="tag green" style="background:rgba(0,224,164,.2);color:#aaffe6;border-color:rgba(0,224,164,.4);margin-bottom:18px"><?= snip('edu.banner.tag') ?></span>
@@ -165,7 +165,7 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
     <div class="player-wrap reveal">
       <div class="player">
         <div class="screen">
-          <img src="assets/images/education-banner.png" alt="课程视频画面">
+          <img src="assets/images/education-banner.webp" alt="课程视频画面">
           <div class="danmaku" id="danmaku"></div>
           <div class="playbtn" data-demo="正式版将唤起独立播放器，侧边常驻知识图谱入口"></div>
         </div>
@@ -192,19 +192,19 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
     <h3 style="margin:40px 0 18px;font-size:20px" class="reveal">单课时卡片陈列 · 点击唤起播放器</h3>
     <div class="grid-4">
       <div class="lesson-card reveal">
-        <div class="thumb"><img src="assets/images/education-banner.png" alt=""><span class="badge">第 01 课</span><span class="dur">28:10</span></div>
+        <div class="thumb"><img src="assets/images/education-banner.webp" alt=""><span class="badge">第 01 课</span><span class="dur">28:10</span></div>
         <div class="meta"><h4>疫苗发展史与分类</h4><div class="sub">研发人员重点看这节</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span><span class="mini-link" data-demo="跳转知识图谱">🕸 图谱</span></div></div>
       </div>
       <div class="lesson-card reveal d1">
-        <div class="thumb"><img src="assets/images/lab-scene.png" onerror="this.style.display='none'" alt=""><span class="badge">第 02 课</span><span class="dur">31:24</span></div>
+        <div class="thumb"><img src="assets/images/lab-scene.webp" onerror="this.style.display='none'" alt=""><span class="badge">第 02 课</span><span class="dur">31:24</span></div>
         <div class="meta"><h4>免疫系统如何识别抗原</h4><div class="sub">新手父母怎么理解接种顺序？</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span><span class="mini-link" data-demo="跳转知识图谱">🕸 图谱</span></div></div>
       </div>
       <div class="lesson-card reveal d2">
-        <div class="thumb"><img src="assets/images/education-banner.png" alt=""><span class="badge">第 03 课</span><span class="dur">33:02</span></div>
+        <div class="thumb"><img src="assets/images/education-banner.webp" alt=""><span class="badge">第 03 课</span><span class="dur">33:02</span></div>
         <div class="meta"><h4>疫苗免疫应答基础</h4><div class="sub">AI 能解释论文中的机制吗？</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span><span class="mini-link" data-demo="跳转知识图谱">🕸 图谱</span></div></div>
       </div>
       <div class="lesson-card reveal d3">
-        <div class="thumb"><img src="assets/images/antibody-structure.png" onerror="this.style.display='none'" alt=""><span class="badge">第 04 课</span><span class="dur">26:47</span></div>
+        <div class="thumb"><img src="assets/images/antibody-structure.webp" onerror="this.style.display='none'" alt=""><span class="badge">第 04 课</span><span class="dur">26:47</span></div>
         <div class="meta"><h4>抗体在疫苗中的作用</h4><div class="sub">研发人员重点看这节</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span><span class="mini-link" data-demo="跳转知识图谱">🕸 图谱</span></div></div>
       </div>
     </div>

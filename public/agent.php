@@ -166,7 +166,7 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
         <div class="tag-row" style="margin-top:16px"><span class="tag">表达纯化</span><span class="tag">亲和力测定</span><span class="tag green">功能验证</span><span class="tag">结构解析</span></div>
         <a href="#" class="btn btn-green" style="margin-top:20px" data-demo="正式版将开放在线下单">🧪 一键下单湿实验</a>
       </div>
-      <div style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--sh)"><img src="assets/images/antibody-structure.png" alt="抗体结构" onerror="this.parentElement.style.display='none'"></div>
+      <div style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--sh)"><img src="assets/images/antibody-structure.webp" alt="抗体结构" onerror="this.parentElement.style.display='none'"></div>
     </div>
   </div>
 </section>

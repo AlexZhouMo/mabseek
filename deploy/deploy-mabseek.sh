@@ -16,9 +16,10 @@
 #   1) 取得新代码到暂存区（在线=git 工作副本 /opt/mabseek-src；离线=临时解压目录）
 #   2) 把代码目录（app/ bin/ public/ deploy/）铺开到 /var/www/html
 #   3) 保留数据库（data/）与已上传图片（public/assets/images/uploads/）—— 历史数据不丢，并留一份备份
-#   4) 幂等 seed、刷新权限、重载 php-fpm/nginx、本机自检；全过程带时间戳详细日志
+#   4) 幂等 seed、迁移历史图片路径为 .webp、刷新权限、重载 php-fpm/nginx、本机自检；全过程带时间戳详细日志
 #
-# 幂等：seed.php 只补缺不删数据；migrate 用 CREATE TABLE IF NOT EXISTS。
+# 幂等：seed.php 只补缺不删数据；migrate 用 CREATE TABLE IF NOT EXISTS；
+#       图片路径迁移仅在对应 .webp 存在时才改写，可反复运行。
 #       故本脚本可反复运行：首次建库+初始数据，之后仅更新代码、历史数据原样保留。
 #
 # 说明：仓库为公开仓库，在线模式 git clone 走 HTTPS 无需认证。若日后转为私有仓库，
@@ -63,7 +64,7 @@ printf '  MabSeek 部署  %s\n' "$BANNER_START"
 printf '%s\n' "════════════════════════════════════════════════"
 
 # ─────────────────── 0. 基本前置 + 模式判定 ───────────────────
-step "0/8 环境与参数检查"
+step "0/9 环境与参数检查"
 [ "$(id -u)" -eq 0 ] || die "请用 root 运行：sudo bash $0"
 ok "已具备 root 权限"
 
@@ -81,7 +82,7 @@ fi
 
 # ─────────────────── 1. 依赖检查 ───────────────────
 DEP_LABEL="PHP / 扩展 / php-fpm / nginx"; [ "$MODE" = "git" ] && DEP_LABEL="git / $DEP_LABEL"
-step "1/8 依赖检查（$DEP_LABEL）"
+step "1/9 依赖检查（$DEP_LABEL）"
 
 if [ "$MODE" = "git" ]; then
   command -v git >/dev/null 2>&1 || die "在线模式需 git（apt-get install -y git），或改用离线模式：sudo bash $0 <包路径>"
@@ -113,7 +114,7 @@ FPM_SVC="$(systemctl list-unit-files --type=service 2>/dev/null | grep -oE 'php[
 STAGE=""          # 暂存区：内含 app/ bin/ public/ deploy/
 CLEAN_STAGE=0     # 1=部署后删除暂存区（离线临时目录要删；git 工作副本要留）
 if [ "$MODE" = "git" ]; then
-  step "2/8 从 GitHub 拉取代码到 $SRC_DIR"
+  step "2/9 从 GitHub 拉取代码到 $SRC_DIR"
   run mkdir -p "$(dirname "$SRC_DIR")"
   if [ -d "$SRC_DIR/.git" ]; then
     log "已存在工作副本，执行 fetch + reset --hard origin/$BRANCH"
@@ -135,7 +136,7 @@ if [ "$MODE" = "git" ]; then
   VERSION="git $(gitc log --oneline -1 2>/dev/null || echo '未知')"
   ok "已同步到最新提交：$VERSION"
 else
-  step "2/8 解压离线包到临时目录"
+  step "2/9 解压离线包到临时目录"
   STAGE="$(mktemp -d /tmp/mabseek-stage.XXXXXX)"
   CLEAN_STAGE=1
   run tar -xzf "$PKG" -C "$STAGE"
@@ -151,7 +152,7 @@ done
 ok "代码内容校验通过"
 
 # ─────────────────── 3. 备份历史数据 ───────────────────
-step "3/8 备份数据库与上传目录（安全网）"
+step "3/9 备份数据库与上传目录（安全网）"
 BACKUP="/var/www/mabseek-backup-$(date '+%Y%m%d-%H%M%S')"
 FIRST_DEPLOY=1
 if [ -f "$DATA_DIR/mabseek.sqlite" ] || [ -d "$ROOT/$UPLOAD_REL" ]; then
@@ -172,7 +173,7 @@ if [ -d "$ROOT/$UPLOAD_REL" ]; then
 fi
 
 # ─────────────────── 4. 铺开新代码（保留 data/ 与上传） ───────────────────
-step "4/8 替换代码（从暂存区复制，保留 data/）"
+step "4/9 替换代码（从暂存区复制，保留 data/）"
 run mkdir -p "$ROOT"
 for d in "${CODE_DIRS[@]}"; do
   [ -e "$ROOT/$d" ] && { log "删除旧 $d/"; rm -rf "${ROOT:?}/$d"; }
@@ -192,7 +193,7 @@ cleanup_tmp                            # 删除离线临时解压区与上传暂
 STAGE=""; CLEAN_STAGE=0; PRESERVE_UPLOADS=""
 
 # ─────────────────── 5. 初始化 / 迁移数据库 ───────────────────
-step "5/8 数据库 seed（幂等：建表+补缺，绝不删历史数据）"
+step "5/9 数据库 seed（幂等：建表+补缺，绝不删历史数据）"
 # 先给 data 目录临时可写属主，保证 seed 能建库
 run chown -R "$WEBUSER:$WEBUSER" "$DATA_DIR"
 if sudo -u "$WEBUSER" php "$ROOT/bin/seed.php"; then
@@ -204,8 +205,23 @@ if [ "$FIRST_DEPLOY" -eq 1 ]; then
   warn "首次部署：管理员 admin / mabseek2026（首次登录强制改密）"
 fi
 
+# ─────────────────── 5b. 迁移历史图片路径为 .webp ───────────────────
+# 仓库自带静态图已转 WebP 并删除原图；代码引用随代码同步，但保留下来的历史数据库
+# 里仍存旧的 .png/.jpg 路径（如团队头像、教育回顾封面/正文），需就地迁移，否则 404。
+# 脚本幂等：仅当对应 .webp 实际存在时才替换，且跳过 uploads/ 下的用户上传图。
+step "5b/9 迁移数据库中的静态图片路径 .png/.jpg → .webp（幂等，保护用户上传图）"
+if [ -f "$ROOT/bin/migrate-images-webp.php" ]; then
+  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-images-webp.php"; then
+    ok "图片路径迁移完成"
+  else
+    die "图片路径迁移失败，请检查上面的 PHP 报错"
+  fi
+else
+  warn "未找到 bin/migrate-images-webp.php，跳过图片路径迁移（旧版代码可忽略）"
+fi
+
 # ─────────────────── 6. 刷新权限 ───────────────────
-step "6/8 刷新权限（源码只读，data 与上传目录可写）"
+step "6/9 刷新权限（源码只读，data 与上传目录可写）"
 run chown -R root:root "$ROOT"
 run find "$ROOT" -type d -exec chmod 755 {} +
 run find "$ROOT" -type f -exec chmod 644 {} +
@@ -216,7 +232,7 @@ run chmod 750 "$DATA_DIR" "$ROOT/$UPLOAD_REL"
 ok "权限刷新完成"
 
 # ─────────────────── 7. 重载服务（清 opcache）───────────────────
-step "7/8 重载 php-fpm / nginx"
+step "7/9 重载 php-fpm / nginx"
 if [ -n "$FPM_SVC" ]; then
   run systemctl reload "$FPM_SVC" || run systemctl restart "$FPM_SVC"
   ok "已重载 $FPM_SVC（清除 opcache，新代码立即生效）"
@@ -235,7 +251,7 @@ else
 fi
 
 # ─────────────────── 8. 自检 ───────────────────
-step "8/8 本机自检"
+step "9/9 本机自检"
 if command -v curl >/dev/null 2>&1; then
   CODE_HOME="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ || echo 000)"
   CODE_ADMIN="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/admin.php || echo 000)"

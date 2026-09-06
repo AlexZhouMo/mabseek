@@ -355,7 +355,7 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
   overflow: hidden;
   padding: calc(var(--nav-h) + 72px) 24px 40px;
   background-color: var(--bg-dark);    /* 兜底：图未加载时不塌陷 */
-  background-image: url('../images/hero-home.jpg');
+  background-image: url('../images/hero-home.webp');
   background-size: cover;
   background-position: right center;   /* 焦点锚右，抗体不被裁没 */
   background-repeat: no-repeat;

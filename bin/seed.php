@@ -45,15 +45,15 @@ seed_collection('news', [
 
 // ── 2b) edu_reviews（教育往期回顾，3 条示例）──
 seed_collection('edu_reviews', [
-    ['title'=>'《疫苗的力量》公开课回顾','summary'=>'首期公开课全程实录，从免疫基础到抗体机制的系统讲解，反响热烈。','cover'=>'assets/images/forum-adc.png','body'=>'<p>本期公开课系统讲解了疫苗与免疫的基础知识，涵盖免疫系统识别抗原、抗体中和机制、疫苗免疫应答等核心内容。现场提问踊跃，课后反馈良好。</p>','sort'=>1,'published'=>1],
-    ['title'=>'抗体设计工作坊纪实','summary'=>'从序列设计到亲和力预测的完整流程实践，学员动手体验 AI 辅助虚拟筛选。','cover'=>'assets/images/forum-bioinfo.png','body'=>'<p>抗体设计工作坊聚焦从序列设计到亲和力预测的完整流程，学员动手实践 AI 辅助的虚拟筛选，深入理解干湿闭环验证的关键环节与成药性评估要点。</p>','sort'=>2,'published'=>1],
-    ['title'=>'学术讲座 · AI 驱动的抗体发现','summary'=>'邀请领域专家分享 AI 大模型在抗体发现中的最新进展与实践经验。','cover'=>'assets/images/forum-protocol.png','body'=>'<p>讲座回顾了近年 AI 在抗体发现领域的突破，结合实验室实际案例探讨了大模型辅助设计的落地路径。</p>','sort'=>3,'published'=>1],
+    ['title'=>'《疫苗的力量》公开课回顾','summary'=>'首期公开课全程实录，从免疫基础到抗体机制的系统讲解，反响热烈。','cover'=>'assets/images/forum-adc.webp','body'=>'<p>本期公开课系统讲解了疫苗与免疫的基础知识，涵盖免疫系统识别抗原、抗体中和机制、疫苗免疫应答等核心内容。现场提问踊跃，课后反馈良好。</p>','sort'=>1,'published'=>1],
+    ['title'=>'抗体设计工作坊纪实','summary'=>'从序列设计到亲和力预测的完整流程实践，学员动手体验 AI 辅助虚拟筛选。','cover'=>'assets/images/forum-bioinfo.webp','body'=>'<p>抗体设计工作坊聚焦从序列设计到亲和力预测的完整流程，学员动手实践 AI 辅助的虚拟筛选，深入理解干湿闭环验证的关键环节与成药性评估要点。</p>','sort'=>2,'published'=>1],
+    ['title'=>'学术讲座 · AI 驱动的抗体发现','summary'=>'邀请领域专家分享 AI 大模型在抗体发现中的最新进展与实践经验。','cover'=>'assets/images/forum-protocol.webp','body'=>'<p>讲座回顾了近年 AI 在抗体发现领域的突破，结合实验室实际案例探讨了大模型辅助设计的落地路径。</p>','sort'=>3,'published'=>1],
 ]);
 
 // ── 3) team_members（about.html 双负责人，逐字）──
 seed_collection('team_members', [
-    ['name'=>'张林琦','affiliation'=>'清华大学 · 实验室负责人','direction'=>'长期从事抗体工程、疫苗研发与病毒免疫研究，为 MabSeek 奠定抗体科学与湿实验验证的专业根基。','role_label'=>'科学负责人 · 抗体 / 疫苗 / 病毒免疫','role_type'=>'science','avatar_char'=>'张','avatar_img'=>'assets/images/team/zhang.png','sort'=>1,'published'=>1],
-    ['name'=>'马维英','affiliation'=>'清华大学 · 实验室负责人','direction'=>'深耕人工智能、大模型与机器学习，为 MabSeek 的 AI 抗体设计、预测与分析能力提供核心算法支撑。','role_label'=>'AI 负责人 · 人工智能 / 大模型 / 机器学习','role_type'=>'ai','avatar_char'=>'马','avatar_img'=>'assets/images/team/ma.png','sort'=>2,'published'=>1],
+    ['name'=>'张林琦','affiliation'=>'清华大学 · 实验室负责人','direction'=>'长期从事抗体工程、疫苗研发与病毒免疫研究，为 MabSeek 奠定抗体科学与湿实验验证的专业根基。','role_label'=>'科学负责人 · 抗体 / 疫苗 / 病毒免疫','role_type'=>'science','avatar_char'=>'张','avatar_img'=>'assets/images/team/zhang.webp','sort'=>1,'published'=>1],
+    ['name'=>'马维英','affiliation'=>'清华大学 · 实验室负责人','direction'=>'深耕人工智能、大模型与机器学习，为 MabSeek 的 AI 抗体设计、预测与分析能力提供核心算法支撑。','role_label'=>'AI 负责人 · 人工智能 / 大模型 / 机器学习','role_type'=>'ai','avatar_char'=>'马','avatar_img'=>'assets/images/team/ma.webp','sort'=>2,'published'=>1],
 ]);
 
 // ── 4) partners（index.html logo 墙，逐字）──

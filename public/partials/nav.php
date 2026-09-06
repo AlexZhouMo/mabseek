@@ -16,7 +16,7 @@ $links['about'] = ['了解我们', 'about.php'];
 ?>
 <header class="nav<?= ($navOnDark || $navSolidDark) ? ' nav--on-dark' : '' ?><?= $navSolidDark ? ' nav--solid-dark' : '' ?>">
   <div class="container">
-    <a class="brand" href="index.php"><img class="brand-logo" src="assets/images/logo.png" alt="MabSeek 抗体求索 · 清华大学医学院"></a>
+    <a class="brand" href="index.php"><img class="brand-logo" src="assets/images/logo.webp" alt="MabSeek 抗体求索 · 清华大学医学院"></a>
     <nav class="nav-links">
 <?php foreach ($links as $key => [$label, $href]): ?>
       <a href="<?= $href ?>"<?= $active === $key ? ' class="active"' : '' ?>><?= $label ?></a>
