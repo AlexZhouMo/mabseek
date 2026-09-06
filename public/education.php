@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../app/bootstrap.php';
-$active = 'education'; $navOnDark = false; $contactHref = 'index.php#contact';
+member_check();                                   // 未登录跳 login.php
+$active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
 $eduInfo    = (new Collection('content_cards'))->published("grp='edu_info'");
 $eduLecture = (new Collection('content_cards'))->published("grp='edu_lecture'");
 $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
@@ -93,6 +94,18 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
 .acc-body .inner .lock { color:var(--ink-3); font-size:13px; }
 .res-item { display:flex; align-items:center; gap:10px; padding:8px 0; }
 .res-item .k { flex:1; } .res-item .lockbadge { font-size:12px; color:var(--ink-3); }
+/* 往期回顾卡片 */
+.review-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.review-card { display:block; background:#fff; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--sh-sm); text-decoration:none; color:inherit; transition:.25s; }
+.review-card:hover { transform:translateY(-4px); box-shadow:var(--sh-lg); }
+.review-card .rc-cover { aspect-ratio:16/9; background:#f2f2f6; }
+.review-card .rc-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+.review-card .rc-cover.grad { background:var(--grad-brand); display:grid; place-items:center; color:#fff; font-size:40px; }
+.review-card .rc-body { padding:16px 18px; }
+.review-card .rc-body h4 { font-size:16px; line-height:1.4; margin:0 0 8px; }
+.review-card .rc-body p { font-size:13px; color:var(--ink-3); margin:0; }
+@media (max-width:960px){ .review-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:600px){ .review-grid{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -117,7 +130,7 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
       <img src="assets/images/education-banner.png" alt="疫苗的力量 课程主视觉">
       <div class="overlay">
         <div>
-          <span class="tag green" style="background:rgba(0,224,164,.2);color:#aaffe6;border-color:rgba(0,224,164,.4)"><?= snip('edu.banner.tag') ?></span>
+          <span class="tag green" style="background:rgba(0,224,164,.2);color:#aaffe6;border-color:rgba(0,224,164,.4);margin-bottom:18px"><?= snip('edu.banner.tag') ?></span>
           <h2><?= snip('edu.banner.title') ?></h2>
           <p><?= snip('edu.banner.sub') ?></p>
         </div>
@@ -156,6 +169,7 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
     <div style="margin-bottom:34px">
       <span class="eyebrow reveal"><?= snip('edu.video.eyebrow') ?></span>
       <h2 class="section-title reveal d1"><?= snip('edu.video.title') ?></h2>
+      <p class="section-sub reveal d2">元视频点播、实时弹幕与专属留言区，边看边学边讨论。</p>
     </div>
     <div class="player-wrap reveal">
       <div class="player">
@@ -206,118 +220,39 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
   </div>
 </section>
 
-<!-- 交互式知识图谱 -->
-<section class="section" id="graph">
-  <div class="container">
-    <div style="margin-bottom:34px">
-      <span class="eyebrow green reveal"><?= snip('edu.kg.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip('edu.kg.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('edu.kg.sub') ?></p>
-    </div>
-    <div class="kg-layout">
-      <div id="kg" class="reveal"></div>
-      <div class="reveal d1">
-        <div id="kg-panel"></div>
-        <div class="layer-list">
-          <div class="layer"><span class="num" style="background:var(--grad-green);color:#04352a">1</span><div><h4>免费基础版图谱</h4><p>所有访客无门槛开放，标准化可视化知识点关联，联动免费视频片段。</p></div></div>
-          <div class="layer"><span class="num" style="background:var(--grad-purple)">2</span><div><h4>Token 付费进阶图谱</h4><p>消耗少量 Token 解锁，依据观看与提问行为生成个性化学习路径。</p></div></div>
-          <div class="layer"><span class="num" style="background:linear-gradient(135deg,#4b6bff,#6D3BEB)">3</span><div><h4>AI 文献生成图谱</h4><p>导入论文/专利，AI 智能梳理逻辑脉络，自动生成全新专属知识图谱。</p></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 学习路径 · 知识地图（章节树，新增） ============ -->
-<section class="section section-light" id="map">
-  <div class="container">
-    <div style="margin-bottom:34px">
-      <span class="eyebrow reveal"><?= snip('edu.map.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip('edu.map.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('edu.map.sub') ?></p>
-    </div>
-    <div class="accordion kmap reveal">
-      <div class="acc-item open">
-        <div class="acc-head">第 1 章 · 免疫与疫苗基础 <span class="arrow">▾</span></div>
-        <div class="acc-body"><div class="inner">
-          <div class="kmap-node"><span class="kt">疫苗发展史与分类</span><span class="desc">从病毒免疫到疫苗研发的知识起点</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-          <div class="kmap-node"><span class="kt">免疫系统如何识别抗原</span><span class="desc">先天与适应性免疫的基本机制</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-          <div class="kmap-node"><span class="kt">疫苗免疫应答基础</span><span class="desc">免疫记忆如何建立</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-        </div></div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head">第 2 章 · 抗体与中和机制 <span class="arrow">▾</span></div>
-        <div class="acc-body"><div class="inner">
-          <div class="kmap-node"><span class="kt">抗体在疫苗中的作用</span><span class="desc">抗体如何提供保护</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-          <div class="kmap-node"><span class="kt">抗体结构与功能</span><span class="desc">可变区、恒定区与识别原理</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-          <div class="kmap-node"><span class="kt">中和抗体</span><span class="desc">阻断病原体的关键机制</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-        </div></div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head">第 3 章 · AI 抗体发现 <span class="arrow">▾</span></div>
-        <div class="acc-body"><div class="inner">
-          <div class="kmap-node"><span class="kt">抗体序列设计</span><span class="desc">从一句话需求到候选序列</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-          <div class="kmap-node"><span class="kt">结构与亲和力预测</span><span class="desc">动手实验前的虚拟筛选</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-          <div class="kmap-node"><span class="kt">成药性评估</span><span class="desc">早期规避开发风险</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-        </div></div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head">第 4 章 · 干湿闭环与验证 <span class="arrow">▾</span></div>
-        <div class="acc-body"><div class="inner">
-          <div class="kmap-node"><span class="kt">VLP 抗原制备</span><span class="desc">保持天然构象</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-          <div class="kmap-node"><span class="kt">高通量分离与表征</span><span class="desc">自动化湿实验验证</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-          <div class="kmap-node"><span class="kt">数据回流训练</span><span class="desc">越用越准的闭环</span><span class="kmap-links"><a class="kmap-link" href="#video">▶ 视频片段</a><a class="kmap-link green" href="agent.php">🤖 问 Agent</a></span></div>
-        </div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 配套学习资源 -->
-<section class="section bg-soft">
+<!-- ============ 往期回顾（后台可管理图文材料） ============ -->
+<section class="section bg-soft" id="review">
   <div class="container">
     <div style="margin-bottom:30px">
-      <span class="eyebrow reveal"><?= snip('edu.res.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip('edu.res.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('edu.res.sub') ?></p>
+      <span class="eyebrow reveal">往期回顾</span>
+      <h2 class="section-title reveal d1">往期活动与教学回顾</h2>
+      <p class="section-sub reveal d2">课程、讲座与活动的图文记录，点击查看详情。</p>
     </div>
-    <div class="accordion reveal">
-      <div class="acc-item open">
-        <div class="acc-head">📄 课件下载 <span class="arrow">▾</span></div>
-        <div class="acc-body"><div class="inner">
-          <div class="res-item"><span class="k">《疫苗的力量》公开课课件.pdf</span><span class="lockbadge">🔓 公开</span></div>
-          <div class="res-item"><span class="k">免疫应答机制图解.pdf</span><span class="lockbadge">🔓 公开</span></div>
-          <div class="res-item"><span class="k">内部实操讲义 · 抗体表达纯化.pdf</span><span class="lockbadge" data-demo="组内登录后可查看">🔒 组内</span></div>
-        </div></div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head">✏️ 课后习题 <span class="arrow">▾</span></div>
-        <div class="acc-body"><div class="inner"><p class="lock">分课时习题与自测，登录后自动记录学习进度。</p></div></div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head">📚 行业拓展阅读 <span class="arrow">▾</span></div>
-        <div class="acc-body"><div class="inner"><p class="lock">顶刊论文、行业综述与前沿方向精选阅读清单。</p></div></div>
-      </div>
+<?php $reviews = (new Collection('edu_reviews'))->published(); ?>
+<?php if (!$reviews): ?>
+    <p style="color:var(--ink-3)">暂无往期回顾内容。</p>
+<?php else: ?>
+    <div class="review-grid">
+<?php foreach ($reviews as $r): ?>
+      <a class="review-card" href="edu-review.php?id=<?= (int)$r['id'] ?>">
+<?php if (($r['cover'] ?? '') !== ''): ?>
+        <div class="rc-cover"><img src="<?= e($r['cover']) ?>" alt="" onerror="this.parentElement.classList.add('grad');this.remove()"></div>
+<?php else: ?>
+        <div class="rc-cover grad">📚</div>
+<?php endif; ?>
+        <div class="rc-body">
+          <h4><?= e($r['title']) ?></h4>
+<?php if (($r['summary'] ?? '') !== ''): ?>
+          <p><?= e($r['summary']) ?></p>
+<?php endif; ?>
+        </div>
+      </a>
+<?php endforeach; ?>
     </div>
+<?php endif; ?>
   </div>
 </section>
 
-<!-- 跨板块联动 -->
-<section class="section">
-  <div class="container">
-    <div class="reveal" style="background:var(--grad-brand);border-radius:var(--radius-lg);padding:48px;color:#fff;display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:center" >
-      <div>
-        <span class="tag" style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)"><?= snip('edu.link.tag') ?></span>
-        <h2 style="font-size:clamp(24px,3.4vw,34px);margin:14px 0 12px"><?= snip('edu.link.title') ?></h2>
-        <p style="opacity:.92"><?= snip('edu.link.body') ?></p>
-        <a href="agent.php" class="btn btn-green btn-lg" style="margin-top:22px"><?= snip('edu.link.cta') ?></a>
-      </div>
-      <div style="text-align:center">
-        <div style="font-size:15px;opacity:.9;line-height:2.4">视频观看 <span style="opacity:.6">→</span> 弹幕交流<br><span style="opacity:.6">↓</span><br>图谱梳理 <span style="opacity:.6">→</span> AI 答疑</div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- 学术讲座 + 成长资源 -->
 <section class="section bg-soft">
@@ -345,7 +280,6 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
 <?php include __DIR__ . '/partials/footer.php'; ?>
 
 <script src="assets/js/main.js"></script>
-<script src="assets/js/knowledge-graph.js"></script>
 <script>
 // 弹幕
 (function () {
