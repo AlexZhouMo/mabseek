@@ -7,3 +7,5 @@ public/assets/images/_backup/
 .DS_Store
 deploy/*.tgz
 .superpowers/
+.claude/
+docs/

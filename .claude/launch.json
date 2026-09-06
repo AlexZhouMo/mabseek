@@ -1,6 +1,0 @@
-{
-  "version": "0.0.1",
-  "configurations": [
-    { "name": "mabseek-php", "runtimeExecutable": "php", "runtimeArgs": ["-S", "localhost:8778", "-t", "public"], "port": 8778 }
-  ]
-}
