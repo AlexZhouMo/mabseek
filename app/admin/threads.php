@@ -33,9 +33,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 $threads = thread_admin_list();
 ?>
 <div class="card">
-  <h3 style="margin-bottom:16px">论坛发帖（共 <?= count($threads) ?> 篇）</h3>
-  <table class="admin-table">
-    <thead><tr><th>ID</th><th>标题</th><th>作者</th><th>分类</th><th>状态</th><th>时间</th><th>操作</th></tr></thead>
+  <div class="page-head">
+    <h3>论坛发帖</h3>
+    <span class="page-head-meta">共 <?= count($threads) ?> 篇</span>
+  </div>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>ID</th><th>标题</th><th>作者</th><th>分类</th><th>状态</th><th>时间</th><th class="col-actions">操作</th></tr></thead>
     <tbody>
 <?php foreach ($threads as $t):
       $author = ($t['author_nickname'] ?? '') !== '' ? $t['author_nickname'] : ($t['author_username'] ?? '（已注销）');
@@ -43,24 +47,27 @@ $threads = thread_admin_list();
 ?>
       <tr>
         <td><?= (int)$t['id'] ?></td>
-        <td><a href="thread.php?id=<?= (int)$t['id'] ?>" target="_blank"><?= e($t['title']) ?></a></td>
+        <td><a href="thread.php?id=<?= (int)$t['id'] ?>" target="_blank" class="col-primary"><?= e($t['title']) ?></a></td>
         <td><?= e($author) ?></td>
-        <td><?= e($catLabel) ?></td>
-        <td><?= $t['status'] === 'hidden' ? '<span style="color:#c0392b">已下架</span>' : '公开' ?></td>
+        <td><span class="tag"><?= e($catLabel) ?></span></td>
+        <td><?= $t['status'] === 'hidden' ? '<span class="tag tag-danger">已下架</span>' : '<span class="tag">公开</span>' ?></td>
         <td><?= e($t['created_at']) ?></td>
-        <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <td class="col-actions">
+          <span class="row-actions">
 <?php if ($t['status'] === 'hidden'): ?>
-          <form method="post" action="admin.php?m=threads"><?= csrf_field() ?><input type="hidden" name="act" value="show"><input type="hidden" name="id" value="<?= (int)$t['id'] ?>"><button class="abtn" type="submit">恢复</button></form>
+          <form method="post" action="admin.php?m=threads" style="display:inline;margin:0"><?= csrf_field() ?><input type="hidden" name="act" value="show"><input type="hidden" name="id" value="<?= (int)$t['id'] ?>"><button class="abtn abtn-sm abtn-default" type="submit">恢复</button></form>
 <?php else: ?>
-          <form method="post" action="admin.php?m=threads"><?= csrf_field() ?><input type="hidden" name="act" value="hide"><input type="hidden" name="id" value="<?= (int)$t['id'] ?>"><button class="abtn" type="submit">下架</button></form>
+          <form method="post" action="admin.php?m=threads" style="display:inline;margin:0"><?= csrf_field() ?><input type="hidden" name="act" value="hide"><input type="hidden" name="id" value="<?= (int)$t['id'] ?>"><button class="abtn abtn-sm abtn-default" type="submit">下架</button></form>
 <?php endif; ?>
-          <form method="post" action="admin.php?m=threads" onsubmit="return confirm('确认删除该帖？不可恢复')"><?= csrf_field() ?><input type="hidden" name="act" value="delete"><input type="hidden" name="id" value="<?= (int)$t['id'] ?>"><button class="abtn" type="submit" style="color:#c0392b">删除</button></form>
+          <form method="post" action="admin.php?m=threads" style="display:inline;margin:0" onsubmit="return confirm('确认删除该帖？不可恢复')"><?= csrf_field() ?><input type="hidden" name="act" value="delete"><input type="hidden" name="id" value="<?= (int)$t['id'] ?>"><button class="abtn abtn-sm abtn-danger" type="submit">删除</button></form>
+          </span>
         </td>
       </tr>
 <?php endforeach; ?>
 <?php if (!$threads): ?>
-      <tr><td colspan="7" style="color:#888">暂无帖子</td></tr>
+      <tr><td colspan="7" class="empty">暂无帖子</td></tr>
 <?php endif; ?>
     </tbody>
   </table>
+  </div>
 </div>

@@ -3,7 +3,7 @@
   <div class="container">
     <div class="footer-grid">
       <div>
-        <div class="brand"><span class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M7 3v4c0 2.8 2.2 5 5 5s5 2.2 5 5v4M17 3v4c0 2.8-2.2 5-5 5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span><span>MabSeek<small>抗体求索 · 清华大学医学院</small></span></div>
+        <div class="brand"><img class="brand-logo" src="assets/images/logo.png" alt="MabSeek 抗体求索 · 清华大学医学院"></div>
         <p><?= snip('footer.brand.tagline') ?></p>
         <div class="footer-social" style="margin-top:18px">
           <span title="微信" data-demo="扫码关注 MabSeek 公众号">💬</span>
@@ -13,10 +13,14 @@
       <div><h5>探索</h5><ul>
         <li><a href="technology.php">技术平台</a></li>
         <li><a href="agent.php">Antibody Agent</a></li>
+<?php if (!empty($_SESSION['uid'])): ?>
         <li><a href="education.php">教育</a></li>
+<?php endif; ?>
       </ul></div>
       <div><h5>社区</h5><ul>
+<?php if (!empty($_SESSION['uid'])): ?>
         <li><a href="forum.php">论坛</a></li>
+<?php endif; ?>
         <li><a href="about.php">了解我们</a></li>
         <li><a href="about.php#news">新闻活动</a></li>
       </ul></div>

@@ -18,7 +18,7 @@ check(member_validate_password('12345678') === false, 'password 缺字母被拒'
 check(member_validate_password('a1b2c3') === false, 'password 过短被拒');
 check(member_validate_password('a1' . str_repeat('x', 31)) === false, 'password 过长被拒');
 
-check(member_validate_email('') === true, 'email 可空');
+check(member_validate_email('') === false, 'email 必填：空值被拒');
 check(member_validate_email('a@b.com') === true, 'email 合法');
 check(member_validate_email('not-an-email') === false, 'email 非法被拒');
 

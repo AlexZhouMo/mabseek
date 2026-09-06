@@ -138,16 +138,7 @@
     }, 2600);
   }
 
-  /* ---------- 快速反馈表单：前端模拟提交（无后端） ---------- */
-  var fbForm = document.getElementById('contact-form');
-  if (fbForm) {
-    fbForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var name = (fbForm.querySelector('[name="name"]') || {}).value || '';
-      showToast('已收到你的反馈' + (name ? ('，' + name) : '') + '！我们会尽快通过邮件联系你。');
-      fbForm.reset();
-    });
-  }
+  /* ---------- 快速反馈表单：真实提交到 feedback.php（整页 POST + 服务端提示） ---------- */
 
   /* ---------- 技术平台架构图：触屏/点击展开节点详情（桌面 hover 走 CSS） ---------- */
   var archNodes = document.querySelectorAll('.arch-node');

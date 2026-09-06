@@ -104,6 +104,10 @@ function admin_crud_save(array $cfg, string $m): void
         flash_set('error', '请检查以下字段：' . implode('、', $errors));
         redirect($id > 0 ? "admin.php?m=$m&a=edit&id=$id" : "admin.php?m=$m&a=new");
     }
+    // 模块可选派生钩子：净化后、写库前回填字段（如从正文派生缩略图/摘要）
+    if (isset($cfg['derive']) && is_callable($cfg['derive'])) {
+        $data = ($cfg['derive'])($data);
+    }
     if ($id > 0) {
         (new Collection($cfg['table']))->update($id, $data);
         audit('update', $cfg['table'], (string)$id);

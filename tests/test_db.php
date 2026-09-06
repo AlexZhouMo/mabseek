@@ -6,8 +6,12 @@ require_once __DIR__ . '/../app/repositories/Collection.php';
 $pdo = db();
 $tables = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
               ->fetchAll(PDO::FETCH_COLUMN);
-foreach (['audit_log','content_cards','forum_hot','forum_posts','login_attempts','news','partners','snippets','team_members','users'] as $t) {
+foreach (['audit_log','content_cards','login_attempts','news','partners','snippets','team_members','users'] as $t) {
     check(in_array($t, $tables, true), "table exists: $t");
+}
+// 已下线的论坛 CMS 假数据表：应被 migrate DROP 掉，不存在
+foreach (['forum_posts','forum_hot'] as $t) {
+    check(!in_array($t, $tables, true), "table dropped: $t");
 }
 // PDO 严格模式
 check($pdo->getAttribute(PDO::ATTR_ERRMODE) === PDO::ERRMODE_EXCEPTION, 'ERRMODE_EXCEPTION set');

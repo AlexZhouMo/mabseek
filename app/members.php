@@ -15,8 +15,7 @@ function member_validate_password(string $v): bool {
         && preg_match('/\d/', $v) === 1;
 }
 function member_validate_email(string $v): bool {
-    if ($v === '') return true;
-    return mb_strlen($v) <= 254 && filter_var($v, FILTER_VALIDATE_EMAIL) !== false;
+    return $v !== '' && mb_strlen($v) <= 254 && filter_var($v, FILTER_VALIDATE_EMAIL) !== false;
 }
 function member_validate_phone(string $v): bool {
     if ($v === '') return true;

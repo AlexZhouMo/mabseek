@@ -72,6 +72,13 @@
   content: ""; position: absolute; left: 0; top: 7px; bottom: 7px;
   width: 3px; border-radius: 3px; background: var(--a-accent);
 }
+.admin .admin-sidebar .nav-group-title {
+  padding: 6px 14px 4px; margin-top: 12px;
+  color: var(--a-ink-3); font-size: 11.5px; font-weight: 700;
+  letter-spacing: .08em; text-transform: none; user-select: none;
+}
+.admin .admin-sidebar .nav-group-title:first-child { margin-top: 0; }
+.admin .admin-sidebar .nav-group-title + a { margin-top: 0; }
 .admin .admin-main { flex: 1 1 auto; padding: 22px; min-width: 0; }
 .admin .admin-main .container { max-width: 1280px; padding: 0; margin: 0; }
 
@@ -146,6 +153,8 @@
   display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
   background: var(--a-accent-weak); color: var(--a-accent); border: 1px solid var(--a-accent-line);
 }
+.admin .tag-danger { background: #fdecea; color: var(--a-danger); border-color: var(--a-danger-line); }
+.admin .page-head-meta { color: var(--a-ink-3); font-size: 13px; font-weight: 600; }
 
 /* ---------- 行内编辑（发布 + 排序 + 保存，恒单行） ---------- */
 .admin .inline-edit {

@@ -22,7 +22,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!captcha_answer_ok((string)($_POST['captcha'] ?? ''))) $errors['captcha'] = '验证码错误或已过期';
     if (!member_validate_username($in['username']))           $errors['username'] = '用户名需 3–20 位字母/数字/下划线';
     if (!member_validate_password($pass))                     $errors['password'] = '密码需 8–32 位且含字母与数字';
-    if (!member_validate_email($in['email']))                 $errors['email']    = '邮箱格式不正确';
+    if ($in['email'] === '')                                  $errors['email']    = '请填写邮箱';
+    elseif (!member_validate_email($in['email']))             $errors['email']    = '邮箱格式不正确';
     if (!member_validate_phone($in['phone']))                 $errors['phone']    = '手机号格式不正确';
     if (!member_validate_nickname($in['nickname']))           $errors['nickname'] = '昵称最多 30 字';
 
@@ -40,7 +41,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         redirect('account.php');
     }
 }
-$active = ''; $navOnDark = false;
+$active = ''; $navOnDark = false; $navSolidDark = true;
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -73,8 +74,8 @@ $active = ''; $navOnDark = false;
         <?php if (isset($errors['password'])): ?><div class="auth-field-err"><?= e($errors['password']) ?></div><?php endif; ?>
       </div>
       <div class="field">
-        <label>邮箱（可选）</label>
-        <input class="input" type="email" name="email" value="<?= e($in['email']) ?>">
+        <label>邮箱</label>
+        <input class="input" type="email" name="email" value="<?= e($in['email']) ?>" required>
         <?php if (isset($errors['email'])): ?><div class="auth-field-err"><?= e($errors['email']) ?></div><?php endif; ?>
       </div>
       <div class="field">

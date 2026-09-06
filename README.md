@@ -18,13 +18,16 @@ mabseek/
 │   ├── index.php        首页
 │   ├── technology.php   技术平台
 │   ├── agent.php        Antibody Agent
-│   ├── education.php    教育
+│   ├── education.php    教育（课程 · 讲座 · 教育往期回顾）
+│   ├── edu-review.php   教育回顾详情
 │   ├── forum.php        论坛（会员发帖 · 富文本）
+│   ├── threads-api.php  论坛帖子列表异步接口（分页/筛选，JSON）
 │   ├── thread-new.php   发帖（富文本编辑器 + 图片上传）
 │   ├── thread-edit.php  编辑本人帖
 │   ├── thread.php       帖子详情（直出净化后 HTML）
 │   ├── upload.php       会员图片上传端点（登录 + CSRF，复用图片校验）
-│   ├── about.php        了解我们
+│   ├── feedback.php     联系反馈提交端点（CSRF）
+│   ├── about.php        了解我们（团队成员 · 国际合作）
 │   ├── admin.php        管理后台入口
 │   └── assets/          静态资源（css/js/images，含 uploads/ 上传目录）
 ├── app/               ← 应用代码（在文档根之上，不可 HTTP 访问）
@@ -35,6 +38,8 @@ mabseek/
 │   ├── csrf.php         CSRF 令牌
 │   ├── members.php      会员账号（注册/登录/状态）
 │   ├── threads.php      论坛帖子（校验/发布/治理，正文按纯文本长度校验）
+│   ├── edu_reviews.php  教育往期回顾（校验/查询）
+│   ├── feedback.php     联系反馈（校验/存储）
 │   ├── html_sanitizer.php  富文本白名单净化（DOM 白名单，仅放行站内上传图）
 │   ├── helpers.php      转义/时间/客户端 IP 等工具
 │   ├── admin/           后台各功能模块
@@ -62,6 +67,7 @@ php -S localhost:8778 -t public
 ## 管理后台
 
 - 入口 `public/admin.php`，登录后可管理各页面内容。
+- 内容模块：新闻、团队成员（支持头像上传，无头像时用文字头像）、合作伙伴、内容卡片、文案片段（snippets）、教育往期回顾、会员管理、论坛帖子治理、联系反馈查看。
 - 初始管理员账号由 `bin/seed.php` 依据 `app/config.php` 中的 `SEED_ADMIN_USER` / `SEED_ADMIN_PASS` 创建，**首次登录强制修改密码**。生产环境请在 seed 前改掉默认值，或改后立即修改。
 
 ### 安全措施
@@ -79,6 +85,16 @@ php -S localhost:8778 -t public
 - 会员可注册/登录，在论坛发帖、编辑与删除本人帖子。
 - 发帖/编辑复用与后台新闻相同的富文本编辑器（工具栏 + 图片插入）；正文按「净化后纯文本」长度校验（1–5000 字，标签与图片不计入），停用账号禁止发帖与上传。
 - 会员图片经独立端点 `public/upload.php`（会员登录 + CSRF + 复用后台图片校验）上传，与管理员上传端点隔离。
+- 论坛帖子列表通过 `public/threads-api.php` 异步加载（支持分页与分类筛选，返回 JSON）。
+
+## 教育与反馈
+
+- 教育页除课程与讲座外，展示「教育往期回顾」（`edu_reviews`）卡片，点击进入 `edu-review.php` 详情。
+- 访客可通过页面的联系反馈表单（`public/feedback.php`，CSRF 校验）提交需求/合作意向，后台「联系反馈」模块查看。
+
+## 站点配图
+
+- 全站配图为 AI 生成的深色科技风插画（紫 + 荧光绿渐变），统一收纳于 `public/assets/images/`；团队真实头像置于 `assets/images/team/`。
 
 ## 测试
 

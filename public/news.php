@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../app/bootstrap.php';
-$active = 'about'; $navOnDark = false; $contactHref = 'index.php#contact';
+$active = 'about'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
 
 $id   = (int)($_GET['id'] ?? 0);
 $rows = $id > 0 ? (new Collection('news'))->published('id = ?', [$id]) : [];

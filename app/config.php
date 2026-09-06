@@ -39,6 +39,9 @@ const THREAD_CATEGORIES = [
 ];
 const THREAD_RATE_MIN_SECONDS = 60;    // 两帖最小间隔
 const THREAD_RATE_DAILY_MAX   = 20;    // 单会员 24 小时最多发帖数
+const FORUM_PAGE_SIZE         = 8;     // 论坛帖流每页条数
+const FEEDBACK_RATE_MIN_SECONDS = 60;  // 同 IP 两条反馈最小间隔
+const FEEDBACK_RATE_DAILY_MAX   = 20;  // 同 IP 24 小时最多反馈数
 
 // ── 环境（生产设 false）──
 const APP_DEBUG = false;

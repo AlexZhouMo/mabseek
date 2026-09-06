@@ -5,8 +5,6 @@
 
 $collectionLabels = [
     'news'          => '新闻与活动',
-    'forum_posts'   => '论坛帖子',
-    'forum_hot'     => '论坛热榜',
     'team_members'  => '团队成员',
     'partners'      => '合作伙伴',
     'content_cards' => '内容卡片',

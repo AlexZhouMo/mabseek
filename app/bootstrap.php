@@ -8,6 +8,7 @@ require_once __DIR__ . '/csrf.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/members.php';
 require_once __DIR__ . '/threads.php';
+require_once __DIR__ . '/feedback.php';
 require_once __DIR__ . '/html_sanitizer.php';
 require_once __DIR__ . '/captcha.php';
 require_once __DIR__ . '/repositories/Collection.php';

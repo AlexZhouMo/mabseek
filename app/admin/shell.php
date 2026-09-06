@@ -2,17 +2,11 @@
 /** @var string $module (set by admin.php) */
 $module = $module ?? 'dashboard';
 $adminMenu = [
-    'dashboard'   => '仪表盘',
-    'news'        => '新闻与活动',
-    'forum_posts' => '论坛帖子',
-    'forum_hot'   => '论坛热榜',
-    'team'        => '团队成员',
-    'partners'    => '合作伙伴',
-    'cards'       => '内容卡片',
-    'snippets'    => '文案片段',
-    'members'     => '会员管理',
-    'threads'     => '论坛发帖',
-    'password'    => '修改密码',
+    '_top' => ['dashboard' => '仪表盘'],
+    '内容' => ['news' => '新闻与活动', 'cards' => '内容卡片', 'snippets' => '文案片段', 'team' => '团队成员', 'partners' => '合作伙伴'],
+    '教育' => ['edu_reviews' => '往期回顾'],
+    '论坛' => ['threads' => '帖子管理'],
+    '系统' => ['members' => '会员管理', 'feedback' => '联系反馈', 'password' => '修改密码'],
 ];
 ?>
 <!DOCTYPE html>
@@ -41,8 +35,13 @@ $adminMenu = [
 </header>
 <div class="admin-body">
   <nav class="admin-sidebar">
-<?php foreach ($adminMenu as $key => $label): ?>
+<?php foreach ($adminMenu as $group => $items): ?>
+<?php if ($group !== '_top'): ?>
+    <div class="nav-group-title"><?= e($group) ?></div>
+<?php endif; ?>
+<?php foreach ($items as $key => $label): ?>
     <a href="admin.php?m=<?= $key ?>"<?= $module === $key ? ' class="on"' : '' ?>><?= e($label) ?></a>
+<?php endforeach; ?>
 <?php endforeach; ?>
   </nav>
   <main class="admin-main">

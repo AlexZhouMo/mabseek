@@ -16,7 +16,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $email = trim((string)($_POST['email'] ?? ''));
         $phone = trim((string)($_POST['phone'] ?? ''));
         $nick  = trim((string)($_POST['nickname'] ?? ''));
-        if (!member_validate_email($email))         $err = '邮箱格式不正确';
+        if ($email === '')                          $err = '请填写邮箱';
+        elseif (!member_validate_email($email))     $err = '邮箱格式不正确';
         elseif (!member_validate_phone($phone))     $err = '手机号格式不正确';
         elseif (!member_validate_nickname($nick))   $err = '昵称最多 30 字';
         elseif (member_email_taken($email, (int)$me['id'])) $err = '该邮箱已被占用';
@@ -44,7 +45,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         }
     }
 }
-$active = ''; $navOnDark = false;
+$active = ''; $navOnDark = false; $navSolidDark = true;
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -71,7 +72,7 @@ $active = ''; $navOnDark = false;
       <form method="post" action="account.php">
         <?= csrf_field() ?>
         <input type="hidden" name="do" value="profile">
-        <div class="field"><label>邮箱</label><input class="input" type="email" name="email" value="<?= e($me['email']) ?>"></div>
+        <div class="field"><label>邮箱</label><input class="input" type="email" name="email" value="<?= e($me['email']) ?>" required></div>
         <div class="field"><label>手机号</label><input class="input" type="text" name="phone" value="<?= e($me['phone']) ?>"></div>
         <div class="field"><label>昵称</label><input class="input" type="text" name="nickname" value="<?= e($me['nickname']) ?>"></div>
         <button class="btn btn-purple auth-submit" type="submit">保存资料</button>

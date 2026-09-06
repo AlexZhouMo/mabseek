@@ -12,7 +12,7 @@ if (auth_check()) {
 
 if (!$t) {
     http_response_code(404);
-    $active = 'forum'; $navOnDark = false;
+    $active = 'forum'; $navOnDark = false; $navSolidDark = true;
     include __DIR__ . '/partials/nav.php';
     echo '<main class="container" style="max-width:640px;margin:64px auto;text-align:center"><h1>帖子不存在</h1><p><a href="forum.php">返回论坛</a></p></main>';
     include __DIR__ . '/partials/footer.php';
@@ -21,7 +21,7 @@ if (!$t) {
 $author = ($t['author_nickname'] ?? '') !== '' ? $t['author_nickname'] : ($t['author_username'] ?? '');
 $catLabel = THREAD_CATEGORIES[$t['category']] ?? $t['category'];
 $isOwner = $myId > 0 && (int)$t['user_id'] === $myId;
-$active = 'forum'; $navOnDark = false;
+$active = 'forum'; $navOnDark = false; $navSolidDark = true;
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

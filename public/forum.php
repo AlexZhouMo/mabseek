@@ -1,13 +1,12 @@
 <?php
 require __DIR__ . '/../app/bootstrap.php';
-$active = 'forum'; $navOnDark = false; $contactHref = 'index.php#contact';
-$hotAll  = (new Collection('forum_hot'))->published();
-$hotDay  = array_values(array_filter($hotAll, fn($r) => $r['list'] === 'day'));
-$hotWeek = array_values(array_filter($hotAll, fn($r) => $r['list'] === 'week'));
-$posts   = (new Collection('forum_posts'))->published();
+member_check();                                   // 未登录跳 login.php
+$active = 'forum'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
 $lines   = (new Collection('content_cards'))->published("grp='forum_line'");
-$threads = thread_list_published(20);
-$threadPostHref = auth_check() ? 'thread-new.php' : 'login.php';
+// 首屏首批：多取一条判断「加载更多」显隐
+$firstBatch = thread_list_by_category('all', FORUM_PAGE_SIZE + 1, 0);
+$hasMore    = count($firstBatch) > FORUM_PAGE_SIZE;
+$firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -78,95 +77,45 @@ $threadPostHref = auth_check() ? 'thread-new.php' : 'login.php';
   </div>
 </section>
 
-<!-- ============ 社区热榜（每日/每周，新增） ============ -->
-<section class="section bg-soft" id="hot">
+<!-- ============ 会员真实帖流（分类筛选 + 加载更多） ============ -->
+<section class="section" id="threads" style="padding-top:44px">
   <div class="container">
-    <div style="margin-bottom:28px">
-      <span class="eyebrow reveal"><?= snip('forum.hot.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip('forum.hot.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('forum.hot.sub') ?></p>
-    </div>
-    <div class="hot-tabs reveal">
-      <button class="hot-tab on" data-tab="day"><?= snip('forum.hot.tab_day') ?></button>
-      <button class="hot-tab" data-tab="week"><?= snip('forum.hot.tab_week') ?></button>
-    </div>
-    <ol class="hot-list reveal d1" data-list="day">
-<?php foreach ($hotDay as $r): ?>
-      <li class="hot-row" data-demo="打开帖子详情"><span class="hot-rank"><?= (int)$r['rank'] ?></span><span class="hot-title"><?= e($r['title']) ?></span><span class="hot-cat"><?= e($r['category']) ?></span><span class="hot-fire"><?= e($r['heat']) ?></span></li>
-<?php endforeach; ?>
-    </ol>
-    <ol class="hot-list reveal d1" data-list="week" hidden>
-<?php foreach ($hotWeek as $r): ?>
-      <li class="hot-row" data-demo="打开帖子详情"><span class="hot-rank"><?= (int)$r['rank'] ?></span><span class="hot-title"><?= e($r['title']) ?></span><span class="hot-cat"><?= e($r['category']) ?></span><span class="hot-fire"><?= e($r['heat']) ?></span></li>
-<?php endforeach; ?>
-    </ol>
-  </div>
-</section>
-
-<!-- 话题标签 + 推荐流 -->
-<section class="section" style="padding-top:44px">
-  <div class="container">
-    <div class="filter-bar reveal">
-      <span class="chip-f on" data-f="all">🔥 推荐</span>
-      <span class="chip-f" data-f="pit"># 实验踩坑</span>
-      <span class="chip-f" data-f="proto"># Protocol 分享</span>
-      <span class="chip-f" data-f="paper"># 文献精读</span>
-      <span class="chip-f" data-f="bio"># 生信工具</span>
-      <span class="chip-f" data-f="job"># 求职招聘</span>
-    </div>
-    <p style="font-size:13px;color:var(--ink-3);margin:0 0 22px"><?= snip('forum.feed.note') ?></p>
-
-    <div class="feed reveal d1" id="feed">
-<?php foreach ($posts as $p):
-    $tags = array_filter(array_map('trim', explode(',', $p['tags'] ?? '')));
-    $avStyle = $p['author_avatar_style'] !== '' ? ' style="' . e($p['author_avatar_style']) . '"' : '';
-    $variant = in_array($p['cover_variant'], ['g2', 'g3'], true) ? $p['cover_variant'] : '';
-    $addVariant = $variant !== '' ? ",'$variant'" : '';
-?>
-      <div class="post" data-cat="<?= e($p['category']) ?>" data-demo="打开帖子详情">
-<?php if ($p['cover_type'] === 'img'):
-        $emoji = ['proto'=>'🧪','bio'=>'🧬','pit'=>'💊'][$p['category']] ?? '🧬';
-?>
-        <div class="cover"><img src="<?= e($p['cover_ref']) ?>" alt="" onerror="this.parentElement.classList.add('grad'<?= $addVariant ?>);this.remove();this.parentElement.innerHTML='<?= e($emoji) ?>'"><span class="toptag"><?= e($p['toptag']) ?></span></div>
-<?php else: ?>
-        <div class="cover grad<?= $variant !== '' ? ' ' . $variant : '' ?>"><span></span><?= e($p['cover_ref']) ?></div>
-<?php endif; ?>
-        <div class="pbody"><h4><?= e($p['title']) ?></h4>
-          <div class="ptags"><?php foreach ($tags as $t): ?><span><?= e($t) ?></span><?php endforeach; ?></div>
-          <div class="pfoot"><span class="who"><span class="av"<?= $avStyle ?>><?= e($p['author_avatar_char']) ?></span><?= e($p['author_name']) ?></span><span class="like"><?= e($p['likes']) ?></span></div></div>
-      </div>
-<?php endforeach; ?>
-    </div>
-    <div class="text-center" style="margin-top:20px"><button class="btn btn-outline" data-demo="正式版将加载更多推荐内容"><?= snip('forum.feed.loadmore') ?></button></div>
-  </div>
-</section>
-
-<!-- ============ 会员发布 ============ -->
-<section class="section" id="threads">
-  <div class="container">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:16px;flex-wrap:wrap">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:16px;flex-wrap:wrap">
       <div>
         <span class="eyebrow">会员发布</span>
         <h2 class="section-title">会员们最近发了什么</h2>
       </div>
-      <a class="btn btn-purple" href="<?= e($threadPostHref) ?>">发帖</a>
+      <a class="btn btn-purple" href="thread-new.php">发帖</a>
     </div>
-<?php if (!$threads): ?>
-    <p style="color:var(--ink-3)">还没有会员帖子，<a href="<?= e($threadPostHref) ?>">来发第一帖</a>。</p>
-<?php else: ?>
-    <div class="thread-list">
-<?php foreach ($threads as $t):
+    <div class="filter-bar reveal">
+      <span class="chip-f on" data-f="all">🔥 全部</span>
+<?php foreach (THREAD_CATEGORIES as $k => $label): ?>
+      <span class="chip-f" data-f="<?= e($k) ?>"><?= e($label) ?></span>
+<?php endforeach; ?>
+    </div>
+
+    <div class="feed reveal d1" id="feed">
+<?php foreach ($firstBatch as $t):
       $author = ($t['author_nickname'] ?? '') !== '' ? $t['author_nickname'] : ($t['author_username'] ?? '');
       $catLabel = THREAD_CATEGORIES[$t['category']] ?? $t['category'];
 ?>
-      <a class="thread-item card" href="thread.php?id=<?= (int)$t['id'] ?>" style="display:block;padding:18px 20px;margin-bottom:12px;text-decoration:none;color:inherit">
-        <div style="font-size:12px;color:var(--purple);font-weight:700"><?= e($catLabel) ?></div>
-        <h4 style="margin:6px 0;font-size:16px"><?= e($t['title']) ?></h4>
-        <div style="font-size:13px;color:var(--ink-3)"><?= e($author) ?> · <?= e($t['created_at']) ?></div>
+      <a class="post" href="thread.php?id=<?= (int)$t['id'] ?>" style="text-decoration:none;color:inherit;display:block">
+<?php if (($t['cover'] ?? '') !== ''): ?>
+        <div class="cover"><img src="<?= e($t['cover']) ?>" alt="" onerror="this.parentElement.classList.add('grad');this.remove()"><span class="toptag"><?= e($catLabel) ?></span></div>
+<?php else: ?>
+        <div class="cover grad"><span class="toptag"><?= e($catLabel) ?></span>🧬</div>
+<?php endif; ?>
+        <div class="pbody"><h4><?= e($t['title']) ?></h4>
+          <div class="pfoot"><span class="who"><span class="av"><?= e(mb_substr($author, 0, 1)) ?></span><?= e($author) ?></span><span><?= e($t['created_at']) ?></span></div></div>
       </a>
 <?php endforeach; ?>
     </div>
+<?php if (!$firstBatch): ?>
+    <p id="feed-empty" style="color:var(--ink-3)">还没有会员帖子，<a href="thread-new.php">来发第一帖</a>。</p>
 <?php endif; ?>
+    <div class="text-center" style="margin-top:20px">
+      <button class="btn btn-outline" id="loadmore"<?= $hasMore ? '' : ' hidden' ?>>加载更多</button>
+    </div>
   </div>
 </section>
 
@@ -186,65 +135,64 @@ $threadPostHref = auth_check() ? 'thread-new.php' : 'login.php';
   </div>
 </section>
 
-<!-- 关注动态 + 冷启动 -->
-<section class="section">
-  <div class="container">
-    <div class="grid-2" style="align-items:center">
-      <div class="reveal">
-        <span class="eyebrow"><?= snip('forum.follow.eyebrow') ?></span>
-        <h2 style="font-size:26px;margin:14px 0 12px"><?= snip('forum.follow.title') ?></h2>
-        <p style="color:var(--ink-3)"><?= snip('forum.follow.body') ?></p>
-        <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">
-          <div class="card" style="padding:16px 18px;display:flex;align-items:center;gap:12px"><span class="av" style="width:40px;height:40px;border-radius:50%;background:var(--grad-purple);color:#fff;display:grid;place-items:center;font-weight:700">张</span><div><b style="font-size:14px"><?= snip('forum.follow.card_name') ?></b><div style="font-size:12px;color:var(--ink-3)"><?= snip('forum.follow.card_meta') ?></div></div><button class="btn btn-purple" style="padding:7px 16px;font-size:13px" data-demo="已关注"><?= snip('forum.follow.card_btn') ?></button></div>
-        </div>
-      </div>
-      <div class="reveal d1" style="background:var(--grad-brand);border-radius:var(--radius-lg);padding:36px;color:#fff">
-        <span class="tag" style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)"><?= snip('forum.cold.tag') ?></span>
-        <h3 style="font-size:22px;margin:14px 0 10px"><?= snip('forum.cold.title') ?></h3>
-        <p style="opacity:.92"><?= snip('forum.cold.body') ?></p>
-        <div style="display:flex;gap:24px;margin-top:22px">
-          <div><div style="font-size:30px;font-weight:800"><?= snip('forum.cold.stat1_num') ?></div><div style="opacity:.85;font-size:13px"><?= snip('forum.cold.stat1_label') ?></div></div>
-          <div><div style="font-size:30px;font-weight:800"><?= snip('forum.cold.stat2_num') ?></div><div style="opacity:.85;font-size:13px"><?= snip('forum.cold.stat2_label') ?></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- 页脚 -->
 <?php include __DIR__ . '/partials/footer.php'; ?>
 
 <script src="assets/js/main.js"></script>
 <script>
-// 标签筛选
-var chips = document.querySelectorAll('.chip-f');
-var posts = document.querySelectorAll('#feed .post');
-chips.forEach(function (c) {
-  c.addEventListener('click', function () {
-    chips.forEach(function (x) { x.classList.remove('on'); });
-    c.classList.add('on');
-    var f = c.getAttribute('data-f');
-    posts.forEach(function (p) {
-      p.style.display = (f === 'all' || p.getAttribute('data-cat') === f) ? '' : 'none';
-    });
-  });
-});
+(function () {
+  var chips    = document.querySelectorAll('.chip-f');
+  var feed     = document.getElementById('feed');
+  var loadmore = document.getElementById('loadmore');
+  var cat      = 'all';
+  var offset   = feed ? feed.querySelectorAll('.post').length : 0;
 
-// 热榜：每日 / 每周 切换
-var hotTabs = document.querySelectorAll('.hot-tab');
-var hotLists = document.querySelectorAll('.hot-list');
-hotTabs.forEach(function (tab) {
-  tab.addEventListener('click', function () {
-    hotTabs.forEach(function (x) { x.classList.remove('on'); });
-    tab.classList.add('on');
-    var t = tab.getAttribute('data-tab');
-    hotLists.forEach(function (l) {
-      var show = (l.getAttribute('data-list') === t);
-      l.hidden = !show;
-      if (show) l.classList.add('in'); // 默认隐藏的榜单加载时拿不到 reveal 的 .in，切换时补上
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+
+  function cardHtml(it) {
+    var initial = it.author ? it.author.slice(0, 1) : '';
+    var cover = it.cover
+      ? '<div class="cover"><img src="' + esc(it.cover) + '" alt="" onerror="this.parentElement.classList.add(\'grad\');this.remove()"><span class="toptag">' + esc(it.catLabel) + '</span></div>'
+      : '<div class="cover grad"><span class="toptag">' + esc(it.catLabel) + '</span>🧬</div>';
+    return '<a class="post" href="thread.php?id=' + it.id + '" style="text-decoration:none;color:inherit;display:block">'
+      + cover
+      + '<div class="pbody"><h4>' + esc(it.title) + '</h4>'
+      + '<div class="pfoot"><span class="who"><span class="av">' + esc(initial) + '</span>' + esc(it.author) + '</span><span>' + esc(it.created_at) + '</span></div></div>'
+      + '</a>';
+  }
+
+  function fetchBatch(replace) {
+    var url = 'threads-api.php?category=' + encodeURIComponent(cat) + '&offset=' + offset;
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.ok) return;
+        if (replace) { feed.innerHTML = ''; }
+        data.items.forEach(function (it) { feed.insertAdjacentHTML('beforeend', cardHtml(it)); });
+        offset += data.items.length;
+        loadmore.hidden = !data.hasMore;
+      })
+      .catch(function () { /* 网络错误：静默，用户可重试 */ });
+  }
+
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      chips.forEach(function (x) { x.classList.remove('on'); });
+      c.classList.add('on');
+      cat = c.getAttribute('data-f');
+      offset = 0;
+      fetchBatch(true);   // 切分类：从第 1 批重新拉取并替换
     });
   });
-});
+
+  if (loadmore) {
+    loadmore.addEventListener('click', function () { fetchBatch(false); });  // 追加下一批
+  }
+})();
 </script>
 </body>
 </html>

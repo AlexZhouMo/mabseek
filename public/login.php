@@ -42,7 +42,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $error = '用户名或密码错误';
     }
 }
-$active = ''; $navOnDark = false;
+$active = ''; $navOnDark = false; $navSolidDark = true;
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

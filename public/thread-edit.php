@@ -12,7 +12,7 @@ $t = $id > 0 ? thread_get($id) : null;
 // 仅作者本人；他人或不存在一律 404
 if (!$t || (int)$t['user_id'] !== $uid) {
     http_response_code(404);
-    $active = 'forum'; $navOnDark = false;
+    $active = 'forum'; $navOnDark = false; $navSolidDark = true;
     include __DIR__ . '/partials/nav.php';
     echo '<main class="container" style="max-width:640px;margin:64px auto;text-align:center"><h1>帖子不存在</h1><p><a href="forum.php">返回论坛</a></p></main>';
     include __DIR__ . '/partials/footer.php';
@@ -20,7 +20,7 @@ if (!$t || (int)$t['user_id'] !== $uid) {
 }
 
 $err = null;
-$in = ['category' => $t['category'], 'title' => $t['title'], 'body' => $t['body']];
+$in = ['category' => $t['category'], 'title' => $t['title'], 'body' => $t['body'], 'cover' => $t['cover'] ?? ''];
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     csrf_verify_or_die();
@@ -35,17 +35,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $in['category'] = (string)($_POST['category'] ?? '');
     $in['title']    = (string)($_POST['title'] ?? '');
     $in['body']     = (string)($_POST['body'] ?? '');
+    $in['cover']    = trim((string)($_POST['cover'] ?? ''));
     $cleanBody      = sanitize_html($in['body']);      // 服务端权威净化
     if (!thread_valid_category($in['category']))    $err = '请选择有效分类。';
     elseif (!thread_validate_title($in['title']))   $err = '标题需 1–120 字。';
     elseif (!thread_validate_body($cleanBody))      $err = '正文需 1–5000 字。';
+    elseif ($in['cover'] === '')                    $err = '请上传缩略图。';
+    elseif (!thread_valid_cover($in['cover']))      $err = '缩略图无效，请重新上传。';
     else {
-        thread_update($id, $uid, $in['category'], $in['title'], $cleanBody);
+        thread_update($id, $uid, $in['category'], $in['title'], $cleanBody, $in['cover']);
         audit('thread_update', 'thread', (string)$id);
         redirect('thread.php?id=' . $id);
     }
 }
-$active = 'forum'; $navOnDark = false;
+$active = 'forum'; $navOnDark = false; $navSolidDark = true;
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -77,6 +80,10 @@ $active = 'forum'; $navOnDark = false;
       <div class="field">
         <label>标题（≤120 字）</label>
         <input class="input" type="text" name="title" maxlength="120" value="<?= e($in['title']) ?>" required autofocus>
+      </div>
+      <div class="field">
+        <label>缩略图（必填）</label>
+<?php $coverName = 'cover'; $coverValue = $in['cover']; include __DIR__ . '/partials/cover-field.php'; ?>
       </div>
       <div class="field">
         <label>正文（支持富文本，≤5000 字）</label>

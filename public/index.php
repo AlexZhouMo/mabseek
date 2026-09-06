@@ -98,7 +98,13 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
       <h3 style="color:#fff;font-size:22px"><?= snip('home.contact.h3') ?></h3>
       <p class="section-sub" style="margin:10px auto 0"><?= snip('contact.email') ?> · <?= snip('contact.org') ?></p>
     </div>
-    <form class="feedback" id="contact-form">
+    <?php include __DIR__ . '/partials/feedback-notice.php'; ?>
+    <form class="feedback" id="contact-form" method="post" action="feedback.php">
+      <?= csrf_field() ?>
+      <input type="hidden" name="from" value="index.php">
+      <div style="position:absolute;left:-9999px" aria-hidden="true">
+        <label>请勿填写<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
       <div class="fb-row">
         <input type="text" name="name" placeholder="你的称呼" required>
         <input type="email" name="email" placeholder="邮箱" required>
