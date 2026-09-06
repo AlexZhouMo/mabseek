@@ -9,3 +9,4 @@ deploy/*.tgz
 .superpowers/
 .claude/
 docs/superpowers/
+CLAUDE.md
