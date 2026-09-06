@@ -2,6 +2,7 @@ data/*.sqlite
 data/*.sqlite-*
 public/assets/images/uploads/*
 !public/assets/images/uploads/.gitkeep
+public/assets/images/_backup/
 !data/.gitkeep
 .DS_Store
 deploy/*.tgz
