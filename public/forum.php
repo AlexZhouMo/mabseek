@@ -2,7 +2,6 @@
 require __DIR__ . '/../app/bootstrap.php';
 member_check();                                   // 未登录跳 login.php
 $active = 'forum'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
-$lines   = (new Collection('content_cards'))->published("grp='forum_line'");
 // 首屏首批：多取一条判断「加载更多」显隐
 $firstBatch = thread_list_by_category('all', FORUM_PAGE_SIZE + 1, 0);
 $hasMore    = count($firstBatch) > FORUM_PAGE_SIZE;
@@ -38,13 +37,7 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
 .post .pbody .ptags span { font-size:12px; color:var(--purple); font-weight:600; }
 .post .pfoot { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-3); }
 .post .pfoot .who { display:flex; align-items:center; gap:7px; flex:1; }
-.post .pfoot .av { width:24px;height:24px;border-radius:50%;background:var(--grad-purple);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700; }
 .post .pfoot .like { display:flex;align-items:center;gap:4px; }
-.line-card { background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--sh-sm); }
-.line-card .ico { width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:14px; }
-.line-card h3 { font-size:18px; } .line-card ul { margin-top:10px; }
-.line-card ul li { display:flex;gap:8px;font-size:14px;color:var(--ink-2);margin-bottom:8px; }
-.line-card ul li::before { content:"#"; color:var(--green); font-weight:800; }
 @media (max-width:960px){ .feed{ column-count:2; } }
 @media (max-width:600px){ .feed{ column-count:1; } }
 </style>
@@ -106,7 +99,7 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
         <div class="cover grad"><span class="toptag"><?= e($catLabel) ?></span>🧬</div>
 <?php endif; ?>
         <div class="pbody"><h4><?= e($t['title']) ?></h4>
-          <div class="pfoot"><span class="who"><span class="av"><?= e(mb_substr($author, 0, 1)) ?></span><?= e($author) ?></span><span><?= e($t['created_at']) ?></span></div></div>
+          <div class="pfoot"><span class="who"><?= e($author) ?></span><span><?= e($t['created_at']) ?></span></div></div>
       </a>
 <?php endforeach; ?>
     </div>
@@ -115,22 +108,6 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
 <?php endif; ?>
     <div class="text-center" style="margin-top:20px">
       <button class="btn btn-outline" id="loadmore"<?= $hasMore ? '' : ' hidden' ?>>加载更多</button>
-    </div>
-  </div>
-</section>
-
-<!-- 四条内容线 -->
-<section class="section bg-soft">
-  <div class="container">
-    <div class="text-center" style="margin-bottom:44px">
-      <span class="eyebrow reveal"><?= snip('forum.lines.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('forum.lines.title') ?></h2>
-    </div>
-    <div class="grid-2">
-<?php foreach ($lines as $i => $l): $ex = json_decode($l['extra'] ?: '{}', true); $rev = $i ? ' d' . $i : ''; $icoStyle = !empty($ex['ico_style']) ? ' style="' . e($ex['ico_style']) . '"' : ''; ?>
-      <div class="line-card reveal<?= $rev ?>"><div class="ico"<?= $icoStyle ?>><?= e($l['icon']) ?></div><h3><?= e($l['title']) ?></h3>
-        <ul><?php foreach (($ex['items'] ?? []) as $it): ?><li><?= e($it) ?></li><?php endforeach; ?></ul></div>
-<?php endforeach; ?>
     </div>
   </div>
 </section>
@@ -154,14 +131,13 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
   }
 
   function cardHtml(it) {
-    var initial = it.author ? it.author.slice(0, 1) : '';
     var cover = it.cover
       ? '<div class="cover"><img src="' + esc(it.cover) + '" alt="" onerror="this.parentElement.classList.add(\'grad\');this.remove()"><span class="toptag">' + esc(it.catLabel) + '</span></div>'
       : '<div class="cover grad"><span class="toptag">' + esc(it.catLabel) + '</span>🧬</div>';
     return '<a class="post" href="thread.php?id=' + it.id + '" style="text-decoration:none;color:inherit;display:block">'
       + cover
       + '<div class="pbody"><h4>' + esc(it.title) + '</h4>'
-      + '<div class="pfoot"><span class="who"><span class="av">' + esc(initial) + '</span>' + esc(it.author) + '</span><span>' + esc(it.created_at) + '</span></div></div>'
+      + '<div class="pfoot"><span class="who">' + esc(it.author) + '</span><span>' + esc(it.created_at) + '</span></div></div>'
       + '</a>';
   }
 

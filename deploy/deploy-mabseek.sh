@@ -234,6 +234,19 @@ else
   warn "未找到 bin/migrate-contact-email.php，跳过邮箱订正（旧版代码可忽略）"
 fi
 
+# ─────────────────── 5d. 反馈迭代迁移 ───────────────────
+# 反馈/迭代相关表结构与存量记录订正；脚本幂等（建表用 IF NOT EXISTS，无旧值时 0 改动）。
+step "5d/9 反馈迭代迁移（幂等，就地订正存量记录）"
+if [ -f "$ROOT/bin/migrate-feedback-iteration.php" ]; then
+  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-feedback-iteration.php"; then
+    ok "反馈迭代迁移完成"
+  else
+    die "反馈迭代迁移失败"
+  fi
+else
+  warn "未找到 bin/migrate-feedback-iteration.php，跳过（旧版代码可忽略）"
+fi
+
 # ─────────────────── 6. 刷新权限 ───────────────────
 step "6/9 刷新权限（源码只读，data 与上传目录可写）"
 run chown -R root:root "$ROOT"

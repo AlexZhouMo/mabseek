@@ -58,6 +58,27 @@ if (auth_must_change_password((string)$_SESSION['uid']) && $module !== 'password
     redirect('admin.php?m=password');
 }
 
+// 反馈 CSV 导出：须在 HTML 外壳之前输出，避免被顶栏/侧栏包裹
+if ($module === 'feedback' && ($_GET['act'] ?? '') === 'export') {
+    while (ob_get_level() > 0) { ob_end_clean(); }
+    $rows = feedback_list();
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="feedback-' . date('Ymd-His') . '.csv"');
+    echo "\xEF\xBB\xBF";  // UTF-8 BOM，Excel 中文不乱码
+    $out = fopen('php://output', 'w');
+    fputcsv($out, ['ID', '称呼', '联系方式', '内容', '状态', 'IP', '提交时间']);
+    foreach ($rows as $r) {
+        fputcsv($out, [
+            (int)$r['id'], (string)$r['name'], (string)$r['email'],
+            (string)$r['message'],
+            ($r['status'] ?? '') === 'done' ? '已处理' : '未处理',
+            (string)($r['ip'] ?? ''), (string)$r['created_at'],
+        ]);
+    }
+    fclose($out);
+    exit;
+}
+
 require_once __DIR__ . '/../app/admin/crud.php';   // 通用 CRUD 组件（模块调用 admin_crud）
 $moduleFile = __DIR__ . '/../app/admin/' . $module . '.php';
 

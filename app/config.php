@@ -31,11 +31,13 @@ const CAPTCHA_TTL = 600;                          // 图形验证码有效期 10
 
 // ── 论坛会员发帖 ──
 const THREAD_CATEGORIES = [
-    'pit'   => '# 实验踩坑',
-    'proto' => '# Protocol 分享',
-    'paper' => '# 文献精读',
-    'bio'   => '# 生信工具',
-    'job'   => '# 求职招聘',
+    'paper'    => '📄 论文笔记',
+    'industry' => '📈 行业观察',
+    'method'   => '🔧 方法经验',
+    'essay'    => '✍️ 随笔感悟',
+    'qa'       => '💬 疑问求助',
+    'resource' => '🎁 资源推荐',
+    'other'    => '🌐 其他',
 ];
 const THREAD_RATE_MIN_SECONDS = 60;    // 两帖最小间隔
 const THREAD_RATE_DAILY_MAX   = 20;    // 单会员 24 小时最多发帖数

@@ -6,7 +6,7 @@ require_once __DIR__ . '/helpers.php';
 // ── 字段校验（服务端为准）──
 function feedback_validate_name(string $v): bool { $n = mb_strlen(trim($v)); return $n >= 1 && $n <= 50; }
 function feedback_validate_email(string $v): bool {
-    return $v !== '' && mb_strlen($v) <= 254 && filter_var($v, FILTER_VALIDATE_EMAIL) !== false;
+    $n = mb_strlen(trim($v)); return $n >= 1 && $n <= 254;   // 联系方式：邮箱或学号，自由文本
 }
 function feedback_validate_message(string $v): bool { $n = mb_strlen(trim($v)); return $n >= 1 && $n <= 2000; }
 

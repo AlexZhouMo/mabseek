@@ -45,7 +45,7 @@ $active = 'forum'; $navOnDark = false; $navSolidDark = true;
 <?php include __DIR__ . '/partials/nav.php'; ?>
 <div class="auth-wrap">
   <div class="auth-card wide">
-    <div class="auth-brand"><span class="logo">🧬</span><span>MabSeek</span></div>
+    <div class="auth-brand"><img class="brand-logo" src="assets/images/logo.webp" alt="MabSeek 抗体求索"></div>
     <div class="auth-title">发布帖子</div>
     <div class="auth-sub">分享经验、提问求助，与社区一起成长。</div>
     <?php if ($err): ?><div class="auth-error"><?= e($err) ?></div><?php endif; ?>

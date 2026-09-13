@@ -76,11 +76,6 @@ seed_collection('content_cards', array_merge([
     ['grp'=>'about_achievement','icon'=>'🧾','title'=>'专利成果汇总','body'=>'抗体设计算法与湿实验方法相关专利，构成平台核心技术壁垒。','extra'=>'','sort'=>6,'published'=>1],
     ['grp'=>'about_achievement','icon'=>'🏆','title'=>'科研奖项与荣誉','body'=>'承担国家级科研项目，获多项学术与产业化荣誉。','extra'=>'','sort'=>7,'published'=>1],
     ['grp'=>'about_achievement','icon'=>'👩‍🔬','title'=>'核心团队','body'=>'由博士研究团队与湿实验平台工程师组成，产学研深度融合。','extra'=>'','sort'=>8,'published'=>1],
-    // 7c. 论坛四条内容线（forum.html .line-card）
-    ['grp'=>'forum_line','icon'=>'🎓','title'=>'校友传承线','body'=>'','extra'=>json_encode(['ico_style'=>'background:var(--purple-050);color:var(--purple)','items'=>['校友留言墙：科研感悟、成长心得、毕业寄语','校友风采录：发展去向、职业简介、成长故事','校友动态联动：前后辈互助传承体系']], JSON_UNESCAPED_UNICODE),'sort'=>9,'published'=>1],
-    ['grp'=>'forum_line','icon'=>'🙋','title'=>'问答求助线','body'=>'','extra'=>json_encode(['ico_style'=>'background:var(--green-100);color:#06a97c','items'=>['实验技术求助：Western、ELISA、细胞培养','生信分析求助：序列分析、分子模拟、代码报错','文献求助：找不到全文、看不懂关键论文']], JSON_UNESCAPED_UNICODE),'sort'=>10,'published'=>1],
-    ['grp'=>'forum_line','icon'=>'📦','title'=>'干货分享线','body'=>'','extra'=>json_encode(['ico_style'=>'background:var(--purple-050);color:var(--purple)','items'=>['实验 Protocol 库：经过验证的实操流程','工具与资源：软件、数据库、脚本推荐','文献精读 + 避坑指南']], JSON_UNESCAPED_UNICODE),'sort'=>11,'published'=>1],
-    ['grp'=>'forum_line','icon'=>'💡','title'=>'话题讨论线','body'=>'','extra'=>json_encode(['ico_style'=>'background:var(--green-100);color:#06a97c','items'=>['前沿热点：ADC、双抗、纳米抗体、AI 制药','产业动态：新药获批、融资并购、行业趋势','科研生活：读博日常、压力调节、师生关系']], JSON_UNESCAPED_UNICODE),'sort'=>12,'published'=>1],
 ]));
 
 // ── 8) snippets（零散文案，逐字）──
@@ -88,7 +83,6 @@ $S = [
     // 全站页脚（footer.php 共用）
     ['footer.brand.tagline','清华团队 × AI 大模型，让抗体发现从反复试错变成精准编程。','common','页脚品牌简介','textarea'],
     ['footer.copyright','© 2026 MabSeek 抗体求索 · 清华大学医学院实验室. 保留所有权利。','common','页脚版权行','text'],
-    ['footer.slogan','紫 + 荧光绿 · 科技与趣味的平衡','common','页脚标语','text'],
     ['contact.email','m13673741782@163.com','common','联系邮箱','text'],
     ['contact.org','清华大学医学院','common','联系单位','text'],
 
@@ -107,9 +101,9 @@ $S = [
     ['home.news.eyebrow','我们的近况','home','近况 眉题','text'],
     ['home.news.title','新闻 · 活动','home','近况 标题','text'],
     ['home.news.link','进入「了解我们」查看全部近况 →','home','近况 链接','text'],
-    ['home.contact.eyebrow','合作伙伴 · 联系我们','home','联系 眉题','text'],
+    ['home.contact.eyebrow','意见反馈·寻求合作·加入我们','home','联系 眉题','text'],
     ['home.contact.title','与顶尖机构<span class="txt-neon">共建生态</span>','home','联系 标题(含标记)','textarea'],
-    ['home.contact.h3','有靶点或合作意向？给我们留个言','home','联系 小标题','text'],
+    ['home.contact.h3','有建议或遇到了问题？欢迎告诉我们','home','联系 小标题','text'],
     // 首页近况横滚卡（结构固定，文字可编辑）——沿用 news 集合渲染？否：首页卡片文案与 about 不同，用 snippet
 ];
 foreach ($S as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
@@ -214,10 +208,6 @@ $S_edu = [
     ['edu.banner.sub','元视频 + 交互式知识图谱体系 · 精准适配学生、疫苗研发从业者、接种人群与新手父母','education','课程 Banner 副标题','textarea'],
     ['edu.video.eyebrow','课时播放专区','education','课时播放 眉题','text'],
     ['edu.video.title','元视频点播 + 实时弹幕 + 专属留言区','education','课时播放 标题','text'],
-    ['edu.lecture.eyebrow','学术讲座与教研活动','education','学术讲座 眉题','text'],
-    ['edu.lecture.title','从大牛讲座到民间沙龙','education','学术讲座 标题','text'],
-    ['edu.grow.eyebrow','学生学术成长资源','education','成长资源 眉题','text'],
-    ['edu.grow.title','陪伴科研人从入门到成长','education','成长资源 标题','text'],
 ];
 foreach ($S_edu as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(education): " . count($S_edu) . " seeded (idempotent)\n";
@@ -234,8 +224,6 @@ $S_forum = [
     ['forum.search.chip1','纳米抗体适合 AI 设计吗','forum','搜索 示例1','text'],
     ['forum.search.chip2','双抗结构设计有哪些坑','forum','搜索 示例2','text'],
     ['forum.search.chip3','怎么排查细胞培养污染','forum','搜索 示例3','text'],
-    ['forum.lines.eyebrow','核心内容板块','forum','内容线 眉题','text'],
-    ['forum.lines.title','四条内容线，<span class="grad-text">让社区留得住人</span>','forum','内容线 标题(含标记)','textarea'],
 ];
 foreach ($S_forum as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(forum): " . count($S_forum) . " seeded (idempotent)\n";
@@ -300,18 +288,4 @@ echo "  + snippets(about): " . count($S_about) . " seeded (idempotent)\n";
 seed_cards_group('edu_info', [
     ['grp'=>'edu_info','icon'=>'📘','title'=>'课程简介','body'=>'','extra'=>json_encode(['items'=>['从病毒免疫到疫苗研发的完整知识体系','原版课程完整留存，拆解为独立元视频片段','支持精准点播单个知识点，无需通看全片','视频画面与知识图谱双向跳转溯源'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
     ['grp'=>'edu_info','icon'=>'💡','title'=>'育人理念','body'=>'','extra'=>json_encode(['items'=>['让科研教育有趣、好玩、可高频使用','知识分层开放，从科普到科研全覆盖','AI 全程陪伴答疑，降低学习门槛','搭建前后辈互助传承的成长生态'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
-]);
-
-// 学术讲座与教研活动（education.html .grid-2 左栏 .card）
-seed_cards_group('edu_lecture', [
-    ['grp'=>'edu_lecture','icon'=>'🎤','title'=>'官方讲座','body'=>'实验室邀请领域大牛开展抗体工程、疫苗研发、病毒免疫系列专题讲座。','extra'=>'','sort'=>1,'published'=>1],
-    ['grp'=>'edu_lecture','icon'=>'☕','title'=>'民间交流沙龙','body'=>'师生自发组织沙龙与教研分享，派博士生参与互动；对接产业方品宣需求，双向共赢。','extra'=>'','sort'=>2,'published'=>1],
-    ['grp'=>'edu_lecture','icon'=>'🎬','title'=>'二次传播','body'=>'发起活动可获得资源支持与视频化二次宣传，持续放大传播力量。','extra'=>'','sort'=>3,'published'=>1],
-]);
-
-// 学生学术成长资源（education.html .grid-2 右栏 .card）
-seed_cards_group('edu_grow', [
-    ['grp'=>'edu_grow','icon'=>'🧰','title'=>'成长干货资源库','body'=>'科研工具、写作模板、职业发展、学术成长干货一站汇总。','extra'=>'','sort'=>1,'published'=>1],
-    ['grp'=>'edu_grow','icon'=>'✈️','title'=>'会议与培训','body'=>'优质学术会议、青年学者培训、参会补助资源汇总。','extra'=>'','sort'=>2,'published'=>1],
-    ['grp'=>'edu_grow','icon'=>'💰','title'=>'资助与基金','body'=>'科研资助、奖学金、基金申请渠道及组内成功经验分享。','extra'=>'','sort'=>3,'published'=>1],
 ]);
