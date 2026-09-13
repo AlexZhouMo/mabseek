@@ -42,6 +42,25 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             member_change_password((int)$me['id'], $new);
             session_regenerate_id(true);           // 改密后刷新会话 ID
             audit('member_change_password');
+            // SciencePal 同步密码（本站优先：失败仅记录，不阻断改密）
+            $scpRow = scp_sync_get((int)$me['id']);
+            if ($scpRow && $scpRow['status'] === 'exists') {
+                // exists 账号不改密（文档明确），不同步
+            } else {
+                $emailForScp = (string)$me['email'];
+                $r = sciencepal_sync_password($emailForScp, $new);
+                if ($r['status'] === 'updated') {
+                    scp_sync_upsert((int)$me['id'], $emailForScp, 'created');
+                } elseif ($r['status'] === 'notfound') {
+                    $p = sciencepal_provision($emailForScp, $new);   // 尚未开通 → 此刻有明文, 补开通
+                    scp_sync_upsert((int)$me['id'], $emailForScp, $p['status'] === 'error' ? 'failed' : $p['status'], (string)($p['error'] ?? ''));
+                } elseif ($r['status'] === 'forbidden') {
+                    scp_sync_upsert((int)$me['id'], $emailForScp, 'exists');   // 403：非本接口开通的已有 SciencePal 账号
+                } else {
+                    scp_sync_upsert((int)$me['id'], $emailForScp, 'failed', (string)($r['error'] ?? $r['status']));
+                }
+                audit('scp_sync_pw', 'user', (string)$me['id']);
+            }
             $msg = '密码已更新';
         }
     }
@@ -67,6 +86,16 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
     <?php if ($msg): ?><div class="auth-error" style="background:var(--green-100);border-color:var(--green-400);color:#0a7a5c"><?= e($msg) ?></div><?php endif; ?>
     <?php if ($err): ?><div class="auth-error"><?= e($err) ?></div><?php endif; ?>
     <?php if ($needEmail): ?><div class="auth-error" style="background:var(--green-100);border-color:var(--green-400);color:#0a7a5c">请先补全邮箱,以便正常使用完整功能。</div><?php endif; ?>
+
+    <?php $scpRow = scp_sync_get((int)$me['id']); if ($scpRow): ?>
+      <?php if ($scpRow['status'] === 'exists'): ?>
+      <div class="auth-error">该邮箱已在 SciencePal 注册，请用原 SciencePal 密码直接登录 <a href="https://sciencepal.ai" target="_blank" rel="noopener">sciencepal.ai</a>。</div>
+      <?php elseif ($scpRow['status'] === 'failed'): ?>
+      <div class="auth-error">SciencePal 账号开通尚未完成，重新设置一次密码即可完成同步。</div>
+      <?php elseif ($scpRow['status'] === 'created'): ?>
+      <div class="auth-error" style="background:var(--green-100);border-color:var(--green-400);color:#0a7a5c">已开通 SciencePal，可用同一邮箱密码登录 <a href="https://sciencepal.ai" target="_blank" rel="noopener">sciencepal.ai</a>。</div>
+      <?php endif; ?>
+    <?php endif; ?>
 
     <div class="auth-card wide" style="margin-bottom:20px">
       <div class="auth-section-title">基本资料</div>

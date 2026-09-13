@@ -142,6 +142,21 @@ SQL);
     SQL);
     $pdo->exec("CREATE INDEX IF NOT EXISTS idx_feedback_created ON feedback(created_at DESC)");
 
+    $pdo->exec(<<<SQL
+    CREATE TABLE IF NOT EXISTS sciencepal_sync (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      email TEXT NOT NULL DEFAULT '',
+      status TEXT NOT NULL DEFAULT 'pending',
+      last_error TEXT NOT NULL DEFAULT '',
+      attempts INTEGER NOT NULL DEFAULT 0,
+      synced_at TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+    SQL);
+    $pdo->exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_scp_user ON sciencepal_sync(user_id)");
+
     // 下线论坛 CMS 假数据模块：删除遗留表（幂等；数据无价值，老库亦自动清除）
     $pdo->exec("DROP TABLE IF EXISTS forum_posts");
     $pdo->exec("DROP TABLE IF EXISTS forum_hot");

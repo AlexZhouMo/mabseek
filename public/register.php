@@ -34,10 +34,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     }
 
     if (!$errors) {
-        member_register($in['username'], $pass, $in['email'], $in['phone'], $in['nickname']);
+        $newId = member_register($in['username'], $pass, $in['email'], $in['phone'], $in['nickname']);
         auth_login_user($in['username']);            // 注册成功自动登录
         $_SESSION['nick'] = $in['nickname'] !== '' ? $in['nickname'] : $in['username'];
         audit('member_register', 'user', $in['username']);
+        // SciencePal 同步开通（本站优先：失败仅记录，不阻断注册）
+        $scp = sciencepal_provision($in['email'], $pass);
+        scp_sync_upsert($newId, $in['email'], $scp['status'] === 'error' ? 'failed' : $scp['status'], (string)($scp['error'] ?? ''));
+        audit('scp_provision', 'user', (string)$newId);
         redirect('account.php');
     }
 }

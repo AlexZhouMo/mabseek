@@ -10,3 +10,4 @@ deploy/*.tgz
 .claude/
 docs/superpowers/
 CLAUDE.md
+app/config.local.php
