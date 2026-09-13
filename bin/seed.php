@@ -102,9 +102,9 @@ $S = [
     ['home.news.eyebrow','我们的近况','home','近况 眉题','text'],
     ['home.news.title','新闻 · 活动','home','近况 标题','text'],
     ['home.news.link','进入「了解我们」查看全部近况 →','home','近况 链接','text'],
-    ['home.contact.eyebrow','合作伙伴 · 联系我们','home','联系 眉题','text'],
+    ['home.contact.eyebrow','意见反馈·寻求合作·加入我们','home','联系 眉题','text'],
     ['home.contact.title','与顶尖机构<span class="txt-neon">共建生态</span>','home','联系 标题(含标记)','textarea'],
-    ['home.contact.h3','有靶点或合作意向？给我们留个言','home','联系 小标题','text'],
+    ['home.contact.h3','有建议或遇到了问题？欢迎告诉我们','home','联系 小标题','text'],
     // 首页近况横滚卡（结构固定，文字可编辑）——沿用 news 集合渲染？否：首页卡片文案与 about 不同，用 snippet
 ];
 foreach ($S as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');

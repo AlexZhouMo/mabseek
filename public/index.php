@@ -107,9 +107,9 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
       </div>
       <div class="fb-row">
         <input type="text" name="name" placeholder="你的称呼" required>
-        <input type="email" name="email" placeholder="邮箱" required>
+        <input type="text" name="email" placeholder="联系方式：邮箱/学号" required>
       </div>
-      <textarea name="message" placeholder="简单描述你的靶点 / 需求 / 合作意向" required></textarea>
+      <textarea name="message" placeholder="有建议、想合作、或愿意加入我们？留下你的信息，我们会尽快处理。" required></textarea>
       <button type="submit" class="btn btn-green fb-submit">提交反馈</button>
     </form>
   </div>
