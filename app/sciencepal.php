@@ -28,7 +28,6 @@ function sciencepal_request(string $method, string $path, array $payload): array
     $raw  = curl_exec($ch);
     $http = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $cerr = curl_error($ch);
-    curl_close($ch);
     if ($raw === false) return ['ok' => false, 'http' => 0, 'body' => [], 'error' => 'network:' . $cerr];
     $body = json_decode((string)$raw, true);
     if (!is_array($body)) $body = [];
