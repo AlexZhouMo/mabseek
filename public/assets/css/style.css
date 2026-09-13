@@ -689,8 +689,8 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 .nav--on-dark .nav-auth.btn-ghost:hover { border-color: var(--green-neon); color: var(--green-neon); background: transparent; }
 
 /* 富文本编辑器（论坛发帖 / 后台新闻共用） */
-.rt-field { border: 1px solid var(--line, #e5e7eb); border-radius: 8px; overflow: hidden; }
-.rt-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; background: #f7f7f9; border-bottom: 1px solid var(--line, #e5e7eb); }
+.rt-field { border: 1px solid var(--line, #e5e7eb); border-radius: 8px; }
+.rt-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; background: #f7f7f9; border-bottom: 1px solid var(--line, #e5e7eb); position: sticky; top: 0; z-index: 5; border-radius: 8px 8px 0 0; }
 .rt-btn { min-width: 34px; height: 30px; padding: 0 10px; border: 1px solid #d0d0d8; border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; line-height: 28px; }
 .rt-btn:hover { background: #eef0ff; border-color: #b9c0ff; }
 .rt-editor { min-height: 260px; padding: 14px 16px; outline: none; line-height: 1.7; font-size: 15px; }
