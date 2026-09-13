@@ -247,6 +247,19 @@ else
   warn "未找到 bin/migrate-feedback-iteration.php，跳过（旧版代码可忽略）"
 fi
 
+# ─────────────────── 5e. 团队/教育迁移 ───────────────────
+# 团队/教育相关存量记录订正；脚本幂等（无旧值时 0 改动）。
+step "5e/9 20260909 团队/教育迁移（幂等，就地订正存量记录）"
+if [ -f "$ROOT/bin/migrate-20260909-team-edu.php" ]; then
+  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-20260909-team-edu.php"; then
+    ok "20260909 团队/教育迁移完成"
+  else
+    die "20260909 团队/教育迁移失败"
+  fi
+else
+  warn "未找到 bin/migrate-20260909-team-edu.php，跳过（旧版代码可忽略）"
+fi
+
 # ─────────────────── 6. 刷新权限 ───────────────────
 step "6/9 刷新权限（源码只读，data 与上传目录可写）"
 run chown -R root:root "$ROOT"
