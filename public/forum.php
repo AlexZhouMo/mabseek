@@ -2,7 +2,6 @@
 require __DIR__ . '/../app/bootstrap.php';
 member_check();                                   // 未登录跳 login.php
 $active = 'forum'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
-$lines   = (new Collection('content_cards'))->published("grp='forum_line'");
 // 首屏首批：多取一条判断「加载更多」显隐
 $firstBatch = thread_list_by_category('all', FORUM_PAGE_SIZE + 1, 0);
 $hasMore    = count($firstBatch) > FORUM_PAGE_SIZE;
@@ -115,22 +114,6 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
 <?php endif; ?>
     <div class="text-center" style="margin-top:20px">
       <button class="btn btn-outline" id="loadmore"<?= $hasMore ? '' : ' hidden' ?>>加载更多</button>
-    </div>
-  </div>
-</section>
-
-<!-- 四条内容线 -->
-<section class="section bg-soft">
-  <div class="container">
-    <div class="text-center" style="margin-bottom:44px">
-      <span class="eyebrow reveal"><?= snip('forum.lines.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('forum.lines.title') ?></h2>
-    </div>
-    <div class="grid-2">
-<?php foreach ($lines as $i => $l): $ex = json_decode($l['extra'] ?: '{}', true); $rev = $i ? ' d' . $i : ''; $icoStyle = !empty($ex['ico_style']) ? ' style="' . e($ex['ico_style']) . '"' : ''; ?>
-      <div class="line-card reveal<?= $rev ?>"><div class="ico"<?= $icoStyle ?>><?= e($l['icon']) ?></div><h3><?= e($l['title']) ?></h3>
-        <ul><?php foreach (($ex['items'] ?? []) as $it): ?><li><?= e($it) ?></li><?php endforeach; ?></ul></div>
-<?php endforeach; ?>
     </div>
   </div>
 </section>

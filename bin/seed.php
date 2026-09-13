@@ -76,11 +76,6 @@ seed_collection('content_cards', array_merge([
     ['grp'=>'about_achievement','icon'=>'🧾','title'=>'专利成果汇总','body'=>'抗体设计算法与湿实验方法相关专利，构成平台核心技术壁垒。','extra'=>'','sort'=>6,'published'=>1],
     ['grp'=>'about_achievement','icon'=>'🏆','title'=>'科研奖项与荣誉','body'=>'承担国家级科研项目，获多项学术与产业化荣誉。','extra'=>'','sort'=>7,'published'=>1],
     ['grp'=>'about_achievement','icon'=>'👩‍🔬','title'=>'核心团队','body'=>'由博士研究团队与湿实验平台工程师组成，产学研深度融合。','extra'=>'','sort'=>8,'published'=>1],
-    // 7c. 论坛四条内容线（forum.html .line-card）
-    ['grp'=>'forum_line','icon'=>'🎓','title'=>'校友传承线','body'=>'','extra'=>json_encode(['ico_style'=>'background:var(--purple-050);color:var(--purple)','items'=>['校友留言墙：科研感悟、成长心得、毕业寄语','校友风采录：发展去向、职业简介、成长故事','校友动态联动：前后辈互助传承体系']], JSON_UNESCAPED_UNICODE),'sort'=>9,'published'=>1],
-    ['grp'=>'forum_line','icon'=>'🙋','title'=>'问答求助线','body'=>'','extra'=>json_encode(['ico_style'=>'background:var(--green-100);color:#06a97c','items'=>['实验技术求助：Western、ELISA、细胞培养','生信分析求助：序列分析、分子模拟、代码报错','文献求助：找不到全文、看不懂关键论文']], JSON_UNESCAPED_UNICODE),'sort'=>10,'published'=>1],
-    ['grp'=>'forum_line','icon'=>'📦','title'=>'干货分享线','body'=>'','extra'=>json_encode(['ico_style'=>'background:var(--purple-050);color:var(--purple)','items'=>['实验 Protocol 库：经过验证的实操流程','工具与资源：软件、数据库、脚本推荐','文献精读 + 避坑指南']], JSON_UNESCAPED_UNICODE),'sort'=>11,'published'=>1],
-    ['grp'=>'forum_line','icon'=>'💡','title'=>'话题讨论线','body'=>'','extra'=>json_encode(['ico_style'=>'background:var(--green-100);color:#06a97c','items'=>['前沿热点：ADC、双抗、纳米抗体、AI 制药','产业动态：新药获批、融资并购、行业趋势','科研生活：读博日常、压力调节、师生关系']], JSON_UNESCAPED_UNICODE),'sort'=>12,'published'=>1],
 ]));
 
 // ── 8) snippets（零散文案，逐字）──
@@ -234,8 +229,6 @@ $S_forum = [
     ['forum.search.chip1','纳米抗体适合 AI 设计吗','forum','搜索 示例1','text'],
     ['forum.search.chip2','双抗结构设计有哪些坑','forum','搜索 示例2','text'],
     ['forum.search.chip3','怎么排查细胞培养污染','forum','搜索 示例3','text'],
-    ['forum.lines.eyebrow','核心内容板块','forum','内容线 眉题','text'],
-    ['forum.lines.title','四条内容线，<span class="grad-text">让社区留得住人</span>','forum','内容线 标题(含标记)','textarea'],
 ];
 foreach ($S_forum as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(forum): " . count($S_forum) . " seeded (idempotent)\n";
