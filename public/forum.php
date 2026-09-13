@@ -37,13 +37,7 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
 .post .pbody .ptags span { font-size:12px; color:var(--purple); font-weight:600; }
 .post .pfoot { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-3); }
 .post .pfoot .who { display:flex; align-items:center; gap:7px; flex:1; }
-.post .pfoot .av { width:24px;height:24px;border-radius:50%;background:var(--grad-purple);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700; }
 .post .pfoot .like { display:flex;align-items:center;gap:4px; }
-.line-card { background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--sh-sm); }
-.line-card .ico { width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:14px; }
-.line-card h3 { font-size:18px; } .line-card ul { margin-top:10px; }
-.line-card ul li { display:flex;gap:8px;font-size:14px;color:var(--ink-2);margin-bottom:8px; }
-.line-card ul li::before { content:"#"; color:var(--green); font-weight:800; }
 @media (max-width:960px){ .feed{ column-count:2; } }
 @media (max-width:600px){ .feed{ column-count:1; } }
 </style>
