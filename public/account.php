@@ -54,6 +54,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 } elseif ($r['status'] === 'notfound') {
                     $p = sciencepal_provision($emailForScp, $new);   // 尚未开通 → 此刻有明文, 补开通
                     scp_sync_upsert((int)$me['id'], $emailForScp, $p['status'] === 'error' ? 'failed' : $p['status'], (string)($p['error'] ?? ''));
+                } elseif ($r['status'] === 'forbidden') {
+                    scp_sync_upsert((int)$me['id'], $emailForScp, 'exists');   // 403：非本接口开通的已有 SciencePal 账号
                 } else {
                     scp_sync_upsert((int)$me['id'], $emailForScp, 'failed', (string)($r['error'] ?? $r['status']));
                 }

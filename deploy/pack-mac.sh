@@ -45,6 +45,7 @@ COPYFILE_DISABLE=1 tar \
   --exclude='*.sqlite-wal' \
   --exclude='*.sqlite-shm' \
   --exclude='deploy/*.tgz' \
+  --exclude='app/config.local.php' \
   -czf "$OUT" \
   -C "$ROOT" \
   app bin public deploy
