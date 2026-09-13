@@ -117,6 +117,16 @@ php tests/run.php
 
 nginx 文档根务必指向 `public/`，切勿指向项目根目录，以保持 Web 根隔离。
 
+### SciencePal 合作方对接（密钥配置）
+
+会员在本站注册成功即同步到 SciencePal 开通账号、本站改密时同步新密码。密钥不入 Git，生产环境需**手工配置一次**（git 拉取不会带来）：
+
+- 复制模板并填入密钥：`cp app/config.local.php.example app/config.local.php`，编辑 `app/config.local.php` 填入 SciencePal 提供的 `SCIENCEPAL_PARTNER_KEY`；`SCIENCEPAL_API_BASE` 默认指向正式环境。
+- 或改用环境变量 `SCIENCEPAL_PARTNER_KEY` / `SCIENCEPAL_API_BASE`（优先级高于配置文件），在 php-fpm 池或系统环境中设置。
+- `app/config.local.php` 已被 `.gitignore` 排除，切勿提交；密钥只放服务器后端。
+- 未配置密钥时同步逻辑自动静默跳过（`enabled=false`），不影响本站注册/改密（本站优先）。
+- 同步状态存 `sciencepal_sync` 表（随 `app/db.php` 的 `migrate()` 自动建表，无需单独迁移脚本）。
+
 ### 提交前检查（持续集成保障）
 
 提交到 GitHub 前，须确认一键部署脚本能让本次改动在生产环境正常集成。重点：数据库内容改动（`data/` 不进 git、seed 有数据即跳过）必须配套 `seed.php` 种子更新 + 幂等迁移脚本（`bin/migrate-*.php`）+ 接入 `deploy-mabseek.sh`；静态资源须确认已入库且引用已更新；迁移脚本须幂等且不误伤用户数据；在线 / 离线两种部署模式都要覆盖。完整规则见 [CLAUDE.md](CLAUDE.md)。
