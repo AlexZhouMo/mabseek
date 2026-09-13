@@ -53,7 +53,6 @@ seed_collection('edu_reviews', [
 // ── 3) team_members（about.html 双负责人，逐字）──
 seed_collection('team_members', [
     ['name'=>'张林琦','affiliation'=>'清华大学 · 实验室负责人','direction'=>'长期从事抗体工程、疫苗研发与病毒免疫研究，为 MabSeek 奠定抗体科学与湿实验验证的专业根基。','role_label'=>'科学负责人 · 抗体 / 疫苗 / 病毒免疫','role_type'=>'science','avatar_char'=>'张','avatar_img'=>'assets/images/team/zhang.webp','sort'=>1,'published'=>1],
-    ['name'=>'马维英','affiliation'=>'清华大学 · 实验室负责人','direction'=>'深耕人工智能、大模型与机器学习，为 MabSeek 的 AI 抗体设计、预测与分析能力提供核心算法支撑。','role_label'=>'AI 负责人 · 人工智能 / 大模型 / 机器学习','role_type'=>'ai','avatar_char'=>'马','avatar_img'=>'assets/images/team/ma.webp','sort'=>2,'published'=>1],
 ]);
 
 // ── 4) partners（index.html logo 墙，逐字）──
@@ -201,11 +200,11 @@ seed_cards_group('agent_matrix', [
 $S_edu = [
     ['edu.hero.breadcrumb','教育','education','教育页 面包屑','text'],
     ['edu.hero.eyebrow','新型教育科研范式','education','教育页 Hero 眉题','text'],
-    ['edu.hero.title','让知识<span class="grad-text">可交互、可溯源、可生长</span>','education','教育页 Hero 标题(含标记)','textarea'],
-    ['edu.hero.lead','元视频拆解 + 分层交互式知识图谱 + 实时互动，打通「视频观看 — 弹幕交流 — 图谱梳理 — AI 答疑」完整教学闭环。','education','教育页 Hero 说明','textarea'],
+    ['edu.hero.title','让知识<span class="grad-text">系统沉淀、清晰可循</span>','education','教育页 Hero 标题(含标记)','textarea'],
+    ['edu.hero.lead','元视频拆解 + 实时互动，打通「视频观看 — 弹幕交流 — AI 答疑」的完整教学闭环。','education','教育页 Hero 说明','textarea'],
     ['edu.banner.tag','精品课程','education','课程 Banner 标签','text'],
     ['edu.banner.title','《疫苗的力量》','education','课程 Banner 标题','text'],
-    ['edu.banner.sub','元视频 + 交互式知识图谱体系 · 精准适配学生、疫苗研发从业者、接种人群与新手父母','education','课程 Banner 副标题','textarea'],
+    ['edu.banner.sub','元视频课程体系 · 精准适配学生、疫苗研发从业者、接种人群与新手父母','education','课程 Banner 副标题','textarea'],
     ['edu.video.eyebrow','课时播放专区','education','课时播放 眉题','text'],
     ['edu.video.title','元视频点播 + 实时弹幕 + 专属留言区','education','课时播放 标题','text'],
 ];
@@ -241,9 +240,9 @@ $S_about = [
     ['about.hero.tag_intl','国际合作','about','Hero 标签 国际合作','text'],
     // 实验室与核心团队
     ['about.team.eyebrow','1 · 实验室与核心团队','about','核心团队 眉题','text'],
-    ['about.team.title','两位负责人，AI 与抗体科学的交汇','about','核心团队 标题','text'],
-    ['about.team.sub','MabSeek 由抗体与病毒免疫的科学积累，叠加人工智能与大模型能力共同驱动——「AI × 抗体」正是两位负责人研究方向的交汇。','about','核心团队 说明','textarea'],
-    ['about.team.disclaimer','注：以上为门户展示模板，详细简历与成果列表参考清华大学医学院官网张林琦、马维英主页，正式上线时同步更新。','about','核心团队 免责说明','textarea'],
+    ['about.team.title','实验室与核心团队','about','核心团队 标题','text'],
+    ['about.team.sub','MabSeek 依托抗体工程、疫苗研发与病毒免疫的深厚科学积累，结合 AI 与大模型能力，打通从抗体设计到湿实验验证的完整闭环。','about','核心团队 说明','textarea'],
+    ['about.team.disclaimer','注：以上为门户展示模板，详细简历与成果列表参考清华大学医学院官网张林琦主页，正式上线时同步更新。','about','核心团队 免责说明','textarea'],
     ['about.loc.cap','清华大学医学院 · 立足北京市国合基地','about','位置展示 说明','text'],
     // MabSeek 平台介绍
     ['about.platform.eyebrow','MabSeek 平台介绍','about','平台介绍 眉题','text'],
@@ -286,6 +285,6 @@ echo "  + snippets(about): " . count($S_about) . " seeded (idempotent)\n";
 // ── education 页 content_cards（分组幂等，逐字）──
 // 课程简介 / 育人理念（education.html .three-col info-card）
 seed_cards_group('edu_info', [
-    ['grp'=>'edu_info','icon'=>'📘','title'=>'课程简介','body'=>'','extra'=>json_encode(['items'=>['从病毒免疫到疫苗研发的完整知识体系','原版课程完整留存，拆解为独立元视频片段','支持精准点播单个知识点，无需通看全片','视频画面与知识图谱双向跳转溯源'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
+    ['grp'=>'edu_info','icon'=>'📘','title'=>'课程简介','body'=>'','extra'=>json_encode(['items'=>['从病毒免疫到疫苗研发的完整知识体系','原版课程完整留存，拆解为独立元视频片段','支持精准点播单个知识点，无需通看全片','按知识点精准点播，边看边学'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
     ['grp'=>'edu_info','icon'=>'💡','title'=>'育人理念','body'=>'','extra'=>json_encode(['items'=>['让科研教育有趣、好玩、可高频使用','知识分层开放，从科普到科研全覆盖','AI 全程陪伴答疑，降低学习门槛','搭建前后辈互助传承的成长生态'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
 ]);
