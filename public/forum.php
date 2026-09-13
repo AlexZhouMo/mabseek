@@ -106,7 +106,7 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
         <div class="cover grad"><span class="toptag"><?= e($catLabel) ?></span>🧬</div>
 <?php endif; ?>
         <div class="pbody"><h4><?= e($t['title']) ?></h4>
-          <div class="pfoot"><span class="who"><span class="av"><?= e(mb_substr($author, 0, 1)) ?></span><?= e($author) ?></span><span><?= e($t['created_at']) ?></span></div></div>
+          <div class="pfoot"><span class="who"><?= e($author) ?></span><span><?= e($t['created_at']) ?></span></div></div>
       </a>
 <?php endforeach; ?>
     </div>
@@ -154,14 +154,13 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
   }
 
   function cardHtml(it) {
-    var initial = it.author ? it.author.slice(0, 1) : '';
     var cover = it.cover
       ? '<div class="cover"><img src="' + esc(it.cover) + '" alt="" onerror="this.parentElement.classList.add(\'grad\');this.remove()"><span class="toptag">' + esc(it.catLabel) + '</span></div>'
       : '<div class="cover grad"><span class="toptag">' + esc(it.catLabel) + '</span>🧬</div>';
     return '<a class="post" href="thread.php?id=' + it.id + '" style="text-decoration:none;color:inherit;display:block">'
       + cover
       + '<div class="pbody"><h4>' + esc(it.title) + '</h4>'
-      + '<div class="pfoot"><span class="who"><span class="av">' + esc(initial) + '</span>' + esc(it.author) + '</span><span>' + esc(it.created_at) + '</span></div></div>'
+      + '<div class="pfoot"><span class="who">' + esc(it.author) + '</span><span>' + esc(it.created_at) + '</span></div></div>'
       + '</a>';
   }
 
