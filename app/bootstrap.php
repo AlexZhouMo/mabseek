@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
+if (is_file(__DIR__ . '/config.local.php')) require_once __DIR__ . '/config.local.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/csrf.php';
