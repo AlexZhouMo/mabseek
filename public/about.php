@@ -27,7 +27,7 @@ $news = (new Collection('news'))->published();
 .timeline .tl { position:relative; margin-bottom:18px; }
 .timeline .tl::before { content:""; position:absolute; left:-29px; top:4px; width:12px;height:12px;border-radius:50%;background:var(--grad-purple);box-shadow:0 0 0 4px var(--purple-050); }
 .timeline .tl b { font-size:15px; } .timeline .tl p { font-size:13px;color:var(--ink-3); }
-/* 双人负责人卡 */
+/* 负责人卡 */
 .leads { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px; margin-top:22px; }
 .lead-card { display:flex; gap:18px; align-items:flex-start; background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--sh-sm); }
 .lead-card .ph { flex:0 0 84px; width:84px; height:84px; border-radius:16px; background:var(--grad-brand); color:#fff; display:grid; place-items:center; font-size:34px; font-weight:800; }
