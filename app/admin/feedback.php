@@ -40,10 +40,11 @@ foreach ($rows as $r) if (($r['status'] ?? '') !== 'done') $newCount++;
   <div class="page-head">
     <h3>联系反馈</h3>
     <span class="page-head-meta">共 <?= count($rows) ?> 条 · 未处理 <?= $newCount ?> 条</span>
+    <a class="abtn abtn-sm abtn-default" href="admin.php?m=feedback&act=export">导出 CSV</a>
   </div>
   <div class="table-wrap">
   <table class="data-table">
-    <thead><tr><th>ID</th><th>称呼</th><th>邮箱</th><th>内容</th><th>状态</th><th>IP</th><th>时间</th><th class="col-actions">操作</th></tr></thead>
+    <thead><tr><th>ID</th><th>称呼</th><th>联系方式</th><th>内容</th><th>状态</th><th>IP</th><th>时间</th><th class="col-actions">操作</th></tr></thead>
     <tbody>
 <?php foreach ($rows as $r): ?>
       <tr>
