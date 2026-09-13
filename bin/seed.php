@@ -83,7 +83,6 @@ $S = [
     // 全站页脚（footer.php 共用）
     ['footer.brand.tagline','清华团队 × AI 大模型，让抗体发现从反复试错变成精准编程。','common','页脚品牌简介','textarea'],
     ['footer.copyright','© 2026 MabSeek 抗体求索 · 清华大学医学院实验室. 保留所有权利。','common','页脚版权行','text'],
-    ['footer.slogan','紫 + 荧光绿 · 科技与趣味的平衡','common','页脚标语','text'],
     ['contact.email','m13673741782@163.com','common','联系邮箱','text'],
     ['contact.org','清华大学医学院','common','联系单位','text'],
 
@@ -209,10 +208,6 @@ $S_edu = [
     ['edu.banner.sub','元视频 + 交互式知识图谱体系 · 精准适配学生、疫苗研发从业者、接种人群与新手父母','education','课程 Banner 副标题','textarea'],
     ['edu.video.eyebrow','课时播放专区','education','课时播放 眉题','text'],
     ['edu.video.title','元视频点播 + 实时弹幕 + 专属留言区','education','课时播放 标题','text'],
-    ['edu.lecture.eyebrow','学术讲座与教研活动','education','学术讲座 眉题','text'],
-    ['edu.lecture.title','从大牛讲座到民间沙龙','education','学术讲座 标题','text'],
-    ['edu.grow.eyebrow','学生学术成长资源','education','成长资源 眉题','text'],
-    ['edu.grow.title','陪伴科研人从入门到成长','education','成长资源 标题','text'],
 ];
 foreach ($S_edu as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(education): " . count($S_edu) . " seeded (idempotent)\n";
@@ -293,18 +288,4 @@ echo "  + snippets(about): " . count($S_about) . " seeded (idempotent)\n";
 seed_cards_group('edu_info', [
     ['grp'=>'edu_info','icon'=>'📘','title'=>'课程简介','body'=>'','extra'=>json_encode(['items'=>['从病毒免疫到疫苗研发的完整知识体系','原版课程完整留存，拆解为独立元视频片段','支持精准点播单个知识点，无需通看全片','视频画面与知识图谱双向跳转溯源'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
     ['grp'=>'edu_info','icon'=>'💡','title'=>'育人理念','body'=>'','extra'=>json_encode(['items'=>['让科研教育有趣、好玩、可高频使用','知识分层开放，从科普到科研全覆盖','AI 全程陪伴答疑，降低学习门槛','搭建前后辈互助传承的成长生态'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
-]);
-
-// 学术讲座与教研活动（education.html .grid-2 左栏 .card）
-seed_cards_group('edu_lecture', [
-    ['grp'=>'edu_lecture','icon'=>'🎤','title'=>'官方讲座','body'=>'实验室邀请领域大牛开展抗体工程、疫苗研发、病毒免疫系列专题讲座。','extra'=>'','sort'=>1,'published'=>1],
-    ['grp'=>'edu_lecture','icon'=>'☕','title'=>'民间交流沙龙','body'=>'师生自发组织沙龙与教研分享，派博士生参与互动；对接产业方品宣需求，双向共赢。','extra'=>'','sort'=>2,'published'=>1],
-    ['grp'=>'edu_lecture','icon'=>'🎬','title'=>'二次传播','body'=>'发起活动可获得资源支持与视频化二次宣传，持续放大传播力量。','extra'=>'','sort'=>3,'published'=>1],
-]);
-
-// 学生学术成长资源（education.html .grid-2 右栏 .card）
-seed_cards_group('edu_grow', [
-    ['grp'=>'edu_grow','icon'=>'🧰','title'=>'成长干货资源库','body'=>'科研工具、写作模板、职业发展、学术成长干货一站汇总。','extra'=>'','sort'=>1,'published'=>1],
-    ['grp'=>'edu_grow','icon'=>'✈️','title'=>'会议与培训','body'=>'优质学术会议、青年学者培训、参会补助资源汇总。','extra'=>'','sort'=>2,'published'=>1],
-    ['grp'=>'edu_grow','icon'=>'💰','title'=>'资助与基金','body'=>'科研资助、奖学金、基金申请渠道及组内成功经验分享。','extra'=>'','sort'=>3,'published'=>1],
 ]);

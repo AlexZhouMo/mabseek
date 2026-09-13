@@ -3,8 +3,6 @@ require __DIR__ . '/../app/bootstrap.php';
 member_check();                                   // 未登录跳 login.php
 $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
 $eduInfo    = (new Collection('content_cards'))->published("grp='edu_info'");
-$eduLecture = (new Collection('content_cards'))->published("grp='edu_lecture'");
-$eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -167,7 +165,7 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
         <div class="screen">
           <img src="assets/images/education-banner.webp" alt="课程视频画面">
           <div class="danmaku" id="danmaku"></div>
-          <div class="playbtn" data-demo="正式版将唤起独立播放器，侧边常驻知识图谱入口"></div>
+          <div class="playbtn" data-demo="正式版将唤起独立播放器"></div>
         </div>
         <div class="bar"><span></span></div>
         <div class="ctrls">
@@ -180,7 +178,7 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
         <b style="font-size:15px">课时专属留言区</b>
         <div style="margin-top:12px">
           <div class="comment"><span class="avatar" style="background:var(--grad-purple)">疫</span><div class="body"><b>疫苗探客</b><p>免疫记忆这段讲得很清楚，知识点拆分得刚刚好！</p></div></div>
-          <div class="comment"><span class="avatar" style="background:var(--grad-green);color:#04352a">卡</span><div class="body"><b>疫苗卡壳</b><p>请问儿童疫苗时间表在哪里看？点知识图谱能跳转吗？</p></div></div>
+          <div class="comment"><span class="avatar" style="background:var(--grad-green);color:#04352a">卡</span><div class="body"><b>疫苗卡壳</b><p>请问儿童疫苗时间表在哪里看？</p></div></div>
         </div>
         <div class="comment-input">
           <input type="text" placeholder="发表留言，师生与访客均可互动…">
@@ -193,19 +191,19 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
     <div class="grid-4">
       <div class="lesson-card reveal">
         <div class="thumb"><img src="assets/images/education-banner.webp" alt=""><span class="badge">第 01 课</span><span class="dur">28:10</span></div>
-        <div class="meta"><h4>疫苗发展史与分类</h4><div class="sub">研发人员重点看这节</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span><span class="mini-link" data-demo="跳转知识图谱">🕸 图谱</span></div></div>
+        <div class="meta"><h4>疫苗发展史与分类</h4><div class="sub">研发人员重点看这节</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span></div></div>
       </div>
       <div class="lesson-card reveal d1">
         <div class="thumb"><img src="assets/images/lab-scene.webp" onerror="this.style.display='none'" alt=""><span class="badge">第 02 课</span><span class="dur">31:24</span></div>
-        <div class="meta"><h4>免疫系统如何识别抗原</h4><div class="sub">新手父母怎么理解接种顺序？</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span><span class="mini-link" data-demo="跳转知识图谱">🕸 图谱</span></div></div>
+        <div class="meta"><h4>免疫系统如何识别抗原</h4><div class="sub">新手父母怎么理解接种顺序？</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span></div></div>
       </div>
       <div class="lesson-card reveal d2">
         <div class="thumb"><img src="assets/images/education-banner.webp" alt=""><span class="badge">第 03 课</span><span class="dur">33:02</span></div>
-        <div class="meta"><h4>疫苗免疫应答基础</h4><div class="sub">AI 能解释论文中的机制吗？</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span><span class="mini-link" data-demo="跳转知识图谱">🕸 图谱</span></div></div>
+        <div class="meta"><h4>疫苗免疫应答基础</h4><div class="sub">AI 能解释论文中的机制吗？</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span></div></div>
       </div>
       <div class="lesson-card reveal d3">
         <div class="thumb"><img src="assets/images/antibody-structure.webp" onerror="this.style.display='none'" alt=""><span class="badge">第 04 课</span><span class="dur">26:47</span></div>
-        <div class="meta"><h4>抗体在疫苗中的作用</h4><div class="sub">研发人员重点看这节</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span><span class="mini-link" data-demo="跳转知识图谱">🕸 图谱</span></div></div>
+        <div class="meta"><h4>抗体在疫苗中的作用</h4><div class="sub">研发人员重点看这节</div><div class="foot"><span class="mini-link" data-demo="唤起播放器">▶ 播放</span></div></div>
       </div>
     </div>
   </div>
@@ -244,28 +242,6 @@ $eduGrow    = (new Collection('content_cards'))->published("grp='edu_grow'");
   </div>
 </section>
 
-
-<!-- 学术讲座 + 成长资源 -->
-<section class="section bg-soft">
-  <div class="container">
-    <div class="grid-2" style="align-items:start">
-      <div class="reveal">
-        <span class="eyebrow"><?= snip('edu.lecture.eyebrow') ?></span>
-        <h2 style="font-size:26px;margin:14px 0 18px"><?= snip('edu.lecture.title') ?></h2>
-<?php foreach ($eduLecture as $i => $c): $mb = $i < count($eduLecture) - 1 ? ' style="margin-bottom:14px"' : ''; ?>
-        <div class="card"<?= $mb ?>><h3 style="font-size:16px"><?= e($c['icon']) ?> <?= e($c['title']) ?></h3><p><?= e($c['body']) ?></p></div>
-<?php endforeach; ?>
-      </div>
-      <div class="reveal d1">
-        <span class="eyebrow green"><?= snip('edu.grow.eyebrow') ?></span>
-        <h2 style="font-size:26px;margin:14px 0 18px"><?= snip('edu.grow.title') ?></h2>
-<?php foreach ($eduGrow as $i => $c): $mb = $i < count($eduGrow) - 1 ? ' style="margin-bottom:14px"' : ''; ?>
-        <div class="card"<?= $mb ?>><h3 style="font-size:16px"><?= e($c['icon']) ?> <?= e($c['title']) ?></h3><p><?= e($c['body']) ?></p></div>
-<?php endforeach; ?>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- 页脚 -->
 <?php include __DIR__ . '/partials/footer.php'; ?>

@@ -32,7 +32,6 @@
     </div>
     <div class="footer-bottom">
       <span><?= snip('footer.copyright') ?></span>
-      <span><?= snip('footer.slogan') ?></span>
     </div>
   </div>
 </footer>
