@@ -9,8 +9,8 @@ $eduInfo    = (new Collection('content_cards'))->published("grp='edu_info'");
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>教育 · 《疫苗的力量》元视频 + 交互式知识图谱 | MabSeek</title>
-<meta name="description" content="MabSeek 教育板块：《疫苗的力量》元视频课程、三层交互式知识图谱、学术讲座与学生成长资源，重塑科研教育范式。">
+<title>教育 · 《疫苗的力量》元视频课程 | MabSeek</title>
+<meta name="description" content="MabSeek 教育板块：《疫苗的力量》元视频课程与往期回顾，重塑科研教育范式。">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 <style>
@@ -250,7 +250,7 @@ $eduInfo    = (new Collection('content_cards'))->published("grp='edu_info'");
 <script>
 // 弹幕
 (function () {
-  var texts = ['这个知识点讲得很清楚','HPV疫苗接种年龄是否有限制？','儿童疫苗时间表在哪里看？','mRNA原理终于懂了','点图谱能跳转真方便','AI答疑太强了','求第4课的图谱','免疫记忆这段收藏了'];
+  var texts = ['这个知识点讲得很清楚','HPV疫苗接种年龄是否有限制？','儿童疫苗时间表在哪里看？','mRNA原理终于懂了','AI答疑太强了','免疫记忆这段收藏了'];
   var box = document.getElementById('danmaku');
   if (!box) return;
   var i = 0;
