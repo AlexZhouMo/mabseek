@@ -287,6 +287,17 @@ else
   warn "未找到 bin/migrate-news-category.php，跳过（旧版代码可忽略）"
 fi
 
+step "5g/9 首页近况标题订正（幂等，就地订正存量记录）"
+if [ -f "$ROOT/bin/migrate-home-news-title.php" ]; then
+  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-home-news-title.php"; then
+    ok "首页近况标题订正完成"
+  else
+    die "首页近况标题订正失败"
+  fi
+else
+  warn "未找到 bin/migrate-home-news-title.php，跳过（旧版代码可忽略）"
+fi
+
 # ─────────────────── 6. 刷新权限 ───────────────────
 step "6/9 刷新权限（源码只读，data 与上传目录可写）"
 run chown -R root:root "$ROOT"
