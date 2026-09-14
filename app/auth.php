@@ -70,9 +70,22 @@ function auth_is_admin(): bool {
     return ($_SESSION['role'] ?? '') === 'admin';
 }
 
-/** 会员页硬闸：未登录跳前台登录页；不校验 role（管理员亦可访问自己的账号页） */
+/** 会员页硬闸：未登录跳前台登录页（带当前页来源，登录后回跳）；不校验 role（管理员亦可访问自己的账号页） */
 function member_check(): void {
-    if (!auth_check()) redirect('login.php');
+    if (!auth_check()) {
+        $next = (string)($_SERVER['REQUEST_URI'] ?? '');
+        redirect('login.php' . ($next !== '' ? '?next=' . urlencode($next) : ''));
+    }
+}
+
+/** 校验并归一化登录后回跳目标：仅允许站内相对路径，防开放重定向。非法则返回 null。 */
+function auth_safe_next(?string $next): ?string {
+    $next = trim((string)$next);
+    if ($next === '') return null;
+    // 拒绝绝对 URL、协议相对（//host）、反斜杠绕过
+    if ($next[0] !== '/' && !preg_match('#^[a-zA-Z0-9_-]+\.php#', $next)) return null;
+    if (strpos($next, '//') === 0 || strpos($next, '\\') !== false || stripos($next, '://') !== false) return null;
+    return $next;
 }
 
 function auth_logout(): void {

@@ -7,11 +7,9 @@ $links = [
   'index'      => ['首页', 'index.php'],
   'technology' => ['技术平台', 'technology.php'],
   'agent'      => ['Antibody Agent', 'agent.php'],
+  'education'  => ['教育', 'education.php'],   // 始终可见；未登录点进跳登录，登录后回跳
+  'forum'      => ['论坛', 'forum.php'],
 ];
-if (!empty($_SESSION['uid'])) {                    // 教育/论坛仅登录可见
-  $links['education'] = ['教育', 'education.php'];
-  $links['forum']     = ['论坛', 'forum.php'];
-}
 $links['about'] = ['了解我们', 'about.php'];
 ?>
 <header class="nav<?= ($navOnDark || $navSolidDark) ? ' nav--on-dark' : '' ?><?= $navSolidDark ? ' nav--solid-dark' : '' ?>">
