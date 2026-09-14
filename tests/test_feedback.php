@@ -13,7 +13,7 @@ check(feedback_validate_name(str_repeat('字', 51)) === false, 'name 过长被�
 
 check(feedback_validate_email('a@b.com') === true, 'email 合法');
 check(feedback_validate_email('') === false, 'email 空被拒');
-check(feedback_validate_email('not-an-email') === false, 'email 非法被拒');
+check(feedback_validate_email(str_repeat('a', 255)) === false, '联系方式超长(>254)被拒');
 
 check(feedback_validate_message('一句反馈') === true, 'message 合法');
 check(feedback_validate_message('') === false, 'message 空被拒');
