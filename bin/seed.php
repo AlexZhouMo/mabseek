@@ -256,9 +256,9 @@ $S_about = [
     ['about.news.eyebrow','2 · 新闻与活动分享','about','新闻活动 眉题','text'],
     ['about.news.title','实验室动态一览','about','新闻活动 标题','text'],
     ['about.news.chip_all','全部','about','新闻筛选 全部','text'],
-    ['about.news.chip_edu','团队动态','about','新闻筛选 育人类','text'],
-    ['about.news.chip_res','研究进展','about','新闻筛选 科研类','text'],
-    ['about.news.chip_daily','产品发布','about','新闻筛选 日常活动','text'],
+    ['about.news.chip_edu','团队动态','about','新闻筛选 团队动态','text'],
+    ['about.news.chip_res','研究进展','about','新闻筛选 研究进展','text'],
+    ['about.news.chip_daily','产品发布','about','新闻筛选 产品发布','text'],
     ['about.news.more','了解更多 →','about','新闻活动 按钮','text'],
     // 国际科研合作
     ['about.intl.eyebrow','3 · 国际科研合作','about','国际合作 眉题','text'],
