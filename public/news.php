@@ -6,7 +6,7 @@ $id   = (int)($_GET['id'] ?? 0);
 $rows = $id > 0 ? (new Collection('news'))->published('id = ?', [$id]) : [];
 $item = $rows[0] ?? null;
 
-$tagMap = ['res'=>'科研类','edu'=>'育人类','daily'=>'日常活动'];
+$tagMap = ['research'=>'研究进展','team'=>'团队动态','product'=>'产品发布'];
 if ($item === null) {
     http_response_code(404);
     $pageTitle = '未找到该新闻 · MabSeek 抗体求索';
@@ -43,7 +43,7 @@ if ($item === null) {
 </section>
 <?php else:
     $tagText  = $tagMap[$item['category']] ?? '';
-    $tagClass = $item['category'] === 'res' ? 'tag green' : 'tag';
+    $tagClass = $item['category'] === 'research' ? 'tag green' : 'tag';
     $body = (string)($item['body'] ?? '');
 ?>
 <article class="section">
