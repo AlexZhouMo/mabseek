@@ -37,6 +37,7 @@ WEBUSER="www-data"                   # php-fpm / nginx 运行用户
 CODE_DIRS=(app bin public deploy)    # 每次部署要整体替换的代码目录
 DATA_DIR="$ROOT/data"                # 数据库目录（保留）
 UPLOAD_REL="public/assets/images/uploads"   # 上传目录（保留）
+CONFIG_LOCAL_REL="app/config.local.php"     # 本地私密配置（SciencePal 密钥等；不入 git，跨部署保留）
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)" # 本脚本所在目录（纯文件名离线包在此查找）
 
 # ─────────────────────────── 日志 ───────────────────────────
@@ -54,6 +55,7 @@ gitc() { git -C "$SRC_DIR" -c safe.directory="$SRC_DIR" "$@"; }
 cleanup_tmp() {
   [ "${CLEAN_STAGE:-0}" = "1" ] && [ -n "${STAGE:-}" ] && rm -rf "$STAGE" 2>/dev/null || true
   [ -n "${PRESERVE_UPLOADS:-}" ] && rm -rf "$PRESERVE_UPLOADS" 2>/dev/null || true
+  [ -n "${PRESERVE_CONFIG:-}" ] && rm -rf "$PRESERVE_CONFIG" 2>/dev/null || true
 }
 
 trap 'cleanup_tmp; die "第 $LINENO 行命令返回非零，部署已中止（数据与旧站点未被破坏的部分保持原状）"' ERR
@@ -172,6 +174,13 @@ if [ -d "$ROOT/$UPLOAD_REL" ]; then
   ok "已暂存上传图片 $(find "$PRESERVE_UPLOADS" -type f | wc -l | tr -d ' ') 个文件"
 fi
 
+# 把本地私密配置暂存出来（旧 app 即将删除；config.local.php 不入 git，须跨部署保留）
+PRESERVE_CONFIG="$(mktemp -d /tmp/mabseek-config.XXXXXX)"
+if [ -f "$ROOT/$CONFIG_LOCAL_REL" ]; then
+  cp -a "$ROOT/$CONFIG_LOCAL_REL" "$PRESERVE_CONFIG/config.local.php" 2>/dev/null || true
+  ok "已暂存本地配置 $CONFIG_LOCAL_REL"
+fi
+
 # ─────────────────── 4. 铺开新代码（保留 data/ 与上传） ───────────────────
 step "4/9 替换代码（从暂存区复制，保留 data/）"
 run mkdir -p "$ROOT"
@@ -189,8 +198,13 @@ if [ -n "$(ls -A "$PRESERVE_UPLOADS" 2>/dev/null || true)" ]; then
   cp -a "$PRESERVE_UPLOADS/." "$ROOT/$UPLOAD_REL/" 2>/dev/null || true
   ok "已恢复上传图片到 $UPLOAD_REL"
 fi
+# 恢复本地私密配置（若本次部署前存在）
+if [ -f "$PRESERVE_CONFIG/config.local.php" ]; then
+  cp -a "$PRESERVE_CONFIG/config.local.php" "$ROOT/$CONFIG_LOCAL_REL" 2>/dev/null || true
+  ok "已恢复本地配置 $CONFIG_LOCAL_REL"
+fi
 cleanup_tmp                            # 删除离线临时解压区与上传暂存区（git 工作副本保留）
-STAGE=""; CLEAN_STAGE=0; PRESERVE_UPLOADS=""
+STAGE=""; CLEAN_STAGE=0; PRESERVE_UPLOADS=""; PRESERVE_CONFIG=""
 
 # ─────────────────── 5. 初始化 / 迁移数据库 ───────────────────
 step "5/9 数据库 seed（幂等：建表+补缺，绝不删历史数据）"
