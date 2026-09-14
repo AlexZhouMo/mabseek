@@ -33,7 +33,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             auth_login_user($row['username']);        // 存库中规范用户名
             $_SESSION['nick'] = ($row['nickname'] ?? '') !== '' ? $row['nickname'] : $row['username'];
             audit('member_login');
-            redirect(auth_post_login_dest($row));     // email 已填→首页；空→补全页
+            // 邮箱空→仍先强制补全；否则若有合法 next 回跳来源页；再否则走默认目标
+            if (trim((string)($row['email'] ?? '')) === '') {
+                redirect('account.php?complete=1');
+            }
+            $next = auth_safe_next($_POST['next'] ?? $_GET['next'] ?? null);
+            redirect($next ?? auth_post_login_dest($row));
         }
     } else {
         auth_record_attempt($ip, $u, false);
@@ -62,6 +67,9 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
     <?php if ($error): ?><div class="auth-error"><?= e($error) ?></div><?php endif; ?>
     <form method="post" action="login.php">
       <?= csrf_field() ?>
+<?php $nextVal = auth_safe_next($_POST['next'] ?? $_GET['next'] ?? null); if ($nextVal !== null): ?>
+      <input type="hidden" name="next" value="<?= e($nextVal) ?>">
+<?php endif; ?>
       <div class="field">
         <label>用户名</label>
         <input class="input" type="text" name="username" value="<?= e($oldUser) ?>" required autofocus>
