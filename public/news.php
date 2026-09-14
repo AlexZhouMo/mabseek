@@ -57,7 +57,7 @@ if ($item === null) {
 <?php if (!empty($item['image'])): ?>
     <img class="reveal d2" src="<?= e($item['image']) ?>" alt="<?= e($item['title']) ?>" style="width:100%;border-radius:var(--radius-lg);margin:22px 0;box-shadow:var(--sh)">
 <?php endif; ?>
-    <div class="article-body reveal d2">
+    <div class="article-body">
 <?php if (trim($body) !== ''): ?>
       <?= $body /* 已在写入时净化，直出 */ ?>
 <?php else: ?>
