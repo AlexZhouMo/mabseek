@@ -130,14 +130,14 @@ $news = (new Collection('news'))->published();
     <h2 class="section-title reveal d1"><?= snip('about.news.title') ?></h2>
     <div class="news-tabs reveal d2" style="margin-top:16px">
       <span class="chip-f on" data-nf="all" style="padding:8px 16px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--line);background:var(--grad-purple);color:#fff;cursor:pointer"><?= snip('about.news.chip_all') ?></span>
-      <span class="chip-f" data-nf="edu" style="padding:8px 16px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer"><?= snip('about.news.chip_edu') ?></span>
-      <span class="chip-f" data-nf="res" style="padding:8px 16px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer"><?= snip('about.news.chip_res') ?></span>
-      <span class="chip-f" data-nf="daily" style="padding:8px 16px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer"><?= snip('about.news.chip_daily') ?></span>
+      <span class="chip-f" data-nf="team" style="padding:8px 16px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer"><?= snip('about.news.chip_edu') ?></span>
+      <span class="chip-f" data-nf="research" style="padding:8px 16px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer"><?= snip('about.news.chip_res') ?></span>
+      <span class="chip-f" data-nf="product" style="padding:8px 16px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer"><?= snip('about.news.chip_daily') ?></span>
     </div>
     <div id="news-list">
 <?php foreach ($news as $it):
-    $tagClass = $it['category'] === 'res' ? 'tag green' : 'tag';
-    $tagText  = ['res'=>'科研类','edu'=>'育人类','daily'=>'日常活动'][$it['category']] ?? '';
+    $tagClass = $it['category'] === 'research' ? 'tag green' : 'tag';
+    $tagText  = ['research'=>'研究进展','team'=>'团队动态','product'=>'产品发布'][$it['category']] ?? '';
 ?>
       <a class="news-item" href="news.php?id=<?= (int)$it['id'] ?>" data-nc="<?= e($it['category']) ?>"><div class="date"><div class="d"><?= e($it['date_day']) ?></div><div class="m"><?= e($it['date_ym']) ?></div></div><div class="n-body"><span class="<?= $tagClass ?>" style="font-size:11px"><?= e($tagText) ?></span><h4><?= e($it['title']) ?></h4><p><?= e($it['summary']) ?></p></div></a>
 <?php endforeach; ?>

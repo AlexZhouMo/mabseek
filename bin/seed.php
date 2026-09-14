@@ -36,11 +36,11 @@ function seed_cards_group(string $grp, array $rows): void {
 
 // ── 2) news（about.html #news，5 条，逐字）──
 seed_collection('news', [
-    ['date_day'=>'08','date_ym'=>'2026·08','category'=>'res','title'=>'MabSeek 平台技术升级：亲和力预测模型精度再提升','summary'=>'最新一轮迭代显著提升虚拟筛选命中率，缩短候选分子验证周期。','image'=>null,'sort'=>1,'published'=>1],
-    ['date_day'=>'07','date_ym'=>'2026·07','category'=>'edu','title'=>'《疫苗的力量》交互式课程正式上线','summary'=>'元视频 + 三层知识图谱，面向学生、从业者与公众开放基础版。','image'=>null,'sort'=>2,'published'=>1],
-    ['date_day'=>'06','date_ym'=>'2026·06','category'=>'res','title'=>'实验室最新研究成果发表于领域顶级期刊','summary'=>'抗体设计与免疫机制相关工作获同行高度评价。','image'=>null,'sort'=>3,'published'=>1],
-    ['date_day'=>'05','date_ym'=>'2026·05','category'=>'daily','title'=>'组会纪实与学术沙龙：师生共话前沿方向','summary'=>'平台宣传片发布，记录实验室日常科研与交流活动。','image'=>null,'sort'=>4,'published'=>1],
-    ['date_day'=>'04','date_ym'=>'2026·04','category'=>'edu','title'=>'学生斩获学术竞赛奖项，人才培养成果显著','summary'=>'科普讲座与公益授课走进高校，扩大科学影响力。','image'=>null,'sort'=>5,'published'=>1],
+    ['date_day'=>'08','date_ym'=>'2026·08','category'=>'research','title'=>'MabSeek 平台技术升级：亲和力预测模型精度再提升','summary'=>'最新一轮迭代显著提升虚拟筛选命中率，缩短候选分子验证周期。','image'=>null,'sort'=>1,'published'=>1],
+    ['date_day'=>'07','date_ym'=>'2026·07','category'=>'team','title'=>'《疫苗的力量》交互式课程正式上线','summary'=>'元视频 + 三层知识图谱，面向学生、从业者与公众开放基础版。','image'=>null,'sort'=>2,'published'=>1],
+    ['date_day'=>'06','date_ym'=>'2026·06','category'=>'research','title'=>'实验室最新研究成果发表于领域顶级期刊','summary'=>'抗体设计与免疫机制相关工作获同行高度评价。','image'=>null,'sort'=>3,'published'=>1],
+    ['date_day'=>'05','date_ym'=>'2026·05','category'=>'team','title'=>'组会纪实与学术沙龙：师生共话前沿方向','summary'=>'平台宣传片发布，记录实验室日常科研与交流活动。','image'=>null,'sort'=>4,'published'=>1],
+    ['date_day'=>'04','date_ym'=>'2026·04','category'=>'team','title'=>'学生斩获学术竞赛奖项，人才培养成果显著','summary'=>'科普讲座与公益授课走进高校，扩大科学影响力。','image'=>null,'sort'=>5,'published'=>1],
 ]);
 
 // ── 2b) edu_reviews（教育往期回顾，3 条示例）──
@@ -256,9 +256,9 @@ $S_about = [
     ['about.news.eyebrow','2 · 新闻与活动分享','about','新闻活动 眉题','text'],
     ['about.news.title','实验室动态一览','about','新闻活动 标题','text'],
     ['about.news.chip_all','全部','about','新闻筛选 全部','text'],
-    ['about.news.chip_edu','育人类','about','新闻筛选 育人类','text'],
-    ['about.news.chip_res','科研类','about','新闻筛选 科研类','text'],
-    ['about.news.chip_daily','日常活动','about','新闻筛选 日常活动','text'],
+    ['about.news.chip_edu','团队动态','about','新闻筛选 团队动态','text'],
+    ['about.news.chip_res','研究进展','about','新闻筛选 研究进展','text'],
+    ['about.news.chip_daily','产品发布','about','新闻筛选 产品发布','text'],
     ['about.news.more','了解更多 →','about','新闻活动 按钮','text'],
     // 国际科研合作
     ['about.intl.eyebrow','3 · 国际科研合作','about','国际合作 眉题','text'],
