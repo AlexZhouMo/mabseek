@@ -81,8 +81,6 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
   <div class="container">
     <div class="pillar reveal">
       <div class="pillar-text">
-        <span class="pillar-ico">🗂️</span>
-        <span class="eyebrow green"><?= snip('tech.p1.eyebrow') ?></span>
         <h2 class="section-title"><?= snip_raw('tech.p1.title') ?></h2>
         <p class="section-sub"><?= snip('tech.p1.sub') ?></p>
         <ul class="pillar-points">
@@ -102,8 +100,6 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
   <div class="container">
     <div class="pillar pillar--rev reveal">
       <div class="pillar-text">
-        <span class="pillar-ico">🧠</span>
-        <span class="eyebrow"><?= snip('tech.p2.eyebrow') ?></span>
         <h2 class="section-title"><?= snip_raw('tech.p2.title') ?></h2>
         <p class="section-sub"><?= snip('tech.p2.sub') ?></p>
         <ul class="pillar-points">
@@ -123,8 +119,6 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
   <div class="container">
     <div class="pillar reveal">
       <div class="pillar-text">
-        <span class="pillar-ico">🧪</span>
-        <span class="eyebrow green"><?= snip('tech.p3.eyebrow') ?></span>
         <h2 class="section-title"><?= snip_raw('tech.p3.title') ?></h2>
         <p class="section-sub"><?= snip('tech.p3.sub') ?></p>
         <ul class="pillar-points">
