@@ -51,14 +51,31 @@ die()  { printf '\n%s✘ 失败：%s%s\n' "$CE" "$*" "$C0" >&2; exit 1; }
 run()  { log "\$ $*"; "$@"; }
 # 在 SRC_DIR 内执行 git（带 safe.directory，避免 root 下的 dubious ownership 报错）
 gitc() { git -C "$SRC_DIR" -c safe.directory="$SRC_DIR" "$@"; }
-# 清理临时目录（离线解压区、上传暂存区）——变量未设时安全跳过
+# 清理临时目录。正常收尾（arg=full）删除全部暂存；异常 trap（arg=safe，默认）
+# 只删可再生的解压区 STAGE，**保留** PRESERVE_UPLOADS/PRESERVE_CONFIG——因为异常可能
+# 发生在「旧 public 已删、上传图/私密配置尚未恢复」的窗口，此时这两份暂存副本是恢复
+# 数据的唯一在途来源，绝不能在 trap 里删掉（否则用户上传图/密钥丢失）。
 cleanup_tmp() {
+  local mode="${1:-safe}"
   [ "${CLEAN_STAGE:-0}" = "1" ] && [ -n "${STAGE:-}" ] && rm -rf "$STAGE" 2>/dev/null || true
-  [ -n "${PRESERVE_UPLOADS:-}" ] && rm -rf "$PRESERVE_UPLOADS" 2>/dev/null || true
-  [ -n "${PRESERVE_CONFIG:-}" ] && rm -rf "$PRESERVE_CONFIG" 2>/dev/null || true
+  if [ "$mode" = "full" ]; then
+    [ -n "${PRESERVE_UPLOADS:-}" ] && rm -rf "$PRESERVE_UPLOADS" 2>/dev/null || true
+    [ -n "${PRESERVE_CONFIG:-}" ] && rm -rf "$PRESERVE_CONFIG" 2>/dev/null || true
+  fi
 }
 
-trap 'cleanup_tmp; die "第 $LINENO 行命令返回非零，部署已中止（数据与旧站点未被破坏的部分保持原状）"' ERR
+# 异常处理：保留暂存副本与备份，打印手工恢复线索，绝不删可能用于恢复的数据。
+on_err() {
+  local ln="$1"
+  cleanup_tmp safe
+  printf '\n%s✘ 失败：第 %s 行命令返回非零，部署已中止%s\n' "$CE" "$ln" "$C0" >&2
+  [ -n "${PRESERVE_UPLOADS:-}" ] && [ -d "${PRESERVE_UPLOADS:-/nonexistent}" ] && printf '%s  上传图暂存副本（未删，可手工恢复）：%s%s\n' "$CW" "$PRESERVE_UPLOADS" "$C0" >&2
+  [ -n "${PRESERVE_CONFIG:-}" ]  && [ -d "${PRESERVE_CONFIG:-/nonexistent}" ]  && printf '%s  私密配置暂存副本（未删）：%s%s\n' "$CW" "$PRESERVE_CONFIG" "$C0" >&2
+  [ -n "${BACKUP:-}" ] && [ -d "${BACKUP:-/nonexistent}" ] && printf '%s  完整数据备份：%s%s\n' "$CW" "$BACKUP" "$C0" >&2
+  exit 1
+}
+
+trap 'on_err "$LINENO"' ERR
 
 BANNER_START="$(date '+%Y-%m-%d %H:%M:%S')"
 printf '%s\n' "════════════════════════════════════════════════"
@@ -163,6 +180,13 @@ if [ -f "$DATA_DIR/mabseek.sqlite" ] || [ -d "$ROOT/$UPLOAD_REL" ]; then
   [ -d "$DATA_DIR" ]        && run cp -a "$DATA_DIR"        "$BACKUP/data"    || true
   [ -d "$ROOT/$UPLOAD_REL" ] && { mkdir -p "$BACKUP/uploads"; cp -a "$ROOT/$UPLOAD_REL/." "$BACKUP/uploads/" 2>/dev/null || true; }
   ok "已备份到 $BACKUP"
+  # 备份轮转：只保留最近 5 份，删除更老的，避免长期累积占满磁盘（反过来诱发 cp 失败）
+  BACKUP_KEEP=5
+  mapfile -t OLD_BACKUPS < <(ls -1dt /var/www/mabseek-backup-* 2>/dev/null | tail -n +$((BACKUP_KEEP + 1)) || true)
+  if [ "${#OLD_BACKUPS[@]}" -gt 0 ]; then
+    for ob in "${OLD_BACKUPS[@]}"; do rm -rf "$ob" 2>/dev/null || true; done
+    log "已清理 ${#OLD_BACKUPS[@]} 份旧备份（保留最近 $BACKUP_KEEP 份）"
+  fi
 else
   warn "未发现历史数据，判定为首次部署（稍后将全新建库）"
 fi
@@ -203,7 +227,7 @@ if [ -f "$PRESERVE_CONFIG/config.local.php" ]; then
   cp -a "$PRESERVE_CONFIG/config.local.php" "$ROOT/$CONFIG_LOCAL_REL" 2>/dev/null || true
   ok "已恢复本地配置 $CONFIG_LOCAL_REL"
 fi
-cleanup_tmp                            # 删除离线临时解压区与上传暂存区（git 工作副本保留）
+cleanup_tmp full                       # 上传图/配置已恢复，安全删除全部暂存（git 工作副本保留）
 STAGE=""; CLEAN_STAGE=0; PRESERVE_UPLOADS=""; PRESERVE_CONFIG=""
 
 # ─────────────────── 5. 初始化 / 迁移数据库 ───────────────────
@@ -219,84 +243,42 @@ if [ "$FIRST_DEPLOY" -eq 1 ]; then
   warn "首次部署：管理员 admin / mabseek2026（首次登录强制改密）"
 fi
 
-# ─────────────────── 5b. 迁移历史图片路径为 .webp ───────────────────
-# 仓库自带静态图已转 WebP 并删除原图；代码引用随代码同步，但保留下来的历史数据库
-# 里仍存旧的 .png/.jpg 路径（如团队头像、教育回顾封面/正文），需就地迁移，否则 404。
-# 脚本幂等：仅当对应 .webp 实际存在时才替换，且跳过 uploads/ 下的用户上传图。
-step "5b/9 迁移数据库中的静态图片路径 .png/.jpg → .webp（幂等，保护用户上传图）"
-if [ -f "$ROOT/bin/migrate-images-webp.php" ]; then
-  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-images-webp.php"; then
-    ok "图片路径迁移完成"
+# ─────────────────── 5b~5g. 数据库迁移（幂等，就地订正存量记录）───────────────────
+# 每条迁移脚本都幂等（无旧值/已迁移时 0 改动），文件不存在则跳过（兼容旧版代码）。
+# 保留下来的历史库里的存量记录需就地订正，否则线上出现旧值/死链。
+#   images-webp     : 静态图路径 .png/.jpg → .webp（仅当 .webp 存在，跳过 uploads 用户图）
+#   contact-email   : 联系邮箱订正（snippets，仅替换旧邮箱）
+#   feedback-iteration: 反馈迭代表结构与存量记录
+#   20260909-team-edu : 团队/教育存量记录（删马老师、清图谱文案等）
+#   news-category   : 新闻分类 key 迁移 + 筛选 chip 文案
+#   home-news-title : 首页近况标题订正
+run_migration() {   # $1=脚本名(不含路径)  $2=中文标签
+  local script="$1" label="$2"
+  if [ -f "$ROOT/bin/$script" ]; then
+    if sudo -u "$WEBUSER" php "$ROOT/bin/$script"; then
+      ok "$label完成"
+    else
+      die "$label失败，请检查上面的 PHP 报错"
+    fi
   else
-    die "图片路径迁移失败，请检查上面的 PHP 报错"
+    warn "未找到 bin/$script，跳过$label（旧版代码可忽略）"
   fi
-else
-  warn "未找到 bin/migrate-images-webp.php，跳过图片路径迁移（旧版代码可忽略）"
-fi
+}
 
-# ─────────────────── 5c. 订正联系邮箱 ───────────────────
-# 联系邮箱存于 snippets 表随页面渲染；保留下来的历史库里可能仍是旧邮箱，就地订正。
-# 脚本幂等：仅替换仍含旧邮箱的记录，不动后台改过的其它文案，无旧值时 0 改动。
-step "5c/9 订正数据库中的联系邮箱（幂等，仅替换旧邮箱）"
-if [ -f "$ROOT/bin/migrate-contact-email.php" ]; then
-  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-contact-email.php"; then
-    ok "联系邮箱订正完成"
-  else
-    die "联系邮箱订正失败，请检查上面的 PHP 报错"
-  fi
-else
-  warn "未找到 bin/migrate-contact-email.php，跳过邮箱订正（旧版代码可忽略）"
-fi
-
-# ─────────────────── 5d. 反馈迭代迁移 ───────────────────
-# 反馈/迭代相关表结构与存量记录订正；脚本幂等（建表用 IF NOT EXISTS，无旧值时 0 改动）。
-step "5d/9 反馈迭代迁移（幂等，就地订正存量记录）"
-if [ -f "$ROOT/bin/migrate-feedback-iteration.php" ]; then
-  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-feedback-iteration.php"; then
-    ok "反馈迭代迁移完成"
-  else
-    die "反馈迭代迁移失败"
-  fi
-else
-  warn "未找到 bin/migrate-feedback-iteration.php，跳过（旧版代码可忽略）"
-fi
-
-# ─────────────────── 5e. 团队/教育迁移 ───────────────────
-# 团队/教育相关存量记录订正；脚本幂等（无旧值时 0 改动）。
-step "5e/9 20260909 团队/教育迁移（幂等，就地订正存量记录）"
-if [ -f "$ROOT/bin/migrate-20260909-team-edu.php" ]; then
-  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-20260909-team-edu.php"; then
-    ok "20260909 团队/教育迁移完成"
-  else
-    die "20260909 团队/教育迁移失败"
-  fi
-else
-  warn "未找到 bin/migrate-20260909-team-edu.php，跳过（旧版代码可忽略）"
-fi
-
-# ─────────────────── 5f. 新闻分类迁移 ───────────────────
-# 新闻分类相关存量记录订正；脚本幂等（无旧值时 0 改动）。
-step "5f/9 新闻分类迁移（幂等，就地订正存量记录）"
-if [ -f "$ROOT/bin/migrate-news-category.php" ]; then
-  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-news-category.php"; then
-    ok "新闻分类迁移完成"
-  else
-    die "新闻分类迁移失败"
-  fi
-else
-  warn "未找到 bin/migrate-news-category.php，跳过（旧版代码可忽略）"
-fi
-
-step "5g/9 首页近况标题订正（幂等，就地订正存量记录）"
-if [ -f "$ROOT/bin/migrate-home-news-title.php" ]; then
-  if sudo -u "$WEBUSER" php "$ROOT/bin/migrate-home-news-title.php"; then
-    ok "首页近况标题订正完成"
-  else
-    die "首页近况标题订正失败"
-  fi
-else
-  warn "未找到 bin/migrate-home-news-title.php，跳过（旧版代码可忽略）"
-fi
+# 顺序敏感：images-webp 须先于其它（其它迁移可能引用已迁移的路径）；其余互不依赖。
+MIGRATIONS=(
+  "migrate-images-webp.php|5b/9 迁移静态图片路径 .png/.jpg → .webp（幂等，保护用户上传图）|图片路径迁移"
+  "migrate-contact-email.php|5c/9 订正联系邮箱（幂等，仅替换旧邮箱）|联系邮箱订正"
+  "migrate-feedback-iteration.php|5d/9 反馈迭代迁移（幂等，就地订正存量记录）|反馈迭代迁移"
+  "migrate-20260909-team-edu.php|5e/9 20260909 团队/教育迁移（幂等，就地订正存量记录）|20260909 团队/教育迁移"
+  "migrate-news-category.php|5f/9 新闻分类迁移（幂等，就地订正存量记录）|新闻分类迁移"
+  "migrate-home-news-title.php|5g/9 首页近况标题订正（幂等，就地订正存量记录）|首页近况标题订正"
+)
+for m in "${MIGRATIONS[@]}"; do
+  IFS='|' read -r m_script m_step m_label <<< "$m"
+  step "$m_step"
+  run_migration "$m_script" "$m_label"
+done
 
 # ─────────────────── 6. 刷新权限 ───────────────────
 step "6/9 刷新权限（源码只读，data 与上传目录可写）"
