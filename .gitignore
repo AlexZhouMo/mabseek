@@ -11,3 +11,4 @@ deploy/*.tgz
 docs/superpowers/
 CLAUDE.md
 app/config.local.php
+_thumbnails/
