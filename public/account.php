@@ -17,7 +17,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $email = trim((string)($_POST['email'] ?? ''));
         $phone = trim((string)($_POST['phone'] ?? ''));
         $nick  = trim((string)($_POST['nickname'] ?? ''));
-        if ($email === '')                          $err = '请填写邮箱';
+        // 已同步 SciencePal 的账号(created/exists)：邮箱是登录身份且 SciencePal 无改邮箱接口，禁止改邮箱
+        $scpLocked = in_array((scp_sync_get((int)$me['id'])['status'] ?? ''), ['created', 'exists'], true);
+        if ($scpLocked && $email !== (string)$me['email']) $err = '账号已开通 SciencePal，邮箱作为登录身份不可修改（可修改手机号与昵称）';
+        elseif ($email === '')                      $err = '请填写邮箱';
         elseif (!member_validate_email($email))     $err = '邮箱格式不正确';
         elseif (!member_validate_phone($phone))     $err = '手机号格式不正确';
         elseif (!member_validate_nickname($nick))   $err = '昵称最多 30 字';
@@ -103,7 +106,8 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
       <form method="post" action="account.php">
         <?= csrf_field() ?>
         <input type="hidden" name="do" value="profile">
-        <div class="field"><label>邮箱</label><input class="input" type="email" name="email" value="<?= e($me['email']) ?>" required></div>
+<?php $emailLocked = in_array((scp_sync_get((int)$me['id'])['status'] ?? ''), ['created', 'exists'], true); ?>
+        <div class="field"><label>邮箱<?= $emailLocked ? '（已开通 SciencePal，不可修改）' : '' ?></label><input class="input" type="email" name="email" value="<?= e($me['email']) ?>" required<?= $emailLocked ? ' readonly style="background:var(--bg-soft-2);color:var(--ink-3);cursor:not-allowed"' : '' ?>></div>
         <div class="field"><label>手机号</label><input class="input" type="text" name="phone" value="<?= e($me['phone']) ?>"></div>
         <div class="field"><label>昵称</label><input class="input" type="text" name="nickname" value="<?= e($me['nickname']) ?>"></div>
         <button class="btn btn-purple auth-submit" type="submit">保存资料</button>
