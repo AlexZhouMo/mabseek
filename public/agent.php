@@ -102,8 +102,8 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
       <h2 class="section-title reveal d1"><?= snip_raw('agent.cap.title') ?></h2>
     </div>
     <div class="grid-4">
-<?php foreach ($caps as $i => $c): $ex = json_decode($c['extra'] ?: '{}', true); $icoCls = !empty($ex['ico_class']) ? ' ' . $ex['ico_class'] : ''; $rev = $i ? ' d' . $i : ''; ?>
-      <div class="card reveal<?= $rev ?>"><div class="ico<?= e($icoCls) ?>"><?= e($c['icon']) ?></div><h3><?= e($c['title']) ?></h3><p><?= e($c['body']) ?></p></div>
+<?php foreach ($caps as $i => $c): $rev = $i ? ' d' . $i : ''; ?>
+      <div class="card reveal<?= $rev ?>" style="text-align:center"><h3><?= e($c['title']) ?></h3><p><?= e($c['body']) ?></p></div>
 <?php endforeach; ?>
     </div>
   </div>
