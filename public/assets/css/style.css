@@ -702,14 +702,15 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 
 /* 富文本编辑器（论坛发帖 / 后台新闻共用） */
 .rt-field { border: 1px solid var(--line, #e5e7eb); border-radius: 8px; }
-.rt-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; background: #f7f7f9; border-bottom: 1px solid var(--line, #e5e7eb); border-radius: 8px 8px 0 0; }
-.rt-toolbar-spacer { height: 0; }
-.rt-field.rt-floating .rt-toolbar {
-  position: fixed;
-  top: 0;            /* 由 richtext.js 按顶栏高度动态覆盖 */
-  z-index: 1001;     /* 高于固定导航栏（.nav z-index:1000），避免被遮挡 */
-  border-radius: 0;
-  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+/* 工具栏用 sticky 吸附：编辑器可见范围内始终贴在顶栏下方，随编辑滚动而跟随。
+   --rt-sticky-top 由各页面外壳按其固定顶栏高度设定（前台 nav 72px，后台 topbar 56px）。 */
+.rt-toolbar {
+  position: sticky;
+  top: var(--rt-sticky-top, var(--nav-h, 0px));
+  z-index: 30;
+  display: flex; flex-wrap: wrap; gap: 4px; padding: 8px;
+  background: #f7f7f9; border-bottom: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px 8px 0 0;
 }
 .rt-btn { min-width: 34px; height: 30px; padding: 0 10px; border: 1px solid #d0d0d8; border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; line-height: 28px; }
 .rt-btn:hover { background: #eef0ff; border-color: #b9c0ff; }

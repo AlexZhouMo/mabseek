@@ -89,6 +89,9 @@
   padding: 20px 22px; margin: 0;
 }
 
+/* 后台富文本工具栏 sticky 吸附高度：贴在 admin-topbar（高 56px）正下方 */
+.admin { --rt-sticky-top: 56px; }
+
 /* ---------- 页头（标题 + 主操作） ---------- */
 .admin .page-head {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
