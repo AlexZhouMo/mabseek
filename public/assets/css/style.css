@@ -706,8 +706,8 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 .rt-toolbar-spacer { height: 0; }
 .rt-field.rt-floating .rt-toolbar {
   position: fixed;
-  top: 0;
-  z-index: 60;
+  top: 0;            /* 由 richtext.js 按顶栏高度动态覆盖 */
+  z-index: 1001;     /* 高于固定导航栏（.nav z-index:1000），避免被遮挡 */
   border-radius: 0;
   box-shadow: 0 4px 12px rgba(0,0,0,.12);
 }

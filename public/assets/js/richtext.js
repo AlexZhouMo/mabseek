@@ -77,20 +77,39 @@
 
     var floating = false;      // 当前是否悬浮
 
+    // 探测视口顶部被固定/粘性栏（导航条 / 后台 topbar）占据的高度，
+    // 悬浮工具栏应贴在其下方，避免被遮挡。
+    function topOffset() {
+      var max = 0;
+      var bars = document.querySelectorAll('.nav, .admin-topbar');
+      for (var i = 0; i < bars.length; i++) {
+        var el = bars[i];
+        var pos = getComputedStyle(el).position;
+        if (pos !== 'fixed' && pos !== 'sticky') continue;
+        var r = el.getBoundingClientRect();
+        // 仅统计当前确实吸附在视口顶部的栏
+        if (r.top <= 1 && r.bottom > max) max = r.bottom;
+      }
+      return max;
+    }
+
     function applyFloatPosition() {
       if (!floating || !toolbar) return;
       var rect = field.getBoundingClientRect();
+      var top = topOffset();
       toolbar.style.left = rect.left + 'px';
       toolbar.style.width = rect.width + 'px';
+      toolbar.style.top = top + 'px';
     }
 
-    // 触发条件：编辑框聚焦中，且其顶部已滚过视口顶部、底部仍在视口下方
-    // （即编辑框正被滚动“穿过”，工具栏原位已离开视口，但编辑区尚未结束）
+    // 触发条件：编辑框聚焦中，且其顶部已滚过视口顶部（含被顶栏遮挡的部分）、
+    // 底部仍在视口下方（即编辑框正被滚动“穿过”，但编辑区尚未结束）
     function syncFloat() {
       if (!toolbar) return;
       var rect = field.getBoundingClientRect();
       var active = field.getAttribute('data-rt-active') === '1';
-      var shouldFloat = active && rect.top < 0 && rect.bottom > toolbar.offsetHeight;
+      var top = topOffset();
+      var shouldFloat = active && rect.top < top && rect.bottom > top + toolbar.offsetHeight;
       if (shouldFloat && !floating) {
         floating = true;
         spacer.style.height = toolbar.offsetHeight + 'px';
@@ -107,7 +126,7 @@
       if (!floating) return;
       floating = false;
       field.classList.remove('rt-floating');
-      if (toolbar) { toolbar.style.left = ''; toolbar.style.width = ''; }
+      if (toolbar) { toolbar.style.left = ''; toolbar.style.width = ''; toolbar.style.top = ''; }
       spacer.style.height = '';
     }
 
