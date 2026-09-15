@@ -71,26 +71,30 @@
     }
 
     var floating = false;      // 当前是否悬浮
-    var offscreen = false;     // 工具栏顶边是否已离开视口顶部
 
     function applyFloatPosition() {
       if (!floating || !toolbar) return;
       var rect = field.getBoundingClientRect();
-      spacer.style.height = toolbar.offsetHeight + 'px';
       toolbar.style.left = rect.left + 'px';
       toolbar.style.width = rect.width + 'px';
     }
 
+    // 触发条件：编辑框聚焦中，且其顶部已滚过视口顶部、底部仍在视口下方
+    // （即编辑框正被滚动“穿过”，工具栏原位已离开视口，但编辑区尚未结束）
     function syncFloat() {
-      var shouldFloat = offscreen && field.getAttribute('data-rt-active') === '1';
+      if (!toolbar) return;
+      var rect = field.getBoundingClientRect();
+      var active = field.getAttribute('data-rt-active') === '1';
+      var shouldFloat = active && rect.top < 0 && rect.bottom > toolbar.offsetHeight;
       if (shouldFloat && !floating) {
         floating = true;
+        spacer.style.height = toolbar.offsetHeight + 'px';
         field.classList.add('rt-floating');
+        applyFloatPosition();
+      } else if (shouldFloat && floating) {
         applyFloatPosition();
       } else if (!shouldFloat && floating) {
         unfloat();
-      } else if (shouldFloat && floating) {
-        applyFloatPosition();
       }
     }
 
@@ -102,18 +106,8 @@
       spacer.style.height = '';
     }
 
-    if (toolbar && 'IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        // 观测占位块（始终留在工具栏原位、不随悬浮移动）：
-        // 其顶边滚出视口顶部 => 工具栏原位已离开视口
-        var en = entries[0];
-        offscreen = !en.isIntersecting && en.boundingClientRect.top < 0;
-        syncFloat();
-      }, { threshold: [0, 1] });
-      io.observe(spacer);
-      window.addEventListener('scroll', applyFloatPosition, { passive: true });
-      window.addEventListener('resize', applyFloatPosition);
-    }
+    window.addEventListener('scroll', syncFloat, { passive: true });
+    window.addEventListener('resize', syncFloat);
 
     // 提交前把编辑区内容同步进隐藏 textarea（服务端会再净化）
     form.addEventListener('submit', function () {
