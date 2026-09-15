@@ -54,10 +54,7 @@ if ($item === null) {
       <span style="color:var(--ink-3);font-size:13px;margin-left:10px"><?= e($item['date_ym']) ?> · <?= e($item['date_day']) ?></span>
     </div>
     <h1 class="reveal d1" style="font-size:30px;line-height:1.3"><?= e($item['title']) ?></h1>
-<?php if (!empty($item['image'])): ?>
-    <img class="reveal d2" src="<?= e($item['image']) ?>" alt="<?= e($item['title']) ?>" style="width:100%;border-radius:var(--radius-lg);margin:22px 0;box-shadow:var(--sh)">
-<?php endif; ?>
-    <div class="article-body">
+    <div class="article-body" style="margin-top:22px">
 <?php if (trim($body) !== ''): ?>
       <?= $body /* 已在写入时净化，直出 */ ?>
 <?php else: ?>
