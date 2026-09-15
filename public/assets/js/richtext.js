@@ -5,6 +5,16 @@
     var form = field.closest('form');
     if (!editor || !source || !form) return;
     var uploadUrl = field.getAttribute('data-upload-url') || 'admin.php?m=news&a=upload';
+    var toolbar = field.querySelector('.rt-toolbar');
+
+    // 悬浮态：编辑器聚焦时标记，失焦时清除
+    editor.addEventListener('focusin', function () { field.setAttribute('data-rt-active', '1'); syncFloat(); });
+    editor.addEventListener('focusout', function () { field.removeAttribute('data-rt-active'); unfloat(); });
+
+    // 占位块：悬浮时补上工具栏原本占据的高度，防止内容跳动
+    var spacer = document.createElement('div');
+    spacer.className = 'rt-toolbar-spacer';
+    if (toolbar) toolbar.parentNode.insertBefore(spacer, toolbar.nextSibling);
 
     // 工具栏命令
     field.querySelectorAll('.rt-btn[data-cmd]').forEach(function (btn) {
@@ -59,6 +69,9 @@
         })
         .catch(function () { alert('图片上传失败：网络错误'); });
     }
+
+    function syncFloat() {}
+    function unfloat() {}
 
     // 提交前把编辑区内容同步进隐藏 textarea（服务端会再净化）
     form.addEventListener('submit', function () {
