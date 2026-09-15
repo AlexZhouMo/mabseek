@@ -136,10 +136,16 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
 <!-- ============ T4 经典案例（深） ============ -->
 <section class="section section-dark">
   <div class="container">
-    <div class="text-center">
-      <span class="eyebrow reveal"><?= snip('tech.case.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip('tech.case.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('tech.case.sub') ?></p>
+    <div class="case-lead">
+      <div class="case-lead-text">
+        <span class="eyebrow reveal"><?= snip('tech.case.eyebrow') ?></span>
+        <h2 class="section-title reveal d1"><?= snip('tech.case.title') ?></h2>
+        <p class="section-sub reveal d2"><?= snip('tech.case.sub') ?></p>
+        <div class="reveal d3" style="margin-top:24px"><a href="agent.php" class="btn btn-green"><?= snip('tech.case.cta') ?></a></div>
+      </div>
+      <div class="case-lead-media reveal d2">
+        <img src="assets/images/case-antibody.webp" alt="安巴韦单抗 / 罗米司韦单抗 抗体结构示意" loading="lazy">
+      </div>
     </div>
     <div class="case-dims reveal d2">
       <div class="case-dim">
@@ -155,7 +161,6 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
         <p>减少反复试错、降低后期失败率，从而大幅缩减综合研发成本。</p>
       </div>
     </div>
-    <div class="text-center"><a href="agent.php" class="btn btn-green reveal"><?= snip('tech.case.cta') ?></a></div>
   </div>
 </section>
 
