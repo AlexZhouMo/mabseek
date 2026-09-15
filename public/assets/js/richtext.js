@@ -1,4 +1,5 @@
 (function () {
+  var RTDBG = /[?&]rtdbg=1\b/.test(location.search);  // URL 带 ?rtdbg=1 时输出诊断日志
   document.querySelectorAll('[data-rt]').forEach(function (field) {
     var editor = field.querySelector('.rt-editor');
     var source = field.querySelector('.rt-source');
@@ -12,9 +13,26 @@
       toolbar.addEventListener('mousedown', function (e) { e.preventDefault(); });
     }
 
-    // 悬浮态：编辑器聚焦时标记，失焦时清除
-    editor.addEventListener('focusin', function () { field.setAttribute('data-rt-active', '1'); syncFloat(); });
-    editor.addEventListener('focusout', function () { field.removeAttribute('data-rt-active'); unfloat(); });
+    // 悬浮态：编辑器聚焦时标记；失焦时延迟判定，避免选文字/点按钮的瞬时失焦导致闪烁
+    var blurTimer = null;
+    editor.addEventListener('focusin', function () {
+      if (blurTimer) { clearTimeout(blurTimer); blurTimer = null; }
+      field.setAttribute('data-rt-active', '1');
+      syncFloat();
+    });
+    editor.addEventListener('focusout', function () {
+      // 延迟到下一帧再判定：若焦点其实落回了本 rt-field（选文字、点工具栏、执行命令），
+      // 则视为仍在编辑，不清除悬浮态；只有焦点确实移出整个字段时才 unfloat。
+      if (blurTimer) clearTimeout(blurTimer);
+      blurTimer = setTimeout(function () {
+        blurTimer = null;
+        var ae = document.activeElement;
+        if (RTDBG) console.log('[rt] focusout-check activeElement=' + (ae && ae.nodeName) + ' inField=' + field.contains(ae));
+        if (field.contains(ae)) return;   // 焦点仍在字段内，保持悬浮
+        field.removeAttribute('data-rt-active');
+        unfloat();
+      }, 120);
+    });
 
     // 占位块：悬浮时补上工具栏原本占据的高度，防止内容跳动
     var spacer = document.createElement('div');
@@ -110,6 +128,11 @@
       var active = field.getAttribute('data-rt-active') === '1';
       var top = topOffset();
       var shouldFloat = active && rect.top < top && rect.bottom > top + toolbar.offsetHeight;
+      if (RTDBG) {
+        console.log('[rt] sync active=' + active + ' top=' + top +
+          ' rectTop=' + Math.round(rect.top) + ' rectBottom=' + Math.round(rect.bottom) +
+          ' tbH=' + toolbar.offsetHeight + ' shouldFloat=' + shouldFloat + ' floating=' + floating);
+      }
       if (shouldFloat && !floating) {
         floating = true;
         spacer.style.height = toolbar.offsetHeight + 'px';
@@ -131,7 +154,10 @@
     }
 
     // scroll 事件不冒泡，用捕获阶段监听，兼容滚动发生在任意祖先容器的情况
-    window.addEventListener('scroll', syncFloat, { passive: true, capture: true });
+    window.addEventListener('scroll', function (e) {
+      if (RTDBG) console.log('[rt] scroll from ' + (e.target.nodeName || e.target) );
+      syncFloat();
+    }, { passive: true, capture: true });
     window.addEventListener('resize', syncFloat);
 
     // 提交前把编辑区内容同步进隐藏 textarea（服务端会再净化）
