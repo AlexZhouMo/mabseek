@@ -54,7 +54,7 @@
 
 /* ---------- 基础重置 ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   font-family: var(--font);
   color: var(--ink);
@@ -62,7 +62,6 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; transition: color .2s; }
 img { max-width: 100%; display: block; }

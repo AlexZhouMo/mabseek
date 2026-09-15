@@ -111,7 +111,8 @@
       spacer.style.height = '';
     }
 
-    window.addEventListener('scroll', syncFloat, { passive: true });
+    // scroll 事件不冒泡，用捕获阶段监听，兼容滚动发生在任意祖先容器的情况
+    window.addEventListener('scroll', syncFloat, { passive: true, capture: true });
     window.addEventListener('resize', syncFloat);
 
     // 提交前把编辑区内容同步进隐藏 textarea（服务端会再净化）
