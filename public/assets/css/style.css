@@ -691,8 +691,7 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 /* 富文本编辑器（论坛发帖 / 后台新闻共用） */
 .rt-field { border: 1px solid var(--line, #e5e7eb); border-radius: 8px; }
 .rt-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; background: #f7f7f9; border-bottom: 1px solid var(--line, #e5e7eb); border-radius: 8px 8px 0 0; }
-.rt-toolbar-spacer { display: none; }
-.rt-field.rt-floating .rt-toolbar-spacer { display: block; }
+.rt-toolbar-spacer { height: 0; }
 .rt-field.rt-floating .rt-toolbar {
   position: fixed;
   top: 0;
