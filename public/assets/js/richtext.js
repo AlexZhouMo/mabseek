@@ -5,6 +5,21 @@
     var form = field.closest('form');
     if (!editor || !source || !form) return;
     var uploadUrl = field.getAttribute('data-upload-url') || 'admin.php?m=news&a=upload';
+    var toolbar = field.querySelector('.rt-toolbar');
+
+    // 工具栏按钮 mousedown 时阻止默认行为，避免编辑区失焦导致悬浮态闪跳
+    if (toolbar) {
+      toolbar.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    }
+
+    // 悬浮态：编辑器聚焦时标记，失焦时清除
+    editor.addEventListener('focusin', function () { field.setAttribute('data-rt-active', '1'); syncFloat(); });
+    editor.addEventListener('focusout', function () { field.removeAttribute('data-rt-active'); unfloat(); });
+
+    // 占位块：悬浮时补上工具栏原本占据的高度，防止内容跳动
+    var spacer = document.createElement('div');
+    spacer.className = 'rt-toolbar-spacer';
+    if (toolbar) toolbar.parentNode.insertBefore(spacer, toolbar.nextSibling);
 
     // 工具栏命令
     field.querySelectorAll('.rt-btn[data-cmd]').forEach(function (btn) {
@@ -59,6 +74,45 @@
         })
         .catch(function () { alert('图片上传失败：网络错误'); });
     }
+
+    var floating = false;      // 当前是否悬浮
+
+    function applyFloatPosition() {
+      if (!floating || !toolbar) return;
+      var rect = field.getBoundingClientRect();
+      toolbar.style.left = rect.left + 'px';
+      toolbar.style.width = rect.width + 'px';
+    }
+
+    // 触发条件：编辑框聚焦中，且其顶部已滚过视口顶部、底部仍在视口下方
+    // （即编辑框正被滚动“穿过”，工具栏原位已离开视口，但编辑区尚未结束）
+    function syncFloat() {
+      if (!toolbar) return;
+      var rect = field.getBoundingClientRect();
+      var active = field.getAttribute('data-rt-active') === '1';
+      var shouldFloat = active && rect.top < 0 && rect.bottom > toolbar.offsetHeight;
+      if (shouldFloat && !floating) {
+        floating = true;
+        spacer.style.height = toolbar.offsetHeight + 'px';
+        field.classList.add('rt-floating');
+        applyFloatPosition();
+      } else if (shouldFloat && floating) {
+        applyFloatPosition();
+      } else if (!shouldFloat && floating) {
+        unfloat();
+      }
+    }
+
+    function unfloat() {
+      if (!floating) return;
+      floating = false;
+      field.classList.remove('rt-floating');
+      if (toolbar) { toolbar.style.left = ''; toolbar.style.width = ''; }
+      spacer.style.height = '';
+    }
+
+    window.addEventListener('scroll', syncFloat, { passive: true });
+    window.addEventListener('resize', syncFloat);
 
     // 提交前把编辑区内容同步进隐藏 textarea（服务端会再净化）
     form.addEventListener('submit', function () {

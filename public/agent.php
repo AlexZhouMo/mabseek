@@ -38,9 +38,9 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
 
 /* 干湿闭环流程 */
 .flow { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; align-items:stretch; }
-.flow-step { position:relative; background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 16px;text-align:center;box-shadow:var(--sh-sm); }
-.flow-step .n { width:40px;height:40px;border-radius:12px;margin:0 auto 12px;display:grid;place-items:center;font-size:20px;color:#fff; }
-.flow-step h4 { font-size:15px; } .flow-step p { font-size:12.5px;color:var(--ink-3);margin-top:6px; }
+.flow-step { position:relative; background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 12px;text-align:center;box-shadow:var(--sh-sm); }
+.flow-step h4 { font-size:15px; white-space:nowrap; }
+.flow-step p { font-size:11px;color:var(--ink-3);margin-top:6px; white-space:nowrap; }
 .flow-step .tag-mini { font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;display:inline-block;margin-top:10px; }
 .flow-arrow { position:absolute; right:-13px; top:50%; transform:translateY(-50%); color:var(--purple-400); font-size:18px; z-index:2; }
 .flow-step:last-child .flow-arrow { display:none; }
@@ -153,11 +153,11 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
       <p class="section-sub reveal d2"><?= snip('agent.flow.sub') ?></p>
     </div>
     <div class="flow reveal">
-      <div class="flow-step dry"><div class="n" style="background:var(--grad-purple)">💬</div><h4>一句话需求</h4><p>描述靶点与目标，Agent 理解任务</p><span class="tag-mini" style="background:var(--purple-050);color:var(--purple)">干 · AI</span><span class="flow-arrow">→</span></div>
-      <div class="flow-step dry"><div class="n" style="background:var(--grad-purple)">🧬</div><h4>AI 设计筛选</h4><p>序列设计 + 亲和力预测 + 结构分析</p><span class="tag-mini" style="background:var(--purple-050);color:var(--purple)">干 · AI</span><span class="flow-arrow">→</span></div>
-      <div class="flow-step wet"><div class="n" style="background:var(--grad-green);color:#04352a">🧪</div><h4>表达纯化</h4><p>一键下单，线下实验室执行</p><span class="tag-mini" style="background:var(--green-100);color:#06a97c">湿 · 实验</span><span class="flow-arrow">→</span></div>
-      <div class="flow-step wet"><div class="n" style="background:var(--grad-green);color:#04352a">🔬</div><h4>功能验证</h4><p>结合活性与功能实验验证</p><span class="tag-mini" style="background:var(--green-100);color:#06a97c">湿 · 实验</span><span class="flow-arrow">→</span></div>
-      <div class="flow-step" style="background:var(--grad-brand)"><div class="n" style="background:rgba(255,255,255,.2)">📦</div><h4 style="color:#fff">结果交付</h4><p style="color:rgba(255,255,255,.85)">数据回流，与 AI 预测双向溯源</p><span class="tag-mini" style="background:rgba(255,255,255,.2);color:#fff">闭环</span></div>
+      <div class="flow-step dry"><h4>一句话需求</h4><p>描述靶点与目标，Agent 理解任务</p><span class="tag-mini" style="background:var(--purple-050);color:var(--purple)">干 · AI</span><span class="flow-arrow">→</span></div>
+      <div class="flow-step dry"><h4>AI 设计筛选</h4><p>序列设计 + 亲和力预测 + 结构分析</p><span class="tag-mini" style="background:var(--purple-050);color:var(--purple)">干 · AI</span><span class="flow-arrow">→</span></div>
+      <div class="flow-step wet"><h4>表达纯化</h4><p>一键下单，线下实验室执行</p><span class="tag-mini" style="background:var(--green-100);color:#06a97c">湿 · 实验</span><span class="flow-arrow">→</span></div>
+      <div class="flow-step wet"><h4>功能验证</h4><p>结合活性与功能实验验证</p><span class="tag-mini" style="background:var(--green-100);color:#06a97c">湿 · 实验</span><span class="flow-arrow">→</span></div>
+      <div class="flow-step" style="background:var(--grad-brand)"><h4 style="color:#fff">结果交付</h4><p style="color:rgba(255,255,255,.85)">数据回流，与 AI 预测双向溯源</p><span class="tag-mini" style="background:rgba(255,255,255,.2);color:#fff">闭环</span></div>
     </div>
     <div id="wetlab" class="reveal d1" style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;background:#0d1122;border:1px solid var(--line-dark);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--sh-lg)">
       <div>
