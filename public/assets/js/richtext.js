@@ -70,8 +70,49 @@
         .catch(function () { alert('图片上传失败：网络错误'); });
     }
 
-    function syncFloat() {}
-    function unfloat() {}
+    var floating = false;      // 当前是否悬浮
+    var offscreen = false;     // 工具栏顶边是否已离开视口顶部
+
+    function applyFloatPosition() {
+      if (!floating || !toolbar) return;
+      var rect = field.getBoundingClientRect();
+      spacer.style.height = toolbar.offsetHeight + 'px';
+      toolbar.style.left = rect.left + 'px';
+      toolbar.style.width = rect.width + 'px';
+    }
+
+    function syncFloat() {
+      var shouldFloat = offscreen && field.getAttribute('data-rt-active') === '1';
+      if (shouldFloat && !floating) {
+        floating = true;
+        field.classList.add('rt-floating');
+        applyFloatPosition();
+      } else if (!shouldFloat && floating) {
+        unfloat();
+      } else if (shouldFloat && floating) {
+        applyFloatPosition();
+      }
+    }
+
+    function unfloat() {
+      if (!floating) return;
+      floating = false;
+      field.classList.remove('rt-floating');
+      if (toolbar) { toolbar.style.left = ''; toolbar.style.width = ''; }
+      spacer.style.height = '';
+    }
+
+    if (toolbar && 'IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        // 工具栏顶边滚出视口顶部时判定为离屏
+        var en = entries[0];
+        offscreen = !en.isIntersecting && en.boundingClientRect.top < 0;
+        syncFloat();
+      }, { threshold: [0, 1] });
+      io.observe(toolbar);
+      window.addEventListener('scroll', applyFloatPosition, { passive: true });
+      window.addEventListener('resize', applyFloatPosition);
+    }
 
     // 提交前把编辑区内容同步进隐藏 textarea（服务端会再净化）
     form.addEventListener('submit', function () {
