@@ -7,6 +7,11 @@
     var uploadUrl = field.getAttribute('data-upload-url') || 'admin.php?m=news&a=upload';
     var toolbar = field.querySelector('.rt-toolbar');
 
+    // 工具栏按钮 mousedown 时阻止默认行为，避免编辑区失焦导致悬浮态闪跳
+    if (toolbar) {
+      toolbar.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    }
+
     // 悬浮态：编辑器聚焦时标记，失焦时清除
     editor.addEventListener('focusin', function () { field.setAttribute('data-rt-active', '1'); syncFloat(); });
     editor.addEventListener('focusout', function () { field.removeAttribute('data-rt-active'); unfloat(); });
