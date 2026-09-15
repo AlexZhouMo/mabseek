@@ -283,7 +283,7 @@ function admin_crud_form(array $cfg, string $m): void
     </div>
 <?php endforeach; ?>
 <?php if ($needsRtScript): ?>
-    <script src="assets/js/richtext.js" defer></script>
+    <script src="<?= asset('assets/js/richtext.js') ?>" defer></script>
 <?php endif; ?>
     <div class="form-actions">
       <button class="abtn abtn-primary" type="submit">保存</button>

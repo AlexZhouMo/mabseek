@@ -4,6 +4,13 @@ declare(strict_types=1);
 function e(?string $s): string {
     return htmlspecialchars($s ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+// 静态资源 URL 追加基于 mtime 的版本号，改动后浏览器自动拉新版，避免强缓存用旧文件
+function asset(string $path): string {
+    $rel = ltrim($path, '/');
+    $file = __DIR__ . '/../public/' . $rel;
+    $ver = is_file($file) ? (string)filemtime($file) : '0';
+    return e($rel . '?v=' . $ver);
+}
 function iso_now(): string {
     return date('c');
 }

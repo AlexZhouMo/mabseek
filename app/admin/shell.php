@@ -16,8 +16,8 @@ $adminMenu = [
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>MabSeek 管理后台</title>
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/admin.css">
+<link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
+<link rel="stylesheet" href="<?= asset('assets/css/admin.css') ?>">
 </head>
 <body class="admin">
 <header class="admin-topbar">

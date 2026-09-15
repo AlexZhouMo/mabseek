@@ -39,7 +39,7 @@ $active = 'forum'; $navOnDark = false; $navSolidDark = true;
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>发帖 · MabSeek 论坛</title>
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
 </head>
 <body>
 <?php include __DIR__ . '/partials/nav.php'; ?>
@@ -78,7 +78,7 @@ $active = 'forum'; $navOnDark = false; $navSolidDark = true;
     <div class="auth-alt"><a href="forum.php">取消，返回论坛</a></div>
   </div>
 </div>
-<script src="assets/js/richtext.js" defer></script>
+<script src="<?= asset('assets/js/richtext.js') ?>" defer></script>
 <?php include __DIR__ . '/partials/footer.php'; ?>
 </body>
 </html>
