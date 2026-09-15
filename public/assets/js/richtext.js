@@ -104,12 +104,13 @@
 
     if (toolbar && 'IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
-        // 工具栏顶边滚出视口顶部时判定为离屏
+        // 观测占位块（始终留在工具栏原位、不随悬浮移动）：
+        // 其顶边滚出视口顶部 => 工具栏原位已离开视口
         var en = entries[0];
         offscreen = !en.isIntersecting && en.boundingClientRect.top < 0;
         syncFloat();
       }, { threshold: [0, 1] });
-      io.observe(toolbar);
+      io.observe(spacer);
       window.addEventListener('scroll', applyFloatPosition, { passive: true });
       window.addEventListener('resize', applyFloatPosition);
     }
