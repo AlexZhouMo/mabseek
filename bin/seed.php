@@ -214,12 +214,15 @@ $S_edu = [
     ['edu.hero.breadcrumb','教育','education','教育页 面包屑','text'],
     ['edu.hero.eyebrow','新型教育科研范式','education','教育页 Hero 眉题','text'],
     ['edu.hero.title','让知识<span class="grad-text">系统沉淀、清晰可循</span>','education','教育页 Hero 标题(含标记)','textarea'],
-    ['edu.hero.lead','元视频拆解 + 实时互动，打通「视频观看 — 弹幕交流 — AI 答疑」的完整教学闭环。','education','教育页 Hero 说明','textarea'],
+    ['edu.hero.lead','元视频拆解 + AI 答疑，系统沉淀课程知识，随点随学。','education','教育页 Hero 说明','textarea'],
     ['edu.banner.tag','精品课程','education','课程 Banner 标签','text'],
     ['edu.banner.title','《疫苗的力量》','education','课程 Banner 标题','text'],
     ['edu.banner.sub','元视频课程体系 · 精准适配学生、疫苗研发从业者、接种人群与新手父母','education','课程 Banner 副标题','textarea'],
     ['edu.video.eyebrow','课时播放专区','education','课时播放 眉题','text'],
-    ['edu.video.title','元视频点播 + 实时弹幕 + 专属留言区','education','课时播放 标题','text'],
+    ['edu.video.title','课程视频','education','视频区 标题','text'],
+    ['edu.video.src','','education','课程视频文件路径（后台上传后自动填入）','text'],
+    ['edu.course.intro','本课程立足清华科研一线，以真实案例为切入点，深度解析疫苗的历史演变、科学逻辑与全球治理。课程融合理论教学、案例剖析、企业调研与实验实践，旨在点亮抗体与疫苗研发兴趣，培养兼具家国情怀与国际视野的复合型领军人才。','education','课程简介 正文','textarea'],
+    ['edu.teachers.intro','课程组将邀请疫苗研发一线的专家教授参与授课，介绍其所在专业领域中真实的疫苗研发历程和真实的科研经历故事。同时授课教师还包括从事疫苗监管、政策制定和疫苗治理的专家，帮助学生充分了解疫苗如何从实验室走向人群普遍接种的艰苦心路历程，以及科学家们在利用疫苗实现人类健康这一目标上的矢志追求。','education','主讲团队 正文','textarea'],
 ];
 foreach ($S_edu as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(education): " . count($S_edu) . " seeded (idempotent)\n";
@@ -300,4 +303,11 @@ echo "  + snippets(about): " . count($S_about) . " seeded (idempotent)\n";
 seed_cards_group('edu_info', [
     ['grp'=>'edu_info','icon'=>'📘','title'=>'课程简介','body'=>'','extra'=>json_encode(['items'=>['从病毒免疫到疫苗研发的完整知识体系','原版课程完整留存，拆解为独立元视频片段','支持精准点播单个知识点，无需通看全片','按知识点精准点播，边看边学'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
     ['grp'=>'edu_info','icon'=>'💡','title'=>'育人理念','body'=>'','extra'=>json_encode(['items'=>['让科研教育有趣、好玩、可高频使用','知识分层开放，从科普到科研全覆盖','AI 全程陪伴答疑，降低学习门槛','搭建前后辈互助传承的成长生态'],'ico_style'=>''], JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
+]);
+
+// 教学安排（education.php 折叠面板）
+seed_cards_group('edu_schedule', [
+    ['grp'=>'edu_schedule','icon'=>'','title'=>'第 1 讲　疫苗发展史与全球治理','body'=>'授课：张老师','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'edu_schedule','icon'=>'','title'=>'第 2 讲　免疫系统与抗原识别','body'=>'授课：课题组教师','extra'=>'','sort'=>2,'published'=>1],
+    ['grp'=>'edu_schedule','icon'=>'','title'=>'第 3 讲　疫苗免疫应答基础','body'=>'授课：课题组教师','extra'=>'','sort'=>3,'published'=>1],
 ]);
