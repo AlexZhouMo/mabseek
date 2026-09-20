@@ -274,6 +274,7 @@ MIGRATIONS=(
   "migrate-news-category.php|5f/9 新闻分类迁移（幂等，就地订正存量记录）|新闻分类迁移"
   "migrate-home-news-title.php|5g/9 首页近况标题订正（幂等，就地订正存量记录）|首页近况标题订正"
   "migrate-web-update-260920.php|5h/9 260920 网页更新迁移（幂等，就地订正+补齐存量记录）|260920 网页更新迁移"
+  "migrate-web-update-302.php|5i/9 V3.0.2 网页更新迁移（幂等，就地订正+补齐存量记录）|V3.0.2 网页更新迁移"
 )
 for m in "${MIGRATIONS[@]}"; do
   IFS='|' read -r m_script m_step m_label <<< "$m"
