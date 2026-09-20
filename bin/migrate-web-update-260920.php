@@ -36,31 +36,39 @@ function mig_fix_snippet(string $key, string $oldVal, string $newVal, int &$chan
         echo "  ~ snippet $key\n";
     }
 }
+/** 多历史旧值：仅当现值命中已知旧默认值列表才订正（保护后台自定义文案） */
+function mig_fix_snippet_any(string $key, array $oldVals, string $newVal, int &$changed): void {
+    $cur = Snippets::get($key, '__MISSING__');
+    if (in_array($cur, $oldVals, true) && $cur !== $newVal) {
+        Snippets::set($key, $newVal);
+        $changed++;
+        echo "  ~ snippet $key\n";
+    }
+}
 mig_fix_snippet('home.hero.eyebrow', '🧬 清华团队 × AI 大模型', '🧬 AI 驱动的抗体发现平台', $changed);
 mig_fix_snippet('footer.brand.tagline', '清华团队 × AI 大模型，让抗体发现从反复试错变成精准编程。', '让抗体发现从反复试错变成精准编程。', $changed);
+// edu.video.title：旧值（含弹幕/留言，与已删功能自相矛盾）→ 课程视频
+mig_fix_snippet('edu.video.title', '元视频点播 + 实时弹幕 + 专属留言区', '课程视频', $changed);
 
-// PRA：现值不含新版特征串“前瞻性前置研究”则订正为新版（幂等；已是新版则跳过）
+// PRA：仅当现值等于已知历史旧默认值才订正为新版（保护后台自定义文案；已是新版则不命中→跳过）
 $praNew = '大流行病研究联盟（PRA）由清华大学张林琦教授联合钟南山、何大一、袁国勇、王林发及 Sharon Lewin 等多国知名专家于 2023 年发起，针对全球防疫难题开展前瞻性前置研究，布局相关产品研发与应急储备，提升疫病预防、诊断、救治应急处置能力，推进国际合作与人才交流，守护全球民众健康。联盟现已举办 3 场线下、10 场线上国际研讨会，发展为全球活跃的流行病研究协作网络，依次完成框架搭建、学术交流、成果转化与人才培养的稳步进阶。清华大学将依托自身在基础研究、医工交叉与 AI 学科的综合优势，联合全球合作伙伴，为建设更具韧性、公平性与协同性的全球公共卫生体系贡献清华力量。';
-$praCur = Snippets::get('about.intl.pra_body', '');
-if (mb_strpos($praCur, '前瞻性前置研究') === false) {
-    Snippets::set('about.intl.pra_body', $praNew);
-    $changed++;
-    echo "  ~ snippet about.intl.pra_body\n";
-}
+mig_fix_snippet_any('about.intl.pra_body', [
+    // main 分支 seed.php 原值
+    '参与 PRA 国际联盟与大会，围绕项目背景、合作内容与研究进展持续推进多边科研协作，并积极与国内外高校、科研院所及行业企业探索共建联合实验室的合作机会。',
+    // 更早的历史简版（防御性列入）
+    '参与 PRA 国际联盟与大会，围绕项目背景、合作内容与研究进展持续推进多边科研协作。',
+], $praNew, $changed);
 
-// edu.hero.lead：含“弹幕”则订正为新值
-$eduLeadCur = Snippets::get('edu.hero.lead', '');
-if (mb_strpos($eduLeadCur, '弹幕') !== false) {
-    Snippets::set('edu.hero.lead', '元视频拆解 + AI 答疑，系统沉淀课程知识，随点随学。');
-    $changed++;
-    echo "  ~ snippet edu.hero.lead\n";
-}
+// edu.hero.lead：仅当现值等于已知历史旧默认值才订正为新值
+mig_fix_snippet_any('edu.hero.lead', [
+    // main 分支 seed.php 原值（书名号「」+ 全角破折号）
+    '元视频拆解 + 实时互动，打通「视频观看 — 弹幕交流 — AI 答疑」的完整教学闭环。',
+], '元视频拆解 + AI 答疑，系统沉淀课程知识，随点随学。', $changed);
 
 // —— 2) 补齐缺失 snippet（Snippets::seed = 不存在才插；逐条从 seed.php 复制）——
 // [skey, value, grp, label, type]
 $fillSnippets = [
     // education 页
-    ['edu.video.title', '课程视频', 'education', '视频区 标题', 'text'],
     ['edu.video.src', '', 'education', '课程视频文件路径（后台上传后自动填入）', 'text'],
     ['edu.course.intro', '本课程立足清华科研一线，以真实案例为切入点，深度解析疫苗的历史演变、科学逻辑与全球治理。课程融合理论教学、案例剖析、企业调研与实验实践，旨在点亮抗体与疫苗研发兴趣，培养兼具家国情怀与国际视野的复合型领军人才。', 'education', '课程简介 正文', 'textarea'],
     ['edu.teachers.intro', '课程组将邀请疫苗研发一线的专家教授参与授课，介绍其所在专业领域中真实的疫苗研发历程和真实的科研经历故事。同时授课教师还包括从事疫苗监管、政策制定和疫苗治理的专家，帮助学生充分了解疫苗如何从实验室走向人群普遍接种的艰苦心路历程，以及科学家们在利用疫苗实现人类健康这一目标上的矢志追求。', 'education', '主讲团队 正文', 'textarea'],

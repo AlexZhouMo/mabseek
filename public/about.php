@@ -183,10 +183,13 @@ $news = (new Collection('news'))->published();
     <?php
     if (!function_exists('render_carousel')) {
         function render_carousel(array $cards, string $cid) {
-            if (!$cards) return;
+            // 先过滤出有 img 的有效卡；全空则不输出空外壳（避免无 slide 的空轮播+失效箭头）
+            $slides = [];
+            foreach ($cards as $c) { $ex=json_decode($c['extra']?:'{}',true); $img=$ex['img']??''; if($img==='')continue; $slides[]=['img'=>$img,'title'=>$c['title']]; }
+            if (!$slides) return;
             echo '<div class="carousel" data-carousel id="'.e($cid).'"><div class="carousel-track">';
-            foreach ($cards as $c) { $ex=json_decode($c['extra']?:'{}',true); $img=$ex['img']??''; if($img==='')continue;
-                echo '<div class="carousel-slide"><img src="'.e($img).'" alt="'.e($c['title']).'" loading="lazy"></div>'; }
+            foreach ($slides as $s) {
+                echo '<div class="carousel-slide"><img src="'.e($s['img']).'" alt="'.e($s['title']).'" loading="lazy"></div>'; }
             echo '</div><button class="carousel-btn prev" aria-label="上一张">‹</button><button class="carousel-btn next" aria-label="下一张">›</button><div class="carousel-dots"></div></div>';
         }
     }
