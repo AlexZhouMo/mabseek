@@ -21,6 +21,10 @@ const LOGIN_FAIL_WINDOW  = 900;                    // 统计窗口 15 分钟
 // ── 上传 ──
 const UPLOAD_MAX_BYTES = 2 * 1024 * 1024;         // 2MB
 const UPLOAD_ALLOWED   = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+const VIDEO_DIR       = BASE_ROOT . '/public/assets/videos';
+const VIDEO_URL       = 'assets/videos';
+const VIDEO_MAX_BYTES = 50 * 1024 * 1024;   // 50MB
+const VIDEO_ALLOWED   = ['video/mp4' => 'mp4', 'video/webm' => 'webm'];
 
 // ── 初始管理员 ──
 const SEED_ADMIN_USER = 'admin';
