@@ -47,7 +47,8 @@ mabseek/
 ├── bin/
 │   ├── seed.php                  幂等初始化：建库、建管理员账号、灌入初始内容
 │   ├── migrate-images-webp.php   幂等迁移：库中静态图片路径 .png/.jpg → .webp（保护上传图）
-│   └── migrate-contact-email.php 幂等迁移：订正 snippets 中的历史联系邮箱
+│   ├── migrate-contact-email.php 幂等迁移：订正 snippets 中的历史联系邮箱
+│   └── migrate-web-update-260920.php 幂等迁移：260920 网页更新（logo 墙/教育页/张老师成果/国际合作）存量记录订正与补齐
 ├── data/              ← SQLite 数据库文件所在（git 忽略，运行时生成）
 ├── deploy/            ← 部署脚本与样例（见「部署」）
 ├── docs/              ← 架构文档、UI 规范
@@ -98,6 +99,12 @@ php -S localhost:8778 -t public
 
 - 全站配图为 AI 生成的深色科技风插画（紫 + 荧光绿渐变），统一收纳于 `public/assets/images/`；团队真实头像置于 `assets/images/team/`。
 - 静态配图均采用 **WebP** 格式（较 PNG/JPG 显著减小体积、加载更快），照片型质量 q82、logo 与头像 q90 保留透明。数据库里存量的图片路径由 `bin/migrate-images-webp.php` 在部署时幂等迁移，仅替换存在对应 WebP 的引用，不动 `uploads/` 下的用户上传图。
+
+## 260920 网页更新
+
+- **首页合作伙伴 logo 墙**：17 图三行同向滚动展示。
+- **教育页**：课程视频支持后台上传（≤50MB，存 `assets/videos/`），banner 去字 + 两列布局 + 教学安排折叠。
+- **了解我们页**：负责人张老师详细成果（论文 276+ / 专利 34+ / 荣誉手风琴），医学楼全景背景；国际合作以印尼 / PRA 双图片轮播呈现，附 PRA 新版联盟介绍。
 
 ## 静态资源缓存
 
