@@ -2,7 +2,6 @@
 require __DIR__ . '/../app/bootstrap.php';
 member_check();                                   // 未登录跳 login.php
 $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
-$eduInfo    = (new Collection('content_cards'))->published("grp='edu_info'");
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
