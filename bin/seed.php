@@ -57,10 +57,23 @@ seed_collection('team_members', [
 
 // ── 4) partners（index.html logo 墙，逐字）──
 seed_collection('partners', [
-    ['name'=>'清华大学','mark'=>'清','sub'=>'','logo_image'=>null,'demo'=>'清华大学联合实验室详情','sort'=>1,'published'=>1],
-    ['name'=>'北京大学','mark'=>'北','sub'=>'','logo_image'=>null,'demo'=>'北京大学联合实验室详情','sort'=>2,'published'=>1],
-    ['name'=>'Eijkman 研究所','mark'=>'EJ','sub'=>'印度尼西亚','logo_image'=>null,'demo'=>'Eijkman 研究所合作','sort'=>3,'published'=>1],
-    ['name'=>'PRA 国际联盟','mark'=>'PRA','sub'=>'','logo_image'=>null,'demo'=>'PRA 国际联盟合作','sort'=>4,'published'=>1],
+    ['name'=>'清华大学','mark'=>'清','sub'=>'','logo_image'=>'assets/images/partners/p01.webp','demo'=>'','sort'=>1,'published'=>1],
+    ['name'=>'北京大学','mark'=>'北','sub'=>'','logo_image'=>'assets/images/partners/p02.webp','demo'=>'','sort'=>2,'published'=>1],
+    ['name'=>'PRA 国际联盟','mark'=>'PRA','sub'=>'','logo_image'=>'assets/images/partners/p03.webp','demo'=>'','sort'=>3,'published'=>1],
+    ['name'=>'Universitas Indonesia','mark'=>'UI','sub'=>'印度尼西亚','logo_image'=>'assets/images/partners/p04.webp','demo'=>'','sort'=>4,'published'=>1],
+    ['name'=>'北京清华长庚医院','mark'=>'长庚','sub'=>'','logo_image'=>'assets/images/partners/p05.webp','demo'=>'','sort'=>5,'published'=>1],
+    ['name'=>'中国医学科学院','mark'=>'协和','sub'=>'','logo_image'=>'assets/images/partners/p06.webp','demo'=>'','sort'=>6,'published'=>1],
+    ['name'=>'北京医院','mark'=>'京','sub'=>'','logo_image'=>'assets/images/partners/p07.webp','demo'=>'','sort'=>7,'published'=>1],
+    ['name'=>'BRIN','mark'=>'BRIN','sub'=>'印度尼西亚','logo_image'=>'assets/images/partners/p08.webp','demo'=>'','sort'=>8,'published'=>1],
+    ['name'=>'LPDP','mark'=>'LPDP','sub'=>'印度尼西亚','logo_image'=>'assets/images/partners/p09.webp','demo'=>'','sort'=>9,'published'=>1],
+    ['name'=>'北京友谊医院','mark'=>'友谊','sub'=>'','logo_image'=>'assets/images/partners/p10.webp','demo'=>'','sort'=>10,'published'=>1],
+    ['name'=>'沃森生物','mark'=>'WALVAX','sub'=>'','logo_image'=>'assets/images/partners/p11.webp','demo'=>'','sort'=>11,'published'=>1],
+    ['name'=>'天木生物','mark'=>'TMAX','sub'=>'','logo_image'=>'assets/images/partners/p12.webp','demo'=>'','sort'=>12,'published'=>1],
+    ['name'=>'BADAN POM','mark'=>'POM','sub'=>'印度尼西亚','logo_image'=>'assets/images/partners/p13.webp','demo'=>'','sort'=>13,'published'=>1],
+    ['name'=>'思路迪医药','mark'=>'3D','sub'=>'','logo_image'=>'assets/images/partners/p14.webp','demo'=>'','sort'=>14,'published'=>1],
+    ['name'=>'revvity','mark'=>'REV','sub'=>'','logo_image'=>'assets/images/partners/p15.webp','demo'=>'','sort'=>15,'published'=>1],
+    ['name'=>'东富龙 Tofflon','mark'=>'TFL','sub'=>'','logo_image'=>'assets/images/partners/p16.webp','demo'=>'','sort'=>16,'published'=>1],
+    ['name'=>'Kemenkes','mark'=>'KMK','sub'=>'印度尼西亚','logo_image'=>'assets/images/partners/p17.webp','demo'=>'','sort'=>17,'published'=>1],
 ]);
 
 // ── 7) content_cards（各分组，逐字）──

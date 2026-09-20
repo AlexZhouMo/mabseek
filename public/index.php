@@ -89,9 +89,19 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
       <span class="eyebrow reveal"><?= snip('home.contact.eyebrow') ?></span>
       <h2 class="section-title reveal d1"><?= snip_raw('home.contact.title') ?></h2>
     </div>
-    <div class="logo-wall reveal" style="margin-bottom:40px">
-<?php foreach ($partners as $p): ?>
-      <a class="logo-chip" data-demo="<?= e($p['demo']) ?>"><span class="mark"><?= e($p['mark']) ?></span><?= e($p['name']) ?><?= $p['sub'] !== '' ? '<small>' . e($p['sub']) . '</small>' : '' ?></a>
+    <div class="logo-marquee reveal" style="margin-bottom:40px">
+<?php
+      $rows = [[], [], []];
+      foreach ($partners as $i => $p) { $rows[$i % 3][] = $p; }
+      foreach ($rows as $rp):
+        if (!$rp) continue;
+        $loop = array_merge($rp, $rp); // 复制一遍，配合 translateX(-50%) 无缝循环
+?>
+      <div class="logo-row">
+<?php foreach ($loop as $p): if (empty($p['logo_image'])) continue; ?>
+        <div class="logo-item"><img src="<?= e($p['logo_image']) ?>" alt="<?= e($p['name']) ?>" loading="lazy"></div>
+<?php endforeach; ?>
+      </div>
 <?php endforeach; ?>
     </div>
     <div class="text-center">
