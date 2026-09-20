@@ -45,7 +45,11 @@ function mig_fix_snippet_any(string $key, array $oldVals, string $newVal, int &$
         echo "  ~ snippet $key\n";
     }
 }
-mig_fix_snippet('home.hero.eyebrow', '🧬 清华团队 × AI 大模型', '🧬 AI 驱动的抗体发现平台', $changed);
+// home.hero.eyebrow：移除首页 Hero 眉题标签 → 置空（两个历史默认值都订正；后台自定义则保留）
+mig_fix_snippet_any('home.hero.eyebrow', [
+    '🧬 清华团队 × AI 大模型',        // main 分支原值
+    '🧬 AI 驱动的抗体发现平台',        // 本轮曾一度改成的中间值
+], '', $changed);
 mig_fix_snippet('footer.brand.tagline', '清华团队 × AI 大模型，让抗体发现从反复试错变成精准编程。', '让抗体发现从反复试错变成精准编程。', $changed);
 // edu.video.title：旧值（含弹幕/留言，与已删功能自相矛盾）→ 课程视频
 mig_fix_snippet('edu.video.title', '元视频点播 + 实时弹幕 + 专属留言区', '课程视频', $changed);

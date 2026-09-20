@@ -22,7 +22,10 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
 <!-- ============ L1 英雄区（深） ============ -->
 <section class="hero-c">
   <div class="hero-c-inner">
-    <span class="eyebrow reveal"><?= snip('home.hero.eyebrow') ?></span>
+<?php $heroEyebrow = snip('home.hero.eyebrow'); ?>
+<?php if ($heroEyebrow !== ''): ?>
+    <span class="eyebrow reveal"><?= $heroEyebrow ?></span>
+<?php endif; ?>
     <h1 class="reveal d1"><?= snip_raw('home.hero.title') ?></h1>
     <p class="hero-c-sub reveal d2"><?= snip('home.hero.sub') ?></p>
     <a href="agent.php" class="btn btn-green btn-lg hero-c-cta reveal d3"><?= snip('home.hero.cta') ?></a>

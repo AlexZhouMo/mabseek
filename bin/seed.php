@@ -99,7 +99,7 @@ $S = [
     ['contact.org','清华大学医学院','common','联系单位','text'],
 
     // index.html
-    ['home.hero.eyebrow','🧬 AI 驱动的抗体发现平台','home','首页 Hero 眉题','text'],
+    ['home.hero.eyebrow','','home','首页 Hero 眉题（留空则不显示）','text'],
     ['home.hero.title','让抗体发现<br>从"反复试错"变成 <span class="txt-neon">"精准编程"</span>','home','首页 Hero 标题(含标记)','textarea'],
     ['home.hero.sub','从头设计一支完美结合靶点的抗体——AI 生成 + 干湿闭环验证，一站直达。','home','首页 Hero 副标题','textarea'],
     ['home.hero.cta','免费试用 Antibody Agent →','home','首页 Hero 按钮','text'],
