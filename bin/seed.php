@@ -80,13 +80,13 @@ seed_collection('content_cards', array_merge([
 // ── 8) snippets（零散文案，逐字）──
 $S = [
     // 全站页脚（footer.php 共用）
-    ['footer.brand.tagline','清华团队 × AI 大模型，让抗体发现从反复试错变成精准编程。','common','页脚品牌简介','textarea'],
+    ['footer.brand.tagline','让抗体发现从反复试错变成精准编程。','common','页脚品牌简介','textarea'],
     ['footer.copyright','© 2026 MabSeek 抗体求索 · 清华大学医学院实验室. 保留所有权利。','common','页脚版权行','text'],
     ['contact.email','m13673741782@163.com','common','联系邮箱','text'],
     ['contact.org','清华大学医学院','common','联系单位','text'],
 
     // index.html
-    ['home.hero.eyebrow','🧬 清华团队 × AI 大模型','home','首页 Hero 眉题','text'],
+    ['home.hero.eyebrow','🧬 AI 驱动的抗体发现平台','home','首页 Hero 眉题','text'],
     ['home.hero.title','让抗体发现<br>从"反复试错"变成 <span class="txt-neon">"精准编程"</span>','home','首页 Hero 标题(含标记)','textarea'],
     ['home.hero.sub','从头设计一支完美结合靶点的抗体——AI 生成 + 干湿闭环验证，一站直达。','home','首页 Hero 副标题','textarea'],
     ['home.hero.cta','免费试用 Antibody Agent →','home','首页 Hero 按钮','text'],

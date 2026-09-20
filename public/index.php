@@ -11,7 +11,7 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MabSeek 抗体求索 · AI 驱动的抗体发现平台 | 清华大学医学院</title>
-<meta name="description" content="清华团队 × AI 大模型，让抗体发现从反复试错变成精准编程。MabSeek 抗体求索 · 清华大学医学院。">
+<meta name="description" content="AI 驱动的抗体发现平台，让抗体发现从反复试错变成精准编程。MabSeek 抗体求索 · 清华大学医学院。">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 </head>
