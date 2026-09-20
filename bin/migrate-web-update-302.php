@@ -98,9 +98,15 @@ mig_fix_snippet_any('about.intl.pra_body',
     "大流行病研究联盟（PRA）由清华大学张林琦教授联合钟南山、何大一、袁国勇、王林发及 Sharon Lewin 等多国知名专家于 2023 年发起，针对全球防疫难题开展前瞻性前置研究，布局相关产品研发与应急储备，提升疫病预防、诊断、救治应急处置能力，推进国际合作与人才交流，守护全球民众健康。\n联盟现已举办 3 场线下、10 场线上国际研讨会，发展为全球活跃的流行病研究协作网络，依次完成框架搭建、学术交流、成果转化与人才培养的稳步进阶。清华大学将依托自身在基础研究、医工交叉与 AI 学科的综合优势，联合全球合作伙伴，为建设更具韧性、公平性与协同性的全球公共卫生体系贡献清华力量。",
     $changed);
 
-// —— 3) edu_schedule 补齐到 15 条 ——
-$cnt = (int)$pdo->query("SELECT COUNT(*) FROM content_cards WHERE grp='edu_schedule'")->fetchColumn();
-if ($cnt < 15) {
+// —— 3) edu_schedule 订正为 15 周（就地重灌）——
+// 判据不能用 “count < 15”：部署时 seed 先于本迁移运行，seed_cards_group 对已有旧
+// 记录（旧 3 讲）是“补齐”语义（不删旧的直接追加 15 条 → 18 条新旧混杂），本迁移必须能纠正。
+// 故判据改为：不满足“恰好 15 条且首条为新版‘第 1 周 …’格式”即清空重灌，天然幂等。
+$rowsSched = $pdo->query("SELECT sort,title FROM content_cards WHERE grp='edu_schedule' ORDER BY sort")->fetchAll(PDO::FETCH_ASSOC);
+$schedOk = count($rowsSched) === 15
+    && ($rowsSched[0]['title'] ?? '') === '第 1 周 · 2026/09/15 · 绪论：疫苗点亮健康'
+    && ($rowsSched[14]['title'] ?? '') === '第 15 周 · 2026/12/29 · 历史回顾和未来展望';
+if (!$schedOk) {
     $pdo->exec("DELETE FROM content_cards WHERE grp='edu_schedule'");
     $sched = [
         ['title'=>'第 1 周 · 2026/09/15 · 绪论：疫苗点亮健康','body'=>'授课：张林琦｜课程队长：李晨雨','sort'=>1],
