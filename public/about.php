@@ -159,14 +159,19 @@ $news = (new Collection('news'))->published();
     <?php
     if (!function_exists('render_carousel')) {
         function render_carousel(array $cards, string $cid) {
-            // 先过滤出有 img 的有效卡；全空则不输出空外壳（避免无 slide 的空轮播+失效箭头）
+            // 先过滤出有 img 的有效卡；全空则不输出空外壳
             $slides = [];
             foreach ($cards as $c) { $ex=json_decode($c['extra']?:'{}',true); $img=$ex['img']??''; if($img==='')continue; $slides[]=['img'=>$img,'title'=>$c['title']]; }
             if (!$slides) return;
-            echo '<div class="carousel" data-carousel id="'.e($cid).'"><div class="carousel-track">';
-            foreach ($slides as $s) {
-                echo '<div class="carousel-slide"><img src="'.e($s['img']).'" alt="'.e($s['title']).'" loading="lazy"></div>'; }
-            echo '</div><button class="carousel-btn prev" aria-label="上一张">‹</button><button class="carousel-btn next" aria-label="下一张">›</button><div class="carousel-dots"></div></div>';
+            echo '<div class="intl-marquee" id="'.e($cid).'"><div class="intl-track">';
+            // 复制两遍以配合 translateX(-50%) 无缝循环；第二遍对读屏隐藏，避免重复
+            foreach ([$slides, $slides] as $pass => $group) {
+                foreach ($group as $s) {
+                    $hidden = $pass ? ' aria-hidden="true"' : '';
+                    echo '<div class="intl-item"'.$hidden.'><img src="'.e($s['img']).'" alt="'.e($s['title']).'" loading="lazy"></div>';
+                }
+            }
+            echo '</div></div>';
         }
     }
     $intlId = (new Collection('content_cards'))->published("grp='intl_id'");
@@ -228,22 +233,6 @@ nchips.forEach(function (c) {
 });
 // 张老师手风琴折叠
 document.querySelectorAll('.acc-head').forEach(function(h){h.addEventListener('click',function(){var it=h.parentElement,b=h.nextElementSibling;it.classList.toggle('open');b.style.maxHeight=it.classList.contains('open')?b.scrollHeight+'px':'0';});});
-</script>
-<script>
-document.querySelectorAll('[data-carousel]').forEach(function(c){
-  var track=c.querySelector('.carousel-track'), slides=c.querySelectorAll('.carousel-slide'),
-      dotsBox=c.querySelector('.carousel-dots'), n=slides.length, idx=0, timer;
-  if(!n)return;
-  for(var i=0;i<n;i++){var d=document.createElement('button');d.className='carousel-dot'+(i?'':' on');d.dataset.i=i;dotsBox.appendChild(d);}
-  var dots=dotsBox.querySelectorAll('.carousel-dot');
-  function go(i){idx=(i+n)%n;track.style.transform='translateX(-'+(idx*100)+'%)';dots.forEach(function(d,j){d.classList.toggle('on',j===idx);});}
-  c.querySelector('.next').addEventListener('click',function(){go(idx+1);reset();});
-  c.querySelector('.prev').addEventListener('click',function(){go(idx-1);reset();});
-  dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.i);reset();});});
-  function auto(){if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(function(){go(idx+1);},5000);}
-  function reset(){clearInterval(timer);auto();}
-  auto();
-});
 </script>
 </body>
 </html>

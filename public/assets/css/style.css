@@ -744,14 +744,11 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 @media (max-width:720px){ .logo-item { height:52px; padding:10px 16px; } .logo-item img { height:30px; } }
 
 /* ── 国际合作图片轮播 ── */
-.carousel { position:relative; border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(13,16,48,.18); border:1px solid rgba(255,255,255,.12); background:#000; }
-.carousel-track { display:flex; transition:transform .45s cubic-bezier(.4,0,.2,1); }
-.carousel-slide { flex:0 0 100%; }
-.carousel-slide img { width:100%; height:auto; max-height:480px; object-fit:contain; background:#000; display:block; }
-.carousel-btn { position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border:0; border-radius:50%; background:rgba(0,0,0,.4); backdrop-filter:blur(6px); color:#fff; font-size:22px; cursor:pointer; display:grid; place-items:center; transition:background .2s; z-index:2; }
-.carousel-btn:hover { background:rgba(0,0,0,.65); }
-.carousel-btn.prev { left:14px; } .carousel-btn.next { right:14px; }
-.carousel-dots { position:absolute; left:0; right:0; bottom:16px; display:flex; gap:9px; justify-content:center; z-index:2; }
-.carousel-dot { width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.5); border:0; cursor:pointer; padding:0; box-shadow:0 1px 4px rgba(0,0,0,.5); transition:background .2s, transform .2s; }
-.carousel-dot.on { background:#fff; transform:scale(1.3); }
-@media (max-width:720px){ .carousel-slide img { height:220px; } }
+.intl-marquee { overflow:hidden; border-radius:14px; }
+.intl-track { display:flex; gap:20px; width:max-content; animation:intl-scroll 40s linear infinite; }
+.intl-marquee:hover .intl-track { animation-play-state:paused; }
+@keyframes intl-scroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+.intl-item { flex:0 0 auto; }
+.intl-item img { height:220px; width:auto; object-fit:contain; display:block; border-radius:10px; background:#000; box-shadow:0 6px 20px rgba(13,16,48,.16); }
+@media (prefers-reduced-motion: reduce) { .intl-track { animation:none; flex-wrap:wrap; width:auto; } }
+@media (max-width:720px){ .intl-item img { height:160px; } }
