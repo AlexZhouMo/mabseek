@@ -22,12 +22,14 @@ $changed = 0;
 
 echo "Migrating web-update-302 (idempotent)...\n";
 
-function mig_fix_snippet_any(string $key, array $oldVals, string $newVal, int &$changed): void {
-    $cur = Snippets::get($key, '__MISSING__');
-    if (in_array($cur, $oldVals, true) && $cur !== $newVal) {
-        Snippets::set($key, $newVal);
-        $changed++;
-        echo "  ~ snippet $key\n";
+if (!function_exists('mig_fix_snippet_any')) {
+    function mig_fix_snippet_any(string $key, array $oldVals, string $newVal, int &$changed): void {
+        $cur = Snippets::get($key, '__MISSING__');
+        if (in_array($cur, $oldVals, true) && $cur !== $newVal) {
+            Snippets::set($key, $newVal);
+            $changed++;
+            echo "  ~ snippet $key\n";
+        }
     }
 }
 
