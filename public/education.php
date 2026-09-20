@@ -75,11 +75,11 @@ $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 
     <div class="edu-two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px">
       <div class="info-card reveal">
         <div class="head"><span class="ico">📘</span><h3>课程简介</h3></div>
-        <p style="color:var(--ink-2);line-height:1.8"><?= snip('edu.course.intro') ?></p>
+        <div style="color:var(--ink-2);line-height:1.8"><?= snip_paras('edu.course.intro') ?></div>
       </div>
       <div class="info-card reveal d1">
         <div class="head"><span class="ico" style="background:var(--green-100);color:#06a97c">👥</span><h3>主讲团队</h3></div>
-        <p style="color:var(--ink-2);line-height:1.8"><?= snip('edu.teachers.intro') ?></p>
+        <div style="color:var(--ink-2);line-height:1.8"><?= snip_paras('edu.teachers.intro') ?></div>
       </div>
     </div>
 <?php $schedule = (new Collection('content_cards'))->published("grp='edu_schedule'"); if ($schedule): ?>

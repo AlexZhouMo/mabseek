@@ -11,7 +11,7 @@ $news = (new Collection('news'))->published();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>了解我们 · 实验室概况与成果 | MabSeek 抗体求索</title>
-<meta name="description" content="MabSeek 实验室概况与成果：实验室与核心团队介绍、MabSeek 平台介绍、新闻与活动、中印尼深度合作与 PRA 国际科研合作纪实。">
+<meta name="description" content="MabSeek 实验室概况与成果：实验室与核心团队介绍、新闻与活动、中印尼深度合作与 PRA 国际科研合作纪实。">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 <style>
@@ -90,7 +90,7 @@ $news = (new Collection('news'))->published();
 <?php $papers = (new Collection('content_cards'))->published("grp='zhang_papers'"); ?>
     <div class="card reveal" style="margin-top:16px">
       <h3 style="font-size:17px">📄 学术论文成果</h3>
-      <p style="color:var(--ink-2);margin-top:6px"><?= snip('about.zhang.papers_desc') ?>团队发表文章 <span style="color:#c0392b;font-weight:800;font-size:22px"><?= snip('about.zhang.papers_count') ?></span>（数据来源 ResearchGate）</p>
+      <p style="color:var(--ink-2);margin-top:6px"><?= snip('about.zhang.papers_desc') ?>团队发表文章 <span style="color:#c0392b;font-weight:800;font-size:22px"><?= snip('about.zhang.papers_count') ?></span></p>
       <div class="accordion zhang-acc" style="margin-top:12px"><div class="acc-item">
         <div class="acc-head"><span>近 5 年代表性文章</span><span class="arrow">▾</span></div>
         <div class="acc-body"><div class="inner">
@@ -121,26 +121,6 @@ $news = (new Collection('news'))->published();
 <?php foreach ($honors as $h): ?>          <div class="res-item"><span class="k"><?= e($h['title']) ?></span><span class="lockbadge"><?= e($h['body']) ?></span></div>
 <?php endforeach; ?>        </div></div>
       </div></div>
-    </div>
-  </div>
-</section>
-
-<!-- MabSeek 平台介绍 -->
-<section class="section bg-soft" id="platform">
-  <div class="container">
-    <div class="intl">
-      <div class="reveal">
-        <span class="eyebrow green"><?= snip('about.platform.eyebrow') ?></span>
-        <h2 style="font-size:30px;margin:14px 0 12px"><?= snip('about.platform.title') ?></h2>
-        <p style="color:var(--ink-3)"><?= snip('about.platform.body') ?></p>
-        <ul style="margin-top:16px">
-          <li style="display:flex;gap:10px;margin-bottom:10px;color:var(--ink-2)"><b style="color:var(--purple)">干</b> <?= snip('about.platform.li1') ?></li>
-          <li style="display:flex;gap:10px;margin-bottom:10px;color:var(--ink-2)"><b style="color:#06a97c">湿</b> <?= snip('about.platform.li2') ?></li>
-          <li style="display:flex;gap:10px;color:var(--ink-2)"><b style="color:var(--purple)">环</b> <?= snip('about.platform.li3') ?></li>
-        </ul>
-        <a href="agent.php" class="btn btn-purple" style="margin-top:20px"><?= snip('about.platform.btn') ?></a>
-      </div>
-      <div class="intl-media reveal d1"><img src="assets/images/agent-hero.webp" alt="MabSeek 平台" onerror="this.parentElement.style.display='none'"></div>
     </div>
   </div>
 </section>
@@ -194,12 +174,12 @@ $news = (new Collection('news'))->published();
     ?>
     <div class="card reveal" style="margin-bottom:20px">
       <h3 style="font-size:18px"><?= snip('about.intl.cn_id_title') ?></h3>
-      <p style="margin:8px 0 14px"><?= snip('about.intl.cn_id_body') ?></p>
+      <div style="margin:8px 0 14px"><?= snip_paras('about.intl.cn_id_body') ?></div>
       <?php render_carousel($intlId, 'car-id'); ?>
     </div>
     <div class="card reveal d1" id="collab">
       <h3 style="font-size:18px"><?= snip('about.intl.pra_title') ?></h3>
-      <p style="margin:8px 0 14px"><?= snip('about.intl.pra_body') ?></p>
+      <div style="margin:8px 0 14px"><?= snip_paras('about.intl.pra_body') ?></div>
       <?php render_carousel($intlPra, 'car-pra'); ?>
     </div>
   </div>
