@@ -65,13 +65,9 @@ $news = (new Collection('news'))->published();
 <!-- 页头 -->
 <section class="page-hero" style="background:linear-gradient(rgba(13,16,48,.72),rgba(13,16,48,.82)),url('assets/images/lab-panorama.webp') center/cover;">
   <div class="container">
-    <div class="breadcrumb reveal"><a href="index.php">首页</a> / <?= snip('about.hero.breadcrumb') ?></div>
-    <span class="eyebrow reveal"><?= snip('about.hero.eyebrow') ?></span>
-    <h1 class="reveal d1"><?= snip_raw('about.hero.title') ?></h1>
-    <p class="lead reveal d2"><?= snip('about.hero.lead') ?></p>
-    <div class="tag-row reveal d3" style="margin-top:18px">
-      <a href="#team" class="tag"><?= snip('about.hero.tag_team') ?></a><a href="#platform" class="tag green"><?= snip('about.hero.tag_platform') ?></a><a href="#news" class="tag"><?= snip('about.hero.tag_news') ?></a><a href="#intl" class="tag green"><?= snip('about.hero.tag_intl') ?></a>
-    </div>
+    <div class="breadcrumb reveal" style="color:rgba(255,255,255,.75)"><a href="index.php" style="color:rgba(255,255,255,.9)">首页</a> / <?= snip('about.hero.breadcrumb') ?></div>
+    <h1 class="reveal d1" style="color:#fff"><?= snip_raw('about.hero.title') ?></h1>
+    <p class="lead reveal d2" style="color:rgba(255,255,255,.85)"><?= snip('about.hero.lead') ?></p>
   </div>
 </section>
 
