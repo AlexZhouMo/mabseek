@@ -297,7 +297,7 @@ $S_about = [
     ['about.intl.tl3_title','公共卫生合作','about','时间线3 标题','text'],
     ['about.intl.tl3_body','面向区域传染病防控的联合攻关与科普','about','时间线3 正文','textarea'],
     ['about.intl.pra_title','🤝 PRA 等国际合作项目','about','PRA 合作 标题','text'],
-    ['about.intl.pra_body','参与 PRA 国际联盟与大会，围绕项目背景、合作内容与研究进展持续推进多边科研协作，并积极与国内外高校、科研院所及行业企业探索共建联合实验室的合作机会。','about','PRA 合作 正文','textarea'],
+    ['about.intl.pra_body','大流行病研究联盟（PRA）由清华大学张林琦教授联合钟南山、何大一、袁国勇、王林发及 Sharon Lewin 等多国知名专家于 2023 年发起，针对全球防疫难题开展前瞻性前置研究，布局相关产品研发与应急储备，提升疫病预防、诊断、救治应急处置能力，推进国际合作与人才交流，守护全球民众健康。联盟现已举办 3 场线下、10 场线上国际研讨会，发展为全球活跃的流行病研究协作网络，依次完成框架搭建、学术交流、成果转化与人才培养的稳步进阶。清华大学将依托自身在基础研究、医工交叉与 AI 学科的综合优势，联合全球合作伙伴，为建设更具韧性、公平性与协同性的全球公共卫生体系贡献清华力量。','about','PRA 合作 正文','textarea'],
     // 联系我们
     ['about.contact.eyebrow','联系我们','about','联系我们 眉题','text'],
     ['about.contact.title','寻求合作 · 加入我们 · <span class="txt-neon">使用平台</span>','about','联系我们 标题(含标记)','textarea'],
@@ -392,4 +392,21 @@ seed_cards_group('zhang_honors', [
     ['grp'=>'zhang_honors','icon'=>'','title'=>'国家自然科学基金海外杰出青年基金','body'=>'2003-2006','extra'=>'','sort'=>16,'published'=>1],
     ['grp'=>'zhang_honors','icon'=>'','title'=>'葛兰素史克药物研发奖','body'=>'2001-2002','extra'=>'','sort'=>17,'published'=>1],
     ['grp'=>'zhang_honors','icon'=>'','title'=>'中英友好奖学金','body'=>'1988-1992','extra'=>'','sort'=>18,'published'=>1],
+]);
+
+seed_cards_group('intl_id', [
+    ['grp'=>'intl_id','icon'=>'','title'=>'中印尼 mRNA 登革疫苗合作签约','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/id-1.webp'],JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
+    ['grp'=>'intl_id','icon'=>'','title'=>'联合科研团队交流','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/id-2.webp'],JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
+    ['grp'=>'intl_id','icon'=>'','title'=>'实验室联合研究','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/id-3.webp'],JSON_UNESCAPED_UNICODE),'sort'=>3,'published'=>1],
+    ['grp'=>'intl_id','icon'=>'','title'=>'中印尼疫苗与基因组联合中心','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/id-4.webp'],JSON_UNESCAPED_UNICODE),'sort'=>4,'published'=>1],
+    ['grp'=>'intl_id','icon'=>'','title'=>'学术研讨与人才互访','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/id-5.webp'],JSON_UNESCAPED_UNICODE),'sort'=>5,'published'=>1],
+    ['grp'=>'intl_id','icon'=>'','title'=>'Universitas Indonesia 医学院合作','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/id-6.webp'],JSON_UNESCAPED_UNICODE),'sort'=>6,'published'=>1],
+]);
+seed_cards_group('intl_pra', [
+    ['grp'=>'intl_pra','icon'=>'','title'=>'Pandemic Research Alliance 成立签约','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-1.webp'],JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
+    ['grp'=>'intl_pra','icon'=>'','title'=>'PRA 国际研讨会','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-2.webp'],JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
+    ['grp'=>'intl_pra','icon'=>'','title'=>'2024 PRA 国际研讨会','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-3.webp'],JSON_UNESCAPED_UNICODE),'sort'=>3,'published'=>1],
+    ['grp'=>'intl_pra','icon'=>'','title'=>'广州实验室','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-4.webp'],JSON_UNESCAPED_UNICODE),'sort'=>4,'published'=>1],
+    ['grp'=>'intl_pra','icon'=>'','title'=>'下一代大流行病防治疗法研讨','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-5.webp'],JSON_UNESCAPED_UNICODE),'sort'=>5,'published'=>1],
+    ['grp'=>'intl_pra','icon'=>'','title'=>'全球视角专题论坛','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-6.webp'],JSON_UNESCAPED_UNICODE),'sort'=>6,'published'=>1],
 ]);

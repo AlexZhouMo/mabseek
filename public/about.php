@@ -180,23 +180,28 @@ $news = (new Collection('news'))->published();
       <h2 class="section-title reveal d1"><?= snip_raw('about.intl.title') ?></h2>
       <p class="section-sub reveal d2"><?= snip('about.intl.sub') ?></p>
     </div>
-    <div class="intl">
-      <div class="intl-media reveal"><img src="assets/images/international.webp" alt="国际科研合作" onerror="this.parentElement.style.background='var(--grad-brand)';this.parentElement.style.minHeight='320px'"></div>
-      <div class="reveal d1">
-        <div class="card" style="margin-bottom:16px">
-          <h3 style="font-size:18px"><?= snip('about.intl.cn_id_title') ?></h3>
-          <p style="margin-top:8px"><?= snip('about.intl.cn_id_body') ?></p>
-          <div class="timeline">
-            <div class="tl"><b><?= snip('about.intl.tl1_title') ?></b><p><?= snip('about.intl.tl1_body') ?></p></div>
-            <div class="tl"><b><?= snip('about.intl.tl2_title') ?></b><p><?= snip('about.intl.tl2_body') ?></p></div>
-            <div class="tl"><b><?= snip('about.intl.tl3_title') ?></b><p><?= snip('about.intl.tl3_body') ?></p></div>
-          </div>
-        </div>
-        <div class="card" id="collab">
-          <h3 style="font-size:18px"><?= snip('about.intl.pra_title') ?></h3>
-          <p style="margin-top:8px"><?= snip('about.intl.pra_body') ?></p>
-        </div>
-      </div>
+    <?php
+    if (!function_exists('render_carousel')) {
+        function render_carousel(array $cards, string $cid) {
+            if (!$cards) return;
+            echo '<div class="carousel" data-carousel id="'.e($cid).'"><div class="carousel-track">';
+            foreach ($cards as $c) { $ex=json_decode($c['extra']?:'{}',true); $img=$ex['img']??''; if($img==='')continue;
+                echo '<div class="carousel-slide"><img src="'.e($img).'" alt="'.e($c['title']).'" loading="lazy"></div>'; }
+            echo '</div><button class="carousel-btn prev" aria-label="上一张">‹</button><button class="carousel-btn next" aria-label="下一张">›</button><div class="carousel-dots"></div></div>';
+        }
+    }
+    $intlId = (new Collection('content_cards'))->published("grp='intl_id'");
+    $intlPra = (new Collection('content_cards'))->published("grp='intl_pra'");
+    ?>
+    <div class="card reveal" style="margin-bottom:20px">
+      <h3 style="font-size:18px"><?= snip('about.intl.cn_id_title') ?></h3>
+      <p style="margin:8px 0 14px"><?= snip('about.intl.cn_id_body') ?></p>
+      <?php render_carousel($intlId, 'car-id'); ?>
+    </div>
+    <div class="card reveal d1" id="collab">
+      <h3 style="font-size:18px"><?= snip('about.intl.pra_title') ?></h3>
+      <p style="margin:8px 0 14px"><?= snip('about.intl.pra_body') ?></p>
+      <?php render_carousel($intlPra, 'car-pra'); ?>
     </div>
   </div>
 </section>
@@ -244,6 +249,22 @@ nchips.forEach(function (c) {
 });
 // 张老师手风琴折叠
 document.querySelectorAll('.acc-head').forEach(function(h){h.addEventListener('click',function(){var it=h.parentElement,b=h.nextElementSibling;it.classList.toggle('open');b.style.maxHeight=it.classList.contains('open')?b.scrollHeight+'px':'0';});});
+</script>
+<script>
+document.querySelectorAll('[data-carousel]').forEach(function(c){
+  var track=c.querySelector('.carousel-track'), slides=c.querySelectorAll('.carousel-slide'),
+      dotsBox=c.querySelector('.carousel-dots'), n=slides.length, idx=0, timer;
+  if(!n)return;
+  for(var i=0;i<n;i++){var d=document.createElement('button');d.className='carousel-dot'+(i?'':' on');d.dataset.i=i;dotsBox.appendChild(d);}
+  var dots=dotsBox.querySelectorAll('.carousel-dot');
+  function go(i){idx=(i+n)%n;track.style.transform='translateX(-'+(idx*100)+'%)';dots.forEach(function(d,j){d.classList.toggle('on',j===idx);});}
+  c.querySelector('.next').addEventListener('click',function(){go(idx+1);reset();});
+  c.querySelector('.prev').addEventListener('click',function(){go(idx-1);reset();});
+  dots.forEach(function(d){d.addEventListener('click',function(){go(+d.dataset.i);reset();});});
+  function auto(){if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(function(){go(idx+1);},5000);}
+  function reset(){clearInterval(timer);auto();}
+  auto();
+});
 </script>
 </body>
 </html>

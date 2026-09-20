@@ -741,3 +741,15 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .logo-item img { height:40px; width:auto; object-fit:contain; display:block; }
 @media (prefers-reduced-motion: reduce) { .logo-row { animation:none; flex-wrap:wrap; width:auto; } }
 @media (max-width:720px){ .logo-item { height:52px; padding:10px 16px; } .logo-item img { height:30px; } }
+
+/* ── 国际合作图片轮播 ── */
+.carousel { position:relative; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--sh-lg); background:#000; }
+.carousel-track { display:flex; transition:transform .4s ease; }
+.carousel-slide { flex:0 0 100%; }
+.carousel-slide img { width:100%; height:360px; object-fit:cover; display:block; }
+.carousel-btn { position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; border:0; border-radius:50%; background:rgba(0,0,0,.5); color:#fff; font-size:22px; cursor:pointer; display:grid; place-items:center; }
+.carousel-btn.prev { left:12px; } .carousel-btn.next { right:12px; }
+.carousel-dots { display:flex; gap:7px; justify-content:center; margin-top:12px; }
+.carousel-dot { width:8px; height:8px; border-radius:50%; background:var(--line); border:0; cursor:pointer; padding:0; }
+.carousel-dot.on { background:var(--purple); }
+@media (max-width:720px){ .carousel-slide img { height:220px; } }
