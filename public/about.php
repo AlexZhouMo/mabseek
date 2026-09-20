@@ -45,6 +45,16 @@ $news = (new Collection('news'))->published();
 .loc-media.grad { background:var(--grad-brand); min-height:280px; display:grid; place-items:center; color:#fff; font-size:64px; }
 .loc-cap { text-align:center; font-size:13px; color:var(--ink-3); margin-top:12px; }
 @media (max-width:720px){ .leads{ grid-template-columns:1fr; } }
+/* 张老师手风琴 */
+.accordion { border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:#fff; }
+.acc-item { border-bottom:1px solid var(--line); } .acc-item:last-child { border-bottom:0; }
+.acc-head { padding:14px 18px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-weight:700; color:var(--purple); }
+.acc-head:hover { background:var(--bg-soft); }
+.acc-head .arrow { transition:.25s; } .acc-item.open .acc-head .arrow { transform:rotate(180deg); }
+.acc-body { max-height:0; overflow:hidden; transition:max-height .35s ease; }
+.acc-body .inner { padding:14px 18px; color:var(--ink-2); }
+.res-item { display:flex; gap:12px; padding:7px 0; border-bottom:1px dashed var(--line); }
+.res-item:last-child { border-bottom:0; } .res-item .k { flex:1; } .res-item .lockbadge { color:var(--ink-3); font-size:13px; white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -53,7 +63,7 @@ $news = (new Collection('news'))->published();
 <?php include __DIR__ . '/partials/nav.php'; ?>
 
 <!-- 页头 -->
-<section class="page-hero">
+<section class="page-hero" style="background:linear-gradient(rgba(13,16,48,.72),rgba(13,16,48,.82)),url('assets/images/lab-panorama.webp') center/cover;">
   <div class="container">
     <div class="breadcrumb reveal"><a href="index.php">首页</a> / <?= snip('about.hero.breadcrumb') ?></div>
     <span class="eyebrow reveal"><?= snip('about.hero.eyebrow') ?></span>
@@ -68,37 +78,53 @@ $news = (new Collection('news'))->published();
 <!-- 实验室与核心团队 -->
 <section class="section" id="team">
   <div class="container">
-    <span class="eyebrow reveal"><?= snip('about.team.eyebrow') ?></span>
-    <h2 class="section-title reveal d1"><?= snip('about.team.title') ?></h2>
-    <p class="section-sub reveal d2"><?= snip('about.team.sub') ?></p>
-    <div class="leads reveal d1">
-<?php foreach ($team as $m):
-    $roleClass = 'role' . ($m['role_type'] === 'ai' ? ' green' : '');
-?>
-      <div class="lead-card">
-        <?php if (!empty($m['avatar_img'])): ?>
-        <img class="ph" src="<?= e($m['avatar_img']) ?>" alt="<?= e($m['name']) ?>">
-        <?php else: ?>
-        <div class="ph"><?= e($m['avatar_char']) ?></div>
-        <?php endif; ?>
-        <div>
-          <div class="nm"><?= e($m['name']) ?></div>
-          <div class="aff"><?= e($m['affiliation']) ?></div>
-          <div class="dir"><?= e($m['direction']) ?></div>
-          <span class="<?= $roleClass ?>"><?= e($m['role_label']) ?></span>
-        </div>
+    <span class="eyebrow reveal">实验室负责人</span>
+    <h2 class="section-title reveal d1">实验室负责人 · 张林琦</h2>
+
+    <div class="zhang-basic reveal" style="display:flex;gap:22px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--sh-sm);margin-top:18px">
+      <img src="assets/images/team/zhang.webp" alt="张林琦" style="flex:0 0 132px;width:132px;height:168px;object-fit:cover;object-position:center top;border-radius:12px" onerror="var d=document.createElement('div');d.textContent='张';d.style.cssText='flex:0 0 132px;width:132px;height:168px;border-radius:12px;background:var(--grad-brand);color:#fff;display:grid;place-items:center;font-size:44px;font-weight:800';this.replaceWith(d)">
+      <div>
+        <div style="font-size:22px;font-weight:800">张林琦</div>
+        <div style="font-size:13px;color:var(--ink-3);margin:4px 0 12px"><?= snip('about.zhang.role1') ?> · <?= snip('about.zhang.role2') ?></div>
+        <p style="color:var(--ink-2);line-height:1.7"><b style="color:var(--purple)">研究领域　</b><?= snip('about.zhang.field') ?></p>
+        <p style="color:var(--ink-2);line-height:1.7;margin-top:8px"><b style="color:var(--purple)">科学贡献　</b><?= snip('about.zhang.contrib') ?></p>
       </div>
-<?php endforeach; ?>
     </div>
-    <div class="grid-2" style="margin-top:24px">
-<?php foreach ($achv as $i => $c): $rev = $i ? ' d' . $i : ''; ?>
-      <div class="card reveal<?= $rev ?>"><h3 style="font-size:16px"><?= e($c['icon']) ?> <?= e($c['title']) ?></h3><p><?= e($c['body']) ?></p></div>
-<?php endforeach; ?>
+
+<?php $papers = (new Collection('content_cards'))->published("grp='zhang_papers'"); ?>
+    <div class="card reveal" style="margin-top:16px">
+      <h3 style="font-size:17px">📄 学术论文成果</h3>
+      <p style="color:var(--ink-2);margin-top:6px"><?= snip('about.zhang.papers_desc') ?>团队发表文章 <span style="color:#c0392b;font-weight:800;font-size:22px"><?= snip('about.zhang.papers_count') ?></span>（数据来源 ResearchGate）</p>
+      <div class="accordion zhang-acc" style="margin-top:12px"><div class="acc-item">
+        <div class="acc-head"><span>近 5 年代表性文章</span><span class="arrow">▾</span></div>
+        <div class="acc-body"><div class="inner">
+<?php foreach ($papers as $p): ?>          <p style="font-size:13px;line-height:1.6;margin-bottom:10px"><?= e($p['title']) ?></p>
+<?php endforeach; ?>        </div></div>
+      </div></div>
     </div>
-    <p class="reveal" style="font-size:13px;color:var(--ink-3);margin-top:16px"><?= snip('about.team.disclaimer') ?></p>
-    <div class="loc-block reveal">
-      <div class="loc-media"><img src="assets/images/location.webp" alt="MabSeek 实验室位置" onerror="var p=this.parentElement;p.classList.add('grad');p.innerHTML='🏛️'"></div>
-      <div class="loc-cap"><?= snip('about.loc.cap') ?></div>
+
+<?php $patents = (new Collection('content_cards'))->published("grp='zhang_patents'"); ?>
+    <div class="card reveal" style="margin-top:16px">
+      <h3 style="font-size:17px">🧾 专利成果汇总</h3>
+      <p style="color:var(--ink-2);margin-top:6px"><?= snip('about.zhang.patents_desc') ?><span style="color:#c0392b;font-weight:800;font-size:22px"><?= snip('about.zhang.patents_count') ?></span> 项</p>
+      <div class="accordion zhang-acc" style="margin-top:12px"><div class="acc-item">
+        <div class="acc-head"><span>近 5 年专利</span><span class="arrow">▾</span></div>
+        <div class="acc-body"><div class="inner">
+<?php foreach ($patents as $p): ?>          <div class="res-item"><span class="k"><?= e($p['title']) ?></span><span class="lockbadge"><?= e($p['body']) ?></span></div>
+<?php endforeach; ?>        </div></div>
+      </div></div>
+    </div>
+
+<?php $honors = (new Collection('content_cards'))->published("grp='zhang_honors'"); ?>
+    <div class="card reveal" style="margin-top:16px">
+      <h3 style="font-size:17px">🏆 科研奖项与荣誉</h3>
+      <p style="color:var(--ink-2);margin-top:6px">全国科技系统抗击新冠肺炎疫情先进个人　·　非洲科学院院士</p>
+      <div class="accordion zhang-acc" style="margin-top:12px"><div class="acc-item">
+        <div class="acc-head"><span>查看代表性荣誉</span><span class="arrow">▾</span></div>
+        <div class="acc-body"><div class="inner">
+<?php foreach ($honors as $h): ?>          <div class="res-item"><span class="k"><?= e($h['title']) ?></span><span class="lockbadge"><?= e($h['body']) ?></span></div>
+<?php endforeach; ?>        </div></div>
+      </div></div>
     </div>
   </div>
 </section>
@@ -216,6 +242,8 @@ nchips.forEach(function (c) {
     nitems.forEach(function (n) { n.style.display = (f === 'all' || n.getAttribute('data-nc') === f) ? '' : 'none'; });
   });
 });
+// 张老师手风琴折叠
+document.querySelectorAll('.acc-head').forEach(function(h){h.addEventListener('click',function(){var it=h.parentElement,b=h.nextElementSibling;it.classList.toggle('open');b.style.maxHeight=it.classList.contains('open')?b.scrollHeight+'px':'0';});});
 </script>
 </body>
 </html>
