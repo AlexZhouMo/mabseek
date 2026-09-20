@@ -59,3 +59,16 @@ function snip(string $key, string $default = ''): string {
 function snip_raw(string $key, string $default = ''): string {
     return Snippets::get($key, $default);
 }
+
+/** 换行分段：按换行拆分 snippet，每非空段输出为一个转义 <p>。用于正文类多段文案。 */
+function snip_paras(string $key, string $default = ''): string {
+    $raw = Snippets::get($key, $default);
+    $parts = preg_split('/\r\n|\r|\n/', $raw);
+    $html = '';
+    foreach ($parts as $p) {
+        $p = trim($p);
+        if ($p === '') continue;
+        $html .= '<p>' . e($p) . '</p>';
+    }
+    return $html;
+}
