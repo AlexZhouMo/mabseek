@@ -15,7 +15,7 @@ $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 
 <style>
 /* ---- 教育页专属组件 ---- */
 .course-banner { position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--sh-lg); }
-.course-banner img { width: 100%; height: 340px; object-fit: cover; }
+.course-banner img { width: 100%; height: auto; max-height: 460px; object-fit: contain; background:#0d1030; display:block; }
 .info-card { background:#fff; border:1px solid var(--line); border-radius: var(--radius); padding: 26px; box-shadow: var(--sh); }
 .info-card .head { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
 .info-card .head .ico { width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--purple-050);color:var(--purple);font-size:20px; }

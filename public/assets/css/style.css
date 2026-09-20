@@ -227,7 +227,7 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 .logo-chip small { display:block; font-size: 12px; color: var(--ink-3); font-weight: 500; }
 
 /* ---------- 页面通用 Hero (子页) ---------- */
-.page-hero { position: relative; padding: calc(var(--nav-h) + 56px) 0 56px; background: var(--grad-aurora), var(--bg-soft); overflow: hidden; }
+.page-hero { position: relative; padding: calc(var(--nav-h) + 96px) 0 96px; background: var(--grad-aurora), var(--bg-soft); overflow: hidden; }
 .page-hero h1 { font-size: clamp(30px, 4.4vw, 50px); }
 .page-hero .lead { font-size: 18px; color: var(--ink-2); max-width: 720px; margin-top: 16px; }
 .breadcrumb { font-size: 14px; color: var(--ink-3); margin-bottom: 14px; }
@@ -737,8 +737,9 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .logo-row:last-child { margin-bottom:0; }
 .logo-marquee:hover .logo-row { animation-play-state:paused; }
 @keyframes logo-scroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
-.logo-item { flex:0 0 auto; height:64px; background:#fff; border-radius:12px; padding:12px 22px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 10px rgba(0,0,0,.08); }
-.logo-item img { height:40px; width:auto; object-fit:contain; display:block; }
+.logo-row:nth-child(2) { animation-direction:reverse; }
+.logo-item { flex:0 0 auto; height:64px; background:#fff; border-radius:10px; padding:8px 14px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 10px rgba(0,0,0,.08); }
+.logo-item img { height:48px; width:auto; object-fit:contain; display:block; }
 @media (prefers-reduced-motion: reduce) { .logo-row { animation:none; flex-wrap:wrap; width:auto; } }
 @media (max-width:720px){ .logo-item { height:52px; padding:10px 16px; } .logo-item img { height:30px; } }
 
@@ -746,7 +747,7 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .carousel { position:relative; border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(13,16,48,.18); border:1px solid rgba(255,255,255,.12); background:#000; }
 .carousel-track { display:flex; transition:transform .45s cubic-bezier(.4,0,.2,1); }
 .carousel-slide { flex:0 0 100%; }
-.carousel-slide img { width:100%; height:360px; object-fit:cover; display:block; }
+.carousel-slide img { width:100%; height:auto; max-height:480px; object-fit:contain; background:#000; display:block; }
 .carousel-btn { position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border:0; border-radius:50%; background:rgba(0,0,0,.4); backdrop-filter:blur(6px); color:#fff; font-size:22px; cursor:pointer; display:grid; place-items:center; transition:background .2s; z-index:2; }
 .carousel-btn:hover { background:rgba(0,0,0,.65); }
 .carousel-btn.prev { left:14px; } .carousel-btn.next { right:14px; }
