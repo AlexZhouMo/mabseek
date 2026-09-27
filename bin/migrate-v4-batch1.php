@@ -7,7 +7,8 @@ declare(strict_types=1);
  *
  * 三类订正：
  *   1) snippet 定向订正（仅命中已知旧默认值才改，保护后台改过的文案）：
- *      home.hero.eyebrow 保底 / footer.brand.tagline 保底 /
+ *      home.hero.eyebrow 保底（目标值为空串，前端负责判空回退到硬编码） /
+ *      footer.brand.tagline 保底 /
  *      about.intl.cn_id_body / about.intl.pra_body
  *   2) edu_schedule 整表判据："15 条 & 首尾均为新版'第 X 讲 …'"不满足即清空重灌
  *      （沿用 302 迁移思路，将"周/日期/课程队长"整表订正）
@@ -69,6 +70,7 @@ mig_fix_snippet_any('about.intl.pra_body',
     $newPraBody, $changed);
 
 // —— 3) edu.video.iframe_url snippet 存在性保证 ——
+// COUNT 前置只为 $changed 计数（Snippets::seed 内部也有 exists 保护）
 $exists = (int)$pdo->query("SELECT COUNT(*) FROM snippets WHERE skey='edu.video.iframe_url'")->fetchColumn();
 if ($exists === 0) {
     Snippets::seed('edu.video.iframe_url', '', 'education',

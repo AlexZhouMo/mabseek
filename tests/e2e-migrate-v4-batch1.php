@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
 /**
- * e2e-migrate-v4-batch1.php —— V4 批 1 迁移幂等三态验证
+ * e2e-migrate-v4-batch1.php —— V4 批 1 迁移幂等验证（302 存量态）
  *
- * 场景：老 seed（302 前）、260920 版、302 版 → 跑批 1 迁移 → 断言值一致；二次跑 0 改动。
+ * 场景 s1_302：模拟 302 迁移后 / V4 批 1 前的存量库状态 → 跑批 1 迁移 → 断言收敛到 V4 目标值；
+ *              二次跑 changed=0 幂等确认。
+ * 说明：生产库通过 deploy-mabseek.sh 每次都会跑 302 迁移，S1（老 seed 态）/S2（260920 中间态）
+ *       已被 302 消化，不再可能出现在生产，故本 e2e 不覆盖。
  * 用法：php tests/e2e-migrate-v4-batch1.php
  * 依赖：临时 sqlite 库；MABSEEK_DB 环境变量指向该库。
  */
@@ -45,7 +48,7 @@ function scenario_setup(string $tag, string $cnBody, string $praBody, array $sch
 }
 
 // —— 3 个场景 ——
-$OLD_SEED_SCHEDULE = [
+$SCHED_302 = [
     ['title'=>'第 1 周 · 2026/09/15 · 绪论：疫苗点亮健康','body'=>'授课：张林琦｜课程队长：李晨雨','sort'=>1],
     ['title'=>'第 2 周 · 2026/09/22 · 预防接种进展与成就','body'=>'授课：梁晓峰｜课程队长：杨依凌','sort'=>2],
     ['title'=>'第 3 周 · 2026/09/29 · 疫苗是如何保护我们的？','body'=>'授课：李冠乔｜课程队长：范欣雨','sort'=>3],
@@ -63,7 +66,7 @@ $OLD_SEED_SCHEDULE = [
     ['title'=>'第 15 周 · 2026/12/29 · 历史回顾和未来展望','body'=>'授课：张林琦｜课程队长：谭睿洁','sort'=>15],
 ];
 
-foreach (['s1_302' => [$OLD_302_CN_ID, $OLD_302_PRA, $OLD_SEED_SCHEDULE]] as $tag => [$cn, $pra, $sched]) {
+foreach (['s1_302' => [$OLD_302_CN_ID, $OLD_302_PRA, $SCHED_302]] as $tag => [$cn, $pra, $sched]) {
     echo "\n=== Scenario $tag ===\n";
     $db = scenario_setup($tag, $cn, $pra, $sched);
 
