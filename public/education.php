@@ -106,10 +106,10 @@ $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 
 <?php
 $videoIframe = snip_raw('edu.video.iframe_url');
 $videoIframeOk = $videoIframe !== ''
-    && filter_var($videoIframe, FILTER_VALIDATE_URL)
     && (str_starts_with($videoIframe, 'https://')
         || str_starts_with($videoIframe, 'http://')
-        || str_starts_with($videoIframe, '//'));
+        || str_starts_with($videoIframe, '//'))
+    && (str_starts_with($videoIframe, '//') || filter_var($videoIframe, FILTER_VALIDATE_URL));
 $videoIframe = $videoIframeOk ? $videoIframe : '';
 $videoSrc = snip_raw('edu.video.src');
 ?>

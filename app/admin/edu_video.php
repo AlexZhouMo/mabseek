@@ -7,10 +7,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         csrf_verify_or_die();
         $url = trim((string)($_POST['iframe_url'] ?? ''));
         $ok = $url === '' || (
-            filter_var($url, FILTER_VALIDATE_URL)
-            && (str_starts_with($url, 'https://')
+            (str_starts_with($url, 'https://')
                 || str_starts_with($url, 'http://')
                 || str_starts_with($url, '//'))
+            && (str_starts_with($url, '//') || filter_var($url, FILTER_VALIDATE_URL))
         );
         if (!$ok) {
             flash_set('error', '外链嵌入 URL 格式非法（仅支持 http/https/协议相对）');
