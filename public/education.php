@@ -103,9 +103,21 @@ $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 
     <div style="margin-bottom:24px">
       <h2 class="section-title reveal"><?= snip('edu.video.title', '课程视频') ?></h2>
     </div>
-<?php $videoSrc = snip('edu.video.src'); ?>
+<?php
+$videoIframe = snip_raw('edu.video.iframe_url');
+$videoIframe = ($videoIframe !== '' && filter_var($videoIframe, FILTER_VALIDATE_URL)) ? $videoIframe : '';
+$videoSrc = snip_raw('edu.video.src');
+?>
     <div class="edu-video reveal" style="max-width:900px;margin:0 auto">
-<?php if ($videoSrc !== ''): ?>
+<?php if ($videoIframe !== ''): ?>
+      <div style="position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;box-shadow:var(--sh-lg);background:#000">
+        <iframe src="<?= e($videoIframe) ?>"
+                style="position:absolute;inset:0;width:100%;height:100%;border:0"
+                sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
+                allowfullscreen loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+<?php elseif ($videoSrc !== ''): ?>
       <video controls preload="metadata" style="width:100%;border-radius:var(--radius);box-shadow:var(--sh-lg);background:#000">
         <source src="<?= e($videoSrc) ?>">您的浏览器不支持视频播放。
       </video>
