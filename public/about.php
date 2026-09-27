@@ -63,11 +63,22 @@ $news = (new Collection('news'))->published();
 <?php include __DIR__ . '/partials/nav.php'; ?>
 
 <!-- 页头 -->
-<section class="page-hero" style="background:linear-gradient(rgba(13,16,48,.72),rgba(13,16,48,.82)),url('assets/images/lab-panorama.webp') center/cover;">
+<section class="page-hero page-hero--about-v4" style="background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(120,120,120,0.71) 75%, rgba(0,0,0,0.74) 100%), url('assets/images/lab-panorama.webp') center/cover;min-height:480px;height:66vh;display:flex;flex-direction:column;justify-content:flex-end">
+<style>
+.page-hero--about-v4 .breadcrumb { color: rgba(255,255,255,.92) !important; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.page-hero--about-v4 .breadcrumb a { color: rgba(255,255,255,.92) !important; }
+.page-hero--about-v4 h1 { color: #fff !important; text-shadow: 0 2px 6px rgba(0,0,0,.45); }
+.page-hero--about-v4 .lead { color: rgba(255,255,255,.9) !important; text-shadow: 0 1px 3px rgba(0,0,0,.4); }
+.page-hero--about-v4 .container { padding-bottom: 8vh; }
+@media (max-width: 768px) {
+  .page-hero--about-v4 { height: 50vh !important; min-height: 360px !important; }
+  .page-hero--about-v4 .container { padding-bottom: 6vh; }
+}
+</style>
   <div class="container">
-    <div class="breadcrumb reveal" style="color:rgba(255,255,255,.75)"><a href="index.php" style="color:rgba(255,255,255,.9)">首页</a> / <?= snip('about.hero.breadcrumb') ?></div>
-    <h1 class="reveal d1" style="color:#fff"><?= snip_raw('about.hero.title') ?></h1>
-    <p class="lead reveal d2" style="color:rgba(255,255,255,.85)"><?= snip('about.hero.lead') ?></p>
+    <div class="breadcrumb reveal"><a href="index.php">首页</a> / <?= snip('about.hero.breadcrumb') ?></div>
+    <h1 class="reveal d1"><?= snip_raw('about.hero.title') ?></h1>
+    <p class="lead reveal d2"><?= snip('about.hero.lead') ?></p>
   </div>
 </section>
 
