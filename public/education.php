@@ -105,13 +105,19 @@ $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 
     </div>
 <?php
 $videoIframe = snip_raw('edu.video.iframe_url');
-$videoIframe = ($videoIframe !== '' && filter_var($videoIframe, FILTER_VALIDATE_URL)) ? $videoIframe : '';
+$videoIframeOk = $videoIframe !== ''
+    && filter_var($videoIframe, FILTER_VALIDATE_URL)
+    && (str_starts_with($videoIframe, 'https://')
+        || str_starts_with($videoIframe, 'http://')
+        || str_starts_with($videoIframe, '//'));
+$videoIframe = $videoIframeOk ? $videoIframe : '';
 $videoSrc = snip_raw('edu.video.src');
 ?>
     <div class="edu-video reveal" style="max-width:900px;margin:0 auto">
 <?php if ($videoIframe !== ''): ?>
       <div style="position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;box-shadow:var(--sh-lg);background:#000">
         <iframe src="<?= e($videoIframe) ?>"
+                title="<?= snip('edu.video.title', '课程视频') ?>"
                 style="position:absolute;inset:0;width:100%;height:100%;border:0"
                 sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
                 allowfullscreen loading="lazy"
