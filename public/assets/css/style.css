@@ -752,3 +752,16 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .intl-item img { height:220px; width:auto; object-fit:contain; display:block; border-radius:10px; background:#000; box-shadow:0 6px 20px rgba(13,16,48,.16); }
 @media (prefers-reduced-motion: reduce) { .intl-track { animation:none; flex-wrap:wrap; width:auto; } }
 @media (max-width:720px){ .intl-item img { height:160px; } }
+
+/* ============ 试用登录联动模态框（trial-cta.js） ============ */
+.trial-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.trial-modal__backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .55); backdrop-filter: blur(2px); }
+.trial-modal__panel { position: relative; max-width: 480px; width: 100%; background: #fff; border-radius: 12px; padding: 32px 28px 28px; box-shadow: 0 20px 60px rgba(0, 0, 0, .25); }
+.trial-modal__x { position: absolute; top: 8px; right: 12px; background: none; border: 0; font-size: 24px; line-height: 1; color: #666; cursor: pointer; padding: 4px 8px; }
+.trial-modal__x:hover { color: #000; }
+.trial-modal__panel h3 { margin: 0 0 12px; font-size: 20px; font-weight: 600; }
+.trial-modal__panel p { margin: 0 0 12px; color: var(--ink-2); line-height: 1.6; }
+.trial-modal__panel code { background: var(--grey-050, #f4f4f7); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; }
+.trial-modal__hint { font-size: 13px; color: var(--ink-3); }
+.trial-modal__cta { display: inline-block; margin-top: 8px; }
+@media (max-width: 640px) { .trial-modal__panel { border-radius: 8px; padding: 24px 20px 20px; } }
