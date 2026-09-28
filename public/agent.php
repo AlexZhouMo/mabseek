@@ -12,6 +12,7 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
 <title>Antibody Agent · 专属领域 AI 智能体 | MabSeek</title>
 <meta name="description" content="Antibody Agent：集文献检索问答、抗体序列设计、亲和力预测、结构分析于一体，打通 MabSeek 湿实验平台，一句话出方案，线下实验室直接交付结果，真正实现干湿闭环。">
 <link rel="stylesheet" href="assets/css/style.css">
+<?php include __DIR__ . '/partials/head-meta.php'; ?>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 <style>
 /* ---- Agent 页专属 ---- */

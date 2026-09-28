@@ -10,6 +10,7 @@ $active = 'technology'; $navOnDark = true; $contactHref = 'index.php#contact';
 <title>技术平台 · MabSeek 抗体求索 | 清华大学医学院</title>
 <meta name="description" content="MabSeek 技术平台：AI 智能中枢编排的干湿闭环架构、Data / AI / Wet lab 三大能力与经典案例（安巴韦/罗米司韦单抗）。">
 <link rel="stylesheet" href="assets/css/style.css">
+<?php include __DIR__ . '/partials/head-meta.php'; ?>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 </head>
 <body>

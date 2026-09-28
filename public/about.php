@@ -13,6 +13,7 @@ $news = (new Collection('news'))->published();
 <title>了解我们 · 实验室概况与成果 | MabSeek 抗体求索</title>
 <meta name="description" content="MabSeek 实验室概况与成果：实验室与核心团队介绍、新闻与活动、中印尼深度合作与 PRA 国际科研合作纪实。">
 <link rel="stylesheet" href="assets/css/style.css">
+<?php include __DIR__ . '/partials/head-meta.php'; ?>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 <style>
 .news-tabs { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }

@@ -57,6 +57,7 @@ $active = 'forum'; $navOnDark = false; $navSolidDark = true;
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>编辑帖子 · MabSeek 论坛</title>
 <link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
+<?php include __DIR__ . '/partials/head-meta.php'; ?>
 </head>
 <body>
 <?php include __DIR__ . '/partials/nav.php'; ?>

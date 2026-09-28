@@ -11,6 +11,7 @@ $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 
 <title>教育 · 《疫苗的力量》元视频课程 | MabSeek</title>
 <meta name="description" content="MabSeek 教育板块：《疫苗的力量》元视频课程与往期回顾，重塑科研教育范式。">
 <link rel="stylesheet" href="assets/css/style.css">
+<?php include __DIR__ . '/partials/head-meta.php'; ?>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 <style>
 /* ---- 教育页专属组件 ---- */

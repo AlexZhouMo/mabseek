@@ -15,6 +15,7 @@ $firstBatch = array_slice($firstBatch, 0, FORUM_PAGE_SIZE);
 <title>论坛 · 抗体领域高质量交流社区 | MabSeek</title>
 <meta name="description" content="MabSeek 论坛：小红书式内容流的抗体领域交流社区。硬核干货、隐藏高人、前沿话题，提问有人答，分享有人看，高手愿意来，新手能成长。">
 <link rel="stylesheet" href="assets/css/style.css">
+<?php include __DIR__ . '/partials/head-meta.php'; ?>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 <style>
 /* ---- 论坛专属 ---- */
