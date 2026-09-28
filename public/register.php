@@ -43,7 +43,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $scp = sciencepal_provision($in['email'], $pass);
         scp_sync_upsert($newId, $in['email'], $scp['status'] === 'error' ? 'failed' : $scp['status'], (string)($scp['error'] ?? ''));
         audit('scp_provision', 'user', (string)$newId);
-        redirect('account.php');
+        // 支持 ?next= + ?trial=1（同 login.php 的语义，用于"开始试用"漏斗）
+        $next  = auth_safe_next($_POST['next'] ?? $_GET['next'] ?? null);
+        $trial = ((string)($_POST['trial'] ?? $_GET['trial'] ?? '') === '1');
+        $dest  = $next ?? 'account.php';
+        if ($trial) {
+            $sep   = strpos($dest, '?') !== false ? '&' : '?';
+            $dest .= $sep . 'trial=1';
+        }
+        redirect($dest);
     }
 }
 $active = ''; $navOnDark = false; $navSolidDark = true;
@@ -55,6 +63,7 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>注册 · MabSeek</title>
 <link rel="stylesheet" href="assets/css/style.css">
+<?php include __DIR__ . '/partials/head-meta.php'; ?>
 </head>
 <body>
 <?php include __DIR__ . '/partials/nav.php'; ?>
@@ -65,6 +74,13 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
     <div class="auth-sub">加入 MabSeek 社区，参与论坛讨论与分享。</div>
     <form method="post" action="register.php" autocomplete="off">
       <?= csrf_field() ?>
+<?php $nextVal = auth_safe_next($_POST['next'] ?? $_GET['next'] ?? null); $trialFlag = ((string)($_POST['trial'] ?? $_GET['trial'] ?? '') === '1'); ?>
+<?php if ($nextVal !== null): ?>
+      <input type="hidden" name="next"  value="<?= e($nextVal) ?>">
+<?php endif; ?>
+<?php if ($trialFlag): ?>
+      <input type="hidden" name="trial" value="1">
+<?php endif; ?>
       <div style="position:absolute;left:-9999px" aria-hidden="true">
         <label>请勿填写<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
       </div>
@@ -103,7 +119,14 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
       </div>
       <button class="btn btn-purple auth-submit" type="submit">注册并登录</button>
     </form>
-    <div class="auth-alt">已有账号？<a href="login.php">去登录</a></div>
+<?php
+$loginHref = 'login.php';
+$qs = [];
+if ($nextVal !== null) $qs[] = 'next=' . urlencode($nextVal);
+if ($trialFlag)        $qs[] = 'trial=1';
+if ($qs) $loginHref .= '?' . implode('&', $qs);
+?>
+    <div class="auth-alt">已有账号？<a href="<?= e($loginHref) ?>">去登录</a></div>
   </div>
 </div>
 <?php include __DIR__ . '/partials/footer.php'; ?>

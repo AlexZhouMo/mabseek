@@ -38,8 +38,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             if (trim((string)($row['email'] ?? '')) === '') {
                 redirect('account.php?complete=1');
             }
-            $next = auth_safe_next($_POST['next'] ?? $_GET['next'] ?? null);
-            redirect($next ?? auth_post_login_dest($row));
+            $next  = auth_safe_next($_POST['next'] ?? $_GET['next'] ?? null);
+            $trial = ((string)($_POST['trial'] ?? $_GET['trial'] ?? '') === '1');
+            $dest  = $next ?? auth_post_login_dest($row);
+            if ($trial) {
+                $sep   = strpos($dest, '?') !== false ? '&' : '?';
+                $dest .= $sep . 'trial=1';
+            }
+            redirect($dest);
         }
     } else {
         auth_record_attempt($ip, $u, false);
@@ -71,6 +77,9 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
 <?php $nextVal = auth_safe_next($_POST['next'] ?? $_GET['next'] ?? null); if ($nextVal !== null): ?>
       <input type="hidden" name="next" value="<?= e($nextVal) ?>">
 <?php endif; ?>
+<?php $trialFlag = ((string)($_POST['trial'] ?? $_GET['trial'] ?? '') === '1'); if ($trialFlag): ?>
+      <input type="hidden" name="trial" value="1">
+<?php endif; ?>
       <div class="field">
         <label>用户名</label>
         <input class="input" type="text" name="username" value="<?= e($oldUser) ?>" required autofocus>
@@ -90,7 +99,14 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
 <?php endif; ?>
       <button class="btn btn-purple auth-submit" type="submit">登录</button>
     </form>
-    <div class="auth-alt">还没有账号？<a href="register.php">去注册</a></div>
+<?php
+$regHref = 'register.php';
+$qs = [];
+if ($nextVal !== null) $qs[] = 'next=' . urlencode($nextVal);
+if ($trialFlag)        $qs[] = 'trial=1';
+if ($qs) $regHref .= '?' . implode('&', $qs);
+?>
+    <div class="auth-alt">还没有账号？<a href="<?= e($regHref) ?>">去注册</a></div>
   </div>
 </div>
 <?php include __DIR__ . '/partials/footer.php'; ?>
