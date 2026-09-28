@@ -72,8 +72,8 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
         <h1 class="reveal d1"><?= snip_raw('agent.hero.title') ?></h1>
         <p class="lead reveal d2"><?= snip('agent.hero.lead') ?></p>
         <div class="hero-cta reveal d3">
-          <a href="#flow" class="btn btn-green btn-lg"><?= snip('agent.hero.cta1') ?></a>
-          <a href="#agents" class="btn btn-outline btn-lg"><?= snip('agent.hero.cta2') ?></a>
+          <a href="login.php?next=platform.php&trial=1" data-trial-cta="1" class="btn btn-purple btn-lg"><?= snip('platform.hero.cta1', '开始试用') ?></a>
+          <a href="#modules" class="btn btn-outline btn-lg"><?= snip('platform.hero.cta2', '了解详情') ?></a>
         </div>
         <div class="hero-note reveal d4"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span> <?= snip('agent.hero.note') ?></div>
       </div>
@@ -95,8 +95,8 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
   </div>
 </section>
 
-<!-- 核心能力 -->
-<section class="section section-light">
+<!-- 屏 2 · Antibody Agent 四模块 -->
+<section class="section section-light" id="modules">
   <div class="container">
     <div class="text-center" style="margin-bottom:44px">
       <span class="eyebrow reveal"><?= snip('agent.cap.eyebrow') ?></span>
@@ -110,8 +110,8 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
   </div>
 </section>
 
-<!-- ============ A3 案例示范（深，循环动图，新增） ============ -->
-<section class="section section-dark">
+<!-- 屏 3 · 真实数据驱动（GLP-1R / CXCR4 / CD3，2b-1 用 case-anim 3 动图占位）-->
+<section class="section section-dark" id="data">
   <div class="container">
     <div class="text-center" style="margin-bottom:8px">
       <span class="eyebrow reveal"><?= snip('agent.case.eyebrow') ?></span>
@@ -191,13 +191,13 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
   </div>
 </section>
 
-<!-- CTA -->
-<section class="section-sm">
+<!-- 屏 7 · CTA 黑底试用 -->
+<section class="section-sm" id="cta">
   <div class="container">
     <div class="reveal agent-cta">
       <h2 style="font-size:clamp(26px,3.6vw,38px);color:#fff;position:relative;z-index:1"><?= snip('agent.cta.title') ?></h2>
       <p style="color:var(--ink-on-dark-2);font-size:17px;margin:14px auto 26px;max-width:560px;position:relative;z-index:1"><?= snip('agent.cta.sub') ?></p>
-      <a href="#try" class="btn btn-green btn-lg" style="position:relative;z-index:1"><?= snip('agent.cta.btn') ?></a>
+      <a href="login.php?next=platform.php&trial=1" data-trial-cta="1" class="btn btn-green btn-lg" style="position:relative;z-index:1"><?= snip('agent.cta.btn') ?></a>
     </div>
   </div>
 </section>

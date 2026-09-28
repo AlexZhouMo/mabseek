@@ -29,7 +29,7 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
 <?php endif; ?>
     <h1 class="reveal d1"><?= snip_raw('home.hero.title') ?></h1>
     <p class="hero-c-sub reveal d2"><?= snip('home.hero.sub') ?></p>
-    <a href="agent.php" class="btn btn-green btn-lg hero-c-cta reveal d3" data-trial-cta="1"><?= snip('home.hero.cta') ?></a>
+    <a href="platform.php" class="btn btn-green btn-lg hero-c-cta reveal d3" data-trial-cta="1"><?= snip('home.hero.cta') ?></a>
   </div>
 </section>
 
