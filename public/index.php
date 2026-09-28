@@ -40,7 +40,7 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
       <span class="eyebrow green reveal"><?= snip('home.can.eyebrow') ?></span>
       <h2 class="section-title reveal d1"><?= snip_raw('home.can.title') ?></h2>
       <p class="section-sub reveal d2"><?= snip('home.can.sub') ?></p>
-      <a href="technology.php" class="link-more reveal d3" style="margin-top:18px"><?= snip('home.can.link') ?></a>
+      <a href="platform.php" class="link-more reveal d3" style="margin-top:18px"><?= snip('home.can.link') ?></a>
     </div>
   </div>
 </section>
@@ -62,7 +62,7 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
 <?php endforeach; ?>
     </div>
     <div class="text-center" style="margin-top:30px">
-      <a href="technology.php" class="btn btn-outline reveal"><?= snip('home.pain.cta') ?></a>
+      <a href="platform.php" class="btn btn-outline reveal"><?= snip('home.pain.cta') ?></a>
     </div>
   </div>
 </section>
