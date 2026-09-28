@@ -35,3 +35,4 @@
     </div>
   </div>
 </footer>
+<script src="assets/js/trial-cta.js"></script>
