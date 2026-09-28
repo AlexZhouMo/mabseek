@@ -277,6 +277,7 @@ MIGRATIONS=(
   "migrate-web-update-302.php|5i/9 V3.0.2 网页更新迁移（幂等，就地订正+补齐存量记录）|V3.0.2 网页更新迁移"
   "migrate-v4-batch1.php|5j/9 V4 批 1 网页更新迁移（幂等，就地订正+补齐存量记录）|V4 批 1 网页更新迁移"
   "migrate-v4-batch2b1.php|5k/9 V4 批 2b-1 平台页迁移（幂等，21 条 platform.* + home.hero.cta 订正）|V4 批 2b-1 平台页迁移"
+  "migrate-v4-batch2b2a.php|5l/9 V4 批 2b-2a 平台页视觉升级（幂等，4 条新 snippet + 36 孤儿清理）|V4 批 2b-2a 平台页视觉升级"
 )
 for m in "${MIGRATIONS[@]}"; do
   IFS='|' read -r m_script m_step m_label <<< "$m"
