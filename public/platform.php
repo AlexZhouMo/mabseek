@@ -180,13 +180,48 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
       <h2 class="section-title reveal d1"><?= snip_raw('agent.flow.title') ?></h2>
       <p class="section-sub reveal d2"><?= snip('agent.flow.sub') ?></p>
     </div>
-    <div class="flow reveal">
-      <div class="flow-step dry"><h4>一句话需求</h4><p>描述靶点与目标，Agent 理解任务</p><span class="tag-mini" style="background:var(--purple-050);color:var(--purple)">干 · AI</span><span class="flow-arrow">→</span></div>
-      <div class="flow-step dry"><h4>AI 设计筛选</h4><p>序列设计 + 亲和力预测 + 结构分析</p><span class="tag-mini" style="background:var(--purple-050);color:var(--purple)">干 · AI</span><span class="flow-arrow">→</span></div>
-      <div class="flow-step wet"><h4>表达纯化</h4><p>一键下单，线下实验室执行</p><span class="tag-mini" style="background:var(--green-100);color:#06a97c">湿 · 实验</span><span class="flow-arrow">→</span></div>
-      <div class="flow-step wet"><h4>功能验证</h4><p>结合活性与功能实验验证</p><span class="tag-mini" style="background:var(--green-100);color:#06a97c">湿 · 实验</span><span class="flow-arrow">→</span></div>
-      <div class="flow-step" style="background:var(--grad-brand)"><h4 style="color:#fff">结果交付</h4><p style="color:rgba(255,255,255,.85)">数据回流，与 AI 预测双向溯源</p><span class="tag-mini" style="background:rgba(255,255,255,.2);color:#fff">闭环</span></div>
-    </div>
+    <svg class="ring-flow reveal" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MabSeek 干湿闭环流程">
+      <defs>
+        <marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,-5L10,0L0,5" fill="var(--purple-400)"/>
+        </marker>
+      </defs>
+      <circle cx="300" cy="300" r="80" fill="var(--purple-050)" stroke="var(--purple-100)" stroke-width="2"/>
+      <text x="300" y="295" text-anchor="middle" font-size="18" font-weight="700" fill="var(--purple)">MabSeek</text>
+      <text x="300" y="320" text-anchor="middle" font-size="14" fill="var(--ink-3)">干湿闭环</text>
+<?php
+  $nodes = [
+    ['一句话需求', '🎯', 'dry'],
+    ['AI 设计筛选', '🧠', 'dry'],
+    ['表达纯化',   '🧪', 'wet'],
+    ['功能验证',   '🔬', 'wet'],
+    ['结果交付',   '📊', 'brand'],
+  ];
+  $cx = 300; $cy = 300; $r = 220;
+  foreach ($nodes as $i => [$label, $icon, $kind]):
+    $angle = (-90 + $i * 72) * M_PI / 180;
+    $x = $cx + $r * cos($angle);
+    $y = $cy + $r * sin($angle);
+    $fill = $kind === 'dry' ? 'var(--purple-050)' : ($kind === 'wet' ? 'var(--green-100)' : 'var(--grad-brand)');
+    $stroke = $kind === 'dry' ? 'var(--purple-400)' : ($kind === 'wet' ? '#06a97c' : 'var(--purple)');
+?>
+      <g class="ring-node ring-node--<?= $kind ?>">
+        <circle cx="<?= round($x) ?>" cy="<?= round($y) ?>" r="54" fill="<?= $fill ?>" stroke="<?= $stroke ?>" stroke-width="2.5"/>
+        <text x="<?= round($x) ?>" y="<?= round($y - 6) ?>" text-anchor="middle" font-size="22"><?= $icon ?></text>
+        <text x="<?= round($x) ?>" y="<?= round($y + 22) ?>" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink-1)"><?= $label ?></text>
+      </g>
+<?php endforeach; ?>
+<?php
+  for ($i = 0; $i < 5; $i++):
+    $a1 = (-90 + $i * 72) * M_PI / 180;
+    $a2 = (-90 + ($i + 1) * 72) * M_PI / 180;
+    $x1 = $cx + ($r - 60) * cos($a1); $y1 = $cy + ($r - 60) * sin($a1);
+    $x2 = $cx + ($r - 60) * cos($a2); $y2 = $cy + ($r - 60) * sin($a2);
+    $arc = $r - 40;
+?>
+      <path d="M<?= round($x1) ?>,<?= round($y1) ?> A<?= $arc ?>,<?= $arc ?> 0 0 1 <?= round($x2) ?>,<?= round($y2) ?>" fill="none" stroke="var(--purple-400)" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="4 3" opacity=".7"/>
+<?php endfor; ?>
+    </svg>
     <div id="wetlab" class="reveal d1" style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;background:#0d1122;border:1px solid var(--line-dark);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--sh-lg)">
       <div>
         <h3 style="font-size:24px;color:#fff"><?= snip('agent.wetlab.title') ?></h3>

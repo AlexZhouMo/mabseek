@@ -765,3 +765,19 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .trial-modal__hint { font-size: 13px; color: var(--ink-3); }
 .trial-modal__cta { display: inline-block; margin-top: 8px; }
 @media (max-width: 640px) { .trial-modal__panel { border-radius: 8px; padding: 24px 20px 20px; } }
+
+/* platform.php 屏 5 SVG 环形干湿闭环 */
+.ring-flow { display: block; max-width: 560px; width: 100%; height: auto; margin: 0 auto; }
+.ring-node { transition: transform .3s ease; transform-origin: center; transform-box: fill-box; }
+.ring-node:hover { transform: scale(1.08); }
+@keyframes ring-fade-in {
+  from { opacity: 0; transform: scale(.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.ring-node { animation: ring-fade-in .5s ease-out both; }
+.ring-flow g.ring-node:nth-child(3) { animation-delay: .08s; }
+.ring-flow g.ring-node:nth-child(4) { animation-delay: .16s; }
+.ring-flow g.ring-node:nth-child(5) { animation-delay: .24s; }
+.ring-flow g.ring-node:nth-child(6) { animation-delay: .32s; }
+.ring-flow g.ring-node:nth-child(7) { animation-delay: .40s; }
+@media (max-width: 640px) { .ring-flow { max-width: 100%; } }
