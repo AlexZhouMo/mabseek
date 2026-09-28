@@ -31,7 +31,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             auth_record_attempt($ip, $u, true);
             unset($_SESSION['__login_fail']);
             auth_login_user($row['username']);        // 存库中规范用户名
-            $_SESSION['nick'] = ($row['nickname'] ?? '') !== '' ? $row['nickname'] : $row['username'];
+            $_SESSION['nick']  = ($row['nickname'] ?? '') !== '' ? $row['nickname'] : $row['username'];
+            $_SESSION['email'] = trim((string)($row['email'] ?? ''));
             audit('member_login');
             // 邮箱空→仍先强制补全；否则若有合法 next 回跳来源页；再否则走默认目标
             if (trim((string)($row['email'] ?? '')) === '') {

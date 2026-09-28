@@ -36,7 +36,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!$errors) {
         $newId = member_register($in['username'], $pass, $in['email'], $in['phone'], $in['nickname']);
         auth_login_user($in['username']);            // 注册成功自动登录
-        $_SESSION['nick'] = $in['nickname'] !== '' ? $in['nickname'] : $in['username'];
+        $_SESSION['nick']  = $in['nickname'] !== '' ? $in['nickname'] : $in['username'];
+        $_SESSION['email'] = $in['email'];
         audit('member_register', 'user', $in['username']);
         // SciencePal 同步开通（本站优先：失败仅记录，不阻断注册）
         $scp = sciencepal_provision($in['email'], $pass);

@@ -14,6 +14,7 @@ $recentNews = array_slice((new Collection('news'))->published(), 0, 4);
 <meta name="description" content="AI 驱动的抗体发现平台，让抗体发现从反复试错变成精准编程。MabSeek 抗体求索 · 清华大学医学院。">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+<?php include __DIR__ . '/partials/head-meta.php'; ?>
 </head>
 <body>
 
