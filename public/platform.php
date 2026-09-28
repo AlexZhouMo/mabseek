@@ -68,7 +68,7 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
   <div class="container">
     <div class="hero-grid">
       <div>
-        <span class="eyebrow reveal"><?= snip('agent.hero.eyebrow') ?></span>
+        <span class="eyebrow reveal"><?= snip('platform.hero.eyebrow', 'MabSeek 平台 · AI + 湿实验一站式') ?></span>
         <h1 class="reveal d1"><?= snip_raw('agent.hero.title') ?></h1>
         <p class="lead reveal d2"><?= snip('agent.hero.lead') ?></p>
         <div class="hero-cta reveal d3">
