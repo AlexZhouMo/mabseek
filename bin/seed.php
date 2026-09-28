@@ -102,7 +102,7 @@ $S = [
     ['home.hero.eyebrow','','home','首页 Hero 眉题（留空则不显示）','text'],
     ['home.hero.title','让抗体发现<br>从"反复试错"变成 <span class="txt-neon">"精准编程"</span>','home','首页 Hero 标题(含标记)','textarea'],
     ['home.hero.sub','从头设计一支完美结合靶点的抗体——AI 生成 + 干湿闭环验证，一站直达。','home','首页 Hero 副标题','textarea'],
-    ['home.hero.cta','免费试用 Antibody Agent →','home','首页 Hero 按钮','text'],
+    ['home.hero.cta','免费试用 MabSeek 平台 →','home','首页 Hero 按钮','text'],
     ['home.can.eyebrow','我们能做什么','home','能做什么 眉题','text'],
     ['home.can.title','把靶点交给 AI，<span class="txt-green">从设计到验证一条闭环</span>','home','能做什么 标题(含标记)','textarea'],
     ['home.can.sub','AI 从头序列设计 · 结构与亲和力预测 · 干湿闭环一站交付。过去分散在多个团队、数月起步的流程，被压缩为连续、可追溯、可下单的闭环。','home','能做什么 说明','textarea'],
@@ -117,6 +117,28 @@ $S = [
     ['home.contact.title','与顶尖机构<span class="txt-neon">共建生态</span>','home','联系 标题(含标记)','textarea'],
     ['home.contact.h3','有建议或遇到了问题？欢迎告诉我们','home','联系 小标题','text'],
     // 首页近况横滚卡（结构固定，文字可编辑）——沿用 news 集合渲染？否：首页卡片文案与 about 不同，用 snippet
+    // ── batch 2b-1 · MabSeek 平台页新 snippet ──
+    ['platform.hero.cta1',        '开始试用',                                                       'platform_hero',     '平台 Hero·主 CTA', 'text'],
+    ['platform.hero.cta2',        '了解详情',                                                       'platform_hero',     '平台 Hero·副 CTA', 'text'],
+    ['platform.clinical.eyebrow', '临床与学术成果',                                                 'platform_clinical', '临床成果·小标签',  'text'],
+    ['platform.clinical.title',   '真实世界数据 · 复杂靶点覆盖',                                    'platform_clinical', '临床成果·标题',    'html'],
+    ['platform.clinical.sub',     '已支撑多个新药项目推进临床阶段，覆盖 GPCR、离子通道等复杂膜蛋白靶点。', 'platform_clinical', '临床成果·副标题',  'text'],
+    ['platform.clinical.item1',   '▸ 支撑 XX 家药企的抗体发现 pipeline',                            'platform_clinical', '临床成果·条目 1',  'text'],
+    ['platform.clinical.item2',   '▸ 已推进 X 个候选进入 IND-enabling 阶段',                        'platform_clinical', '临床成果·条目 2',  'text'],
+    ['platform.clinical.item3',   '▸ 覆盖 GLP-1R / CXCR4 / CD3 等复杂膜蛋白',                       'platform_clinical', '临床成果·条目 3',  'text'],
+    ['platform.clinical.item4',   '▸ Nature / Cell 系列论文 X 篇（清华医学院）',                    'platform_clinical', '临床成果·条目 4',  'text'],
+    ['platform.lab.item1.title',  'VLP 类病毒颗粒',                                                 'platform_lab',      '实验·VLP 标题',    'text'],
+    ['platform.lab.item1.body',   '类病毒颗粒展示 · 真核 / 原核表达',                               'platform_lab',      '实验·VLP 描述',    'text'],
+    ['platform.lab.item2.title',  '表达纯化',                                                       'platform_lab',      '实验·纯化 标题',   'text'],
+    ['platform.lab.item2.body',   'HEK293 / CHO 表达 · 亲和层析纯化',                               'platform_lab',      '实验·纯化 描述',   'text'],
+    ['platform.lab.item3.title',  '亲和力测定',                                                     'platform_lab',      '实验·亲和力 标题', 'text'],
+    ['platform.lab.item3.body',   'SPR / BLI / ELISA 多平台并行',                                   'platform_lab',      '实验·亲和力 描述', 'text'],
+    ['platform.lab.item4.title',  '功能验证',                                                       'platform_lab',      '实验·功能 标题',   'text'],
+    ['platform.lab.item4.body',   '细胞水平活性 · 报告基因 · FACS',                                 'platform_lab',      '实验·功能 描述',   'text'],
+    ['platform.lab.item5.title',  '结构解析',                                                       'platform_lab',      '实验·结构 标题',   'text'],
+    ['platform.lab.item5.body',   'Cryo-EM / X-ray · 抗原抗体复合物',                               'platform_lab',      '实验·结构 描述',   'text'],
+    ['platform.lab.item6.title',  '微流控筛选',                                                     'platform_lab',      '实验·微流控 标题', 'text'],
+    ['platform.lab.item6.body',   '单细胞液滴 · 高通量克隆筛选',                                    'platform_lab',      '实验·微流控 描述', 'text'],
 ];
 foreach ($S as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(home/common): " . count($S) . " seeded (idempotent)\n";
