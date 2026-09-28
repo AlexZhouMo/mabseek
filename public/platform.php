@@ -185,6 +185,11 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
         <marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto">
           <path d="M0,-5L10,0L0,5" fill="var(--purple-400)"/>
         </marker>
+        <linearGradient id="gradBrand" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#6D3BEB"/>
+          <stop offset="55%" stop-color="#5b6bff"/>
+          <stop offset="100%" stop-color="#00E0A4"/>
+        </linearGradient>
       </defs>
       <circle cx="300" cy="300" r="80" fill="var(--purple-050)" stroke="var(--purple-100)" stroke-width="2"/>
       <text x="300" y="295" text-anchor="middle" font-size="18" font-weight="700" fill="var(--purple)">MabSeek</text>
@@ -202,13 +207,14 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
     $angle = (-90 + $i * 72) * M_PI / 180;
     $x = $cx + $r * cos($angle);
     $y = $cy + $r * sin($angle);
-    $fill = $kind === 'dry' ? 'var(--purple-050)' : ($kind === 'wet' ? 'var(--green-100)' : 'var(--grad-brand)');
-    $stroke = $kind === 'dry' ? 'var(--purple-400)' : ($kind === 'wet' ? '#06a97c' : 'var(--purple)');
+    $fill     = $kind === 'dry' ? 'var(--purple-050)' : ($kind === 'wet' ? 'var(--green-100)' : 'url(#gradBrand)');
+    $stroke   = $kind === 'dry' ? 'var(--purple-400)' : ($kind === 'wet' ? '#06a97c' : 'var(--purple)');
+    $textFill = $kind === 'brand' ? '#fff' : 'var(--ink)';
 ?>
       <g class="ring-node ring-node--<?= $kind ?>">
         <circle cx="<?= round($x) ?>" cy="<?= round($y) ?>" r="54" fill="<?= $fill ?>" stroke="<?= $stroke ?>" stroke-width="2.5"/>
         <text x="<?= round($x) ?>" y="<?= round($y - 6) ?>" text-anchor="middle" font-size="22"><?= $icon ?></text>
-        <text x="<?= round($x) ?>" y="<?= round($y + 22) ?>" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink-1)"><?= $label ?></text>
+        <text x="<?= round($x) ?>" y="<?= round($y + 22) ?>" text-anchor="middle" font-size="11" font-weight="700" fill="<?= $textFill ?>"><?= $label ?></text>
       </g>
 <?php endforeach; ?>
 <?php
