@@ -11,7 +11,6 @@
         </div>
       </div>
       <div><h5>探索</h5><ul>
-        <li><a href="technology.php">技术平台</a></li>
         <li><a href="platform.php">平台</a></li>
 <?php if (!empty($_SESSION['uid'])): ?>
         <li><a href="education.php">教育</a></li>
