@@ -5,8 +5,7 @@ $navSolidDark = $navSolidDark ?? false;
 $contactHref = $contactHref ?? 'index.php#contact';
 $links = [
   'index'      => ['首页', 'index.php'],
-  'technology' => ['技术平台', 'technology.php'],
-  'agent'      => ['Antibody Agent', 'agent.php'],
+  'platform'   => ['平台', 'platform.php'],
   'education'  => ['教育', 'education.php'],   // 始终可见；未登录点进跳登录，登录后回跳
   'forum'      => ['论坛', 'forum.php'],
 ];
