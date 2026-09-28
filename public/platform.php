@@ -145,6 +145,33 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
   </div>
 </section>
 
+<!-- 屏 4 · 全流程实验平台（VLP + 微流控 6 卡占位，2b-2 补实拍）-->
+<section class="section section-light" id="lab">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:36px">
+      <span class="eyebrow reveal"><?= snip('tech.p3.eyebrow', 'Wet lab to validate') ?></span>
+      <h2 class="section-title reveal d1"><?= snip_raw('tech.p3.title') ?></h2>
+      <p class="section-sub reveal d2"><?= snip('tech.p3.sub') ?></p>
+    </div>
+    <div class="grid-3" style="gap:20px">
+<?php
+  $labItems = [
+    ['1', '🧬'], ['2', '🧪'], ['3', '📐'],
+    ['4', '🔬'], ['5', '⚛️'], ['6', '💧'],
+  ];
+  foreach ($labItems as $i => [$n, $icon]):
+    $rev = $i ? ' d' . min($i, 4) : '';
+?>
+      <div class="card reveal<?= $rev ?>" style="text-align:center;padding:26px 20px">
+        <div style="font-size:36px;line-height:1;margin-bottom:10px"><?= $icon ?></div>
+        <h3 style="font-size:16px;font-weight:700;margin:0 0 6px"><?= snip('platform.lab.item' . $n . '.title', 'lab item ' . $n) ?></h3>
+        <p style="font-size:13px;color:var(--ink-3);margin:0;line-height:1.55"><?= snip('platform.lab.item' . $n . '.body', '') ?></p>
+      </div>
+<?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
 <!-- 干湿闭环 -->
 <section class="section bg-soft" id="flow">
   <div class="container">
@@ -172,7 +199,28 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
   </div>
 </section>
 
-<!-- 智能体矩阵 -->
+<!-- 屏 6 · 临床与学术成果（左 4 条文字 + 右 agent.matrix 8 chips 占位）-->
+<section class="section section-light" id="clinical">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:34px">
+      <span class="eyebrow reveal"><?= snip('platform.clinical.eyebrow', '临床与学术成果') ?></span>
+      <h2 class="section-title reveal d1"><?= snip_raw('platform.clinical.title', '真实世界数据 · 复杂靶点覆盖') ?></h2>
+      <p class="section-sub reveal d2"><?= snip('platform.clinical.sub', '已支撑多个新药项目推进临床阶段，覆盖 GPCR、离子通道等复杂膜蛋白靶点。') ?></p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr;gap:14px;max-width:760px;margin:0 auto">
+<?php for ($n = 1; $n <= 4; $n++):
+  $default = ['▸ 支撑多家药企的抗体发现 pipeline',
+              '▸ 已推进多个候选进入 IND-enabling 阶段',
+              '▸ 覆盖 GLP-1R / CXCR4 / CD3 等复杂膜蛋白',
+              '▸ Nature / Cell 系列论文（清华医学院）'][$n - 1];
+?>
+      <div class="reveal<?= $n > 1 ? ' d' . min($n - 1, 3) : '' ?>" style="padding:14px 18px;background:var(--bg-soft);border-radius:var(--radius);font-size:15px;color:var(--ink-2)"><?= snip('platform.clinical.item' . $n, $default) ?></div>
+<?php endfor; ?>
+    </div>
+  </div>
+</section>
+
+<!-- 智能体矩阵（作为能力矩阵占位；2b-2 换为 3D 膜蛋白结构）-->
 <section class="section section-light" id="agents">
   <div class="container">
     <div style="margin-bottom:34px">
