@@ -114,32 +114,53 @@ $matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
 <section class="section section-dark" id="data">
   <div class="container">
     <div class="text-center" style="margin-bottom:8px">
-      <span class="eyebrow reveal"><?= snip('agent.case.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('agent.case.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('agent.case.sub') ?></p>
+      <span class="eyebrow reveal"><?= snip('platform.data.eyebrow', '真实数据驱动') ?></span>
+      <h2 class="section-title reveal d1"><?= snip_raw('platform.data.title', 'AI 平台已支撑的靶点谱系') ?></h2>
+      <p class="section-sub reveal d2"><?= snip('platform.data.sub', '覆盖 GPCR、T 细胞激动、免疫肿瘤等靶点类型') ?></p>
     </div>
-    <div class="case-anim-grid reveal d2">
-      <div class="case-anim">
-        <h3>一句话 → 候选序列</h3>
-        <p>用自然语言描述靶点与目标，Agent 逐步生成候选序列。</p>
-        <div class="case-stage" aria-hidden="true">
-          <div class="ca1-prompt"></div>
-          <div class="ca1-seq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        </div>
+    <div class="data-viz-grid">
+      <div class="data-viz-card reveal">
+        <div class="data-viz-head"><b>GLP-1R</b> · <span>GPCR / 减重靶点</span></div>
+        <svg class="data-viz-svg" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GLP-1R dose-response 示意">
+          <line x1="30" y1="115" x2="185" y2="115" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
+          <line x1="30" y1="20"  x2="30"  y2="115" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
+          <path d="M30,110 Q80,108 100,80 T170,25" stroke="#a58bff" stroke-width="2.5" fill="none"/>
+          <circle cx="105" cy="72" r="4" fill="#a58bff"/>
+          <text x="112" y="70" font-size="9" fill="#a58bff">IC50</text>
+          <text x="107" y="132" font-size="9" text-anchor="middle" fill="rgba(255,255,255,.55)">log[antibody]</text>
+          <text x="12" y="70" font-size="9" fill="rgba(255,255,255,.55)" transform="rotate(-90 12 70)">activity</text>
+        </svg>
+        <p class="data-viz-note">示意 · 具体结果按项目 NDA</p>
       </div>
-      <div class="case-anim">
-        <h3>亲和力虚拟筛选排序</h3>
-        <p>动手实验前完成虚拟打分与排序，把候选按优先级重排。</p>
-        <div class="case-stage" aria-hidden="true">
-          <div class="ca2-bars"><span class="ca2-bar"></span><span class="ca2-bar"></span><span class="ca2-bar"></span><span class="ca2-bar"></span><span class="ca2-bar"></span></div>
-        </div>
+      <div class="data-viz-card reveal d1">
+        <div class="data-viz-head"><b>CXCR4</b> · <span>GPCR / 免疫肿瘤靶点</span></div>
+        <svg class="data-viz-svg" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CXCR4 亲和力对比示意">
+          <line x1="30" y1="115" x2="185" y2="115" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
+          <rect x="55"  y="35" width="24" height="80" fill="#a58bff"/>
+          <rect x="95"  y="50" width="24" height="65" fill="#8b73ff"/>
+          <rect x="135" y="80" width="24" height="35" fill="rgba(255,255,255,.35)"/>
+          <text x="67"  y="30" font-size="9" text-anchor="middle" fill="#a58bff">候选 A</text>
+          <text x="107" y="45" font-size="9" text-anchor="middle" fill="#8b73ff">候选 B</text>
+          <text x="147" y="75" font-size="9" text-anchor="middle" fill="rgba(255,255,255,.55)">参照</text>
+          <text x="107" y="132" font-size="9" text-anchor="middle" fill="rgba(255,255,255,.55)">KD (lower = stronger)</text>
+        </svg>
+        <p class="data-viz-note">示意 · 具体结果按项目 NDA</p>
       </div>
-      <div class="case-anim">
-        <h3>结构 · 表位识别</h3>
-        <p>结构建模与表位识别，理解「结合在哪里、为什么结合」。</p>
-        <div class="case-stage" aria-hidden="true">
-          <div class="ca3-mol"><span class="ca3-anti"></span><span class="ca3-epi"></span></div>
-        </div>
+      <div class="data-viz-card reveal d2">
+        <div class="data-viz-head"><b>CD3</b> · <span>T 细胞激动靶点</span></div>
+        <svg class="data-viz-svg" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CD3 结合特异性 heatmap 示意">
+<?php
+  $colors = ['#3b2b7a', '#5f4bb7', '#8b73ff', '#c5b4ff'];
+  $heatmap = [[3,2,1,0], [2,3,2,1], [1,2,3,2], [0,1,2,3]];
+  foreach ($heatmap as $ri => $row):
+    foreach ($row as $ci => $v):
+      $x = 45 + $ci * 26; $y = 20 + $ri * 26;
+?>
+          <rect x="<?= $x ?>" y="<?= $y ?>" width="24" height="24" fill="<?= $colors[$v] ?>" stroke="#0d1122" stroke-width="1"/>
+<?php endforeach; endforeach; ?>
+          <text x="107" y="132" font-size="9" text-anchor="middle" fill="rgba(255,255,255,.55)">binding specificity map</text>
+        </svg>
+        <p class="data-viz-note">示意 · 具体结果按项目 NDA</p>
       </div>
     </div>
   </div>
