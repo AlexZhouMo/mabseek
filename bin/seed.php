@@ -139,6 +139,11 @@ $S = [
     ['platform.lab.item5.body',   'Cryo-EM / X-ray · 抗原抗体复合物',                               'platform_lab',      '实验·结构 描述',   'text'],
     ['platform.lab.item6.title',  '微流控筛选',                                                     'platform_lab',      '实验·微流控 标题', 'text'],
     ['platform.lab.item6.body',   '单细胞液滴 · 高通量克隆筛选',                                    'platform_lab',      '实验·微流控 描述', 'text'],
+    // ── batch 2b-2a · 平台页视觉升级 ──
+    ['platform.hero.eyebrow',     'MabSeek 平台 · AI + 湿实验一站式',                               'platform_hero',     '平台 Hero·眉题',   'text'],
+    ['platform.data.eyebrow',     '真实数据驱动',                                                   'platform_data',     '数据驱动·眉题',    'text'],
+    ['platform.data.title',       'AI 平台已支撑的靶点谱系',                                        'platform_data',     '数据驱动·标题',    'text'],
+    ['platform.data.sub',         '覆盖 GPCR、T 细胞激动、免疫肿瘤等靶点类型',                      'platform_data',     '数据驱动·副标题',  'text'],
 ];
 foreach ($S as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(home/common): " . count($S) . " seeded (idempotent)\n";

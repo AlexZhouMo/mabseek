@@ -6,8 +6,8 @@
 // 前台以 snip_raw() 原样渲染（含版式标记）的片段——编辑时提示谨慎，勿破坏既有标记结构。
 $rawKeys = [
     'home.hero.title','home.can.title','home.pain.title','home.contact.title',
-    'tech.hero.title','tech.arch.title','tech.p1.title','tech.p2.title','tech.p3.title',
-    'agent.hero.title','agent.cap.title','agent.case.title','agent.flow.title',
+    'tech.p3.title',
+    'agent.hero.title','agent.cap.title','agent.flow.title',
     'forum.hero.title','forum.lines.title','edu.hero.title',
     'about.hero.title','about.intl.title','about.contact.title',
 ];
