@@ -16,45 +16,66 @@
 mabseek/
 ├── public/            ← 唯一对外文档根（nginx/php -S 指向这里）
 │   ├── index.php        首页
-│   ├── technology.php   技术平台
-│   ├── agent.php        Antibody Agent
-│   ├── education.php    教育（课程 · 讲座 · 教育往期回顾）
+│   ├── platform.php     平台（合并原技术平台 + Antibody Agent 两页，V4 版）
+│   ├── technology.php   → 301 转跳 platform.php（legacy stub，保留历史外链兼容）
+│   ├── agent.php        → 301 转跳 platform.php（legacy stub，保留历史外链兼容）
+│   ├── education.php    教育（课程视频 · 教育往期回顾）
 │   ├── edu-review.php   教育回顾详情
 │   ├── forum.php        论坛（会员发帖 · 富文本）
 │   ├── threads-api.php  论坛帖子列表异步接口（分页/筛选，JSON）
 │   ├── thread-new.php   发帖（富文本编辑器 + 图片上传）
 │   ├── thread-edit.php  编辑本人帖
 │   ├── thread.php       帖子详情（直出净化后 HTML）
+│   ├── news.php         新闻详情
 │   ├── upload.php       会员图片上传端点（登录 + CSRF，复用图片校验）
 │   ├── feedback.php     联系反馈提交端点（CSRF）
 │   ├── about.php        了解我们（团队成员 · 国际合作）
+│   ├── login.php        登录（?next=/?trial= 参数透传）
+│   ├── register.php     注册（同步 SciencePal）
+│   ├── logout.php       登出
+│   ├── account.php      会员账户
+│   ├── captcha.php      图形验证码
 │   ├── admin.php        管理后台入口
-│   └── assets/          静态资源（css/js/images，含 uploads/ 上传目录）
+│   ├── partials/        公共片段（head-meta.php 等）
+│   └── assets/          静态资源（css/js/images/videos，含 uploads/ 上传目录）
 ├── app/               ← 应用代码（在文档根之上，不可 HTTP 访问）
 │   ├── config.php       常量配置（路径、会话、登录风控、上传限制、seed 账号）
+│   ├── config.local.php.example  SciencePal 密钥模板（复制为 config.local.php 并填入）
 │   ├── bootstrap.php    统一引导（会话硬化、迁移、依赖装配）
 │   ├── db.php           PDO 连接 + 幂等建表迁移（CREATE TABLE IF NOT EXISTS）
 │   ├── auth.php         登录校验、会话、登录失败锁定、审计日志
 │   ├── csrf.php         CSRF 令牌
+│   ├── captcha.php      图形验证码
 │   ├── members.php      会员账号（注册/登录/状态）
+│   ├── sciencepal.php   SciencePal 合作方账号同步
 │   ├── threads.php      论坛帖子（校验/发布/治理，正文按纯文本长度校验）
 │   ├── edu_reviews.php  教育往期回顾（校验/查询）
 │   ├── feedback.php     联系反馈（校验/存储）
 │   ├── html_sanitizer.php  富文本白名单净化（DOM 白名单，仅放行站内上传图）
 │   ├── helpers.php      转义/时间/客户端 IP 等工具
-│   ├── admin/           后台各功能模块
+│   ├── admin/           后台各功能模块（含 edu_video 课程视频上传）
 │   └── repositories/    数据访问层
 ├── bin/
-│   ├── seed.php                  幂等初始化：建库、建管理员账号、灌入初始内容
-│   ├── migrate-images-webp.php   幂等迁移：库中静态图片路径 .png/.jpg → .webp（保护上传图）
-│   ├── migrate-contact-email.php 幂等迁移：订正 snippets 中的历史联系邮箱
-│   └── migrate-web-update-260920.php 幂等迁移：260920 网页更新（logo 墙/教育页/张老师成果/国际合作）存量记录订正与补齐
+│   ├── seed.php                        幂等初始化：建库、建管理员账号、灌入初始内容
+│   ├── migrate-images-webp.php         静态图片路径 .png/.jpg → .webp（保护上传图）
+│   ├── migrate-contact-email.php       订正历史联系邮箱
+│   ├── migrate-feedback-iteration.php  反馈迭代
+│   ├── migrate-news-category.php       新闻分类
+│   ├── migrate-home-news-title.php     首页近况标题
+│   ├── migrate-20260909-team-edu.php   20260909 团队/教育
+│   ├── migrate-web-update-260920.php   260920 网页更新（logo 墙/教育页/张老师成果/国际合作）
+│   ├── migrate-web-update-302.php      V3.0.2 网页更新
+│   ├── migrate-v4-batch1.php           V4 批 1 网页更新（合并平台与 Agent）
+│   ├── migrate-v4-batch2b1.php         V4 批 2b-1 平台页（21 条 platform.* + home.hero.cta 订正）
+│   └── migrate-v4-batch2b2a.php        V4 批 2b-2a 平台页视觉升级（4 条新 snippet + 36 孤儿清理）
 ├── data/              ← SQLite 数据库文件所在（git 忽略，运行时生成）
 ├── deploy/            ← 部署脚本与样例（见「部署」）
 ├── docs/              ← 架构文档、UI 规范
 └── tests/
     └── run.php          零依赖测试套件
 ```
+
+> **迁移脚本约定**：所有 `bin/migrate-*.php` 幂等设计，可重复运行，命名按迭代批次编号。部署脚本 `deploy/deploy-mabseek.sh` 会在 seed 之后按顺序调用。新增数据库内容改动时必须同步：`seed.php` 种子默认值 + 新迁移脚本 + `deploy-mabseek.sh` 接入 —— 详见 [CLAUDE.md](CLAUDE.md)。
 
 ## 本地运行
 
@@ -70,8 +91,8 @@ php -S localhost:8778 -t public
 ## 管理后台
 
 - 入口 `public/admin.php`，登录后可管理各页面内容。
-- 内容模块：新闻、团队成员（支持头像上传，无头像时用文字头像）、合作伙伴、内容卡片、文案片段（snippets）、教育往期回顾、会员管理、论坛帖子治理、联系反馈查看。
-- 初始管理员账号由 `bin/seed.php` 依据 `app/config.php` 中的 `SEED_ADMIN_USER` / `SEED_ADMIN_PASS` 创建，**首次登录强制修改密码**。生产环境请在 seed 前改掉默认值，或改后立即修改。
+- **内容模块**：仪表盘 · 新闻 · 团队成员（支持头像上传，无头像时用文字头像）· 合作伙伴 · 内容卡片 · 文案片段（snippets）· 会员管理 · 论坛帖子治理 · 教育往期回顾 · **课程视频上传**（`edu_video`，≤50MB，存 `assets/videos/`，自动写 snippet `edu.video.src`）· 联系反馈查看 · 修改密码。
+- 初始管理员账号由 `bin/seed.php` 依据 `app/config.php` 中的 `SEED_ADMIN_USER` / `SEED_ADMIN_PASS` 创建（默认 `admin` / `mabseek2026`），**首次登录强制修改密码**。生产环境请在 seed 前改掉默认值，或改后立即修改。
 
 ### 安全措施
 
@@ -92,19 +113,48 @@ php -S localhost:8778 -t public
 
 ## 教育与反馈
 
-- 教育页除课程与讲座外，展示「教育往期回顾」（`edu_reviews`）卡片，点击进入 `edu-review.php` 详情。
+- 教育页除课程视频与往期回顾外，展示 `edu_reviews` 卡片，点击进入 `edu-review.php` 详情。
+- 课程视频区支持两种源：后台上传的本地视频（写入 `edu.video.src`）或外链 iframe（`edu.video.iframe_url`，Bilibili / YouTube 等，scheme 白名单校验，优先级高于本地视频）。两者都为空时展示克制的品牌色占位块。
 - 访客可通过页面的联系反馈表单（`public/feedback.php`，CSRF 校验）提交需求/合作意向，后台「联系反馈」模块查看。
+
+## 全局试用 CTA（trial-cta）
+
+- 全站带 `data-trial-cta` 的按钮统一被 `assets/js/trial-cta.js` 拦截，弹出 SciencePal 试用申请模态框，会员登录状态由 `partials/head-meta.php` 输出的 meta 决定，未登录跳 `login.php?next=…&trial=1` 后自动回到原页并唤起模态。
+- 登录 / 注册页支持 `?next=` 与 `?trial=1` 参数透传（防开放重定向：只接受本站相对路径）。
 
 ## 站点配图
 
 - 全站配图为 AI 生成的深色科技风插画（紫 + 荧光绿渐变），统一收纳于 `public/assets/images/`；团队真实头像置于 `assets/images/team/`。
 - 静态配图均采用 **WebP** 格式（较 PNG/JPG 显著减小体积、加载更快），照片型质量 q82、logo 与头像 q90 保留透明。数据库里存量的图片路径由 `bin/migrate-images-webp.php` 在部署时幂等迁移，仅替换存在对应 WebP 的引用，不动 `uploads/` 下的用户上传图。
+- 生成新 WebP 时**必须用 `cwebp`**，macOS 自带的 `sips` 不能写 WebP（会静默失败）。
 
-## 260920 网页更新
+## 版本迭代记录
 
+按批次逐步演进，每批含 seed 更新 + 幂等迁移 + 部署脚本接入。
+
+### 260920 · 首轮扩展
 - **首页合作伙伴 logo 墙**：17 图三行同向滚动展示。
 - **教育页**：课程视频支持后台上传（≤50MB，存 `assets/videos/`），banner 去字 + 两列布局 + 教学安排折叠。
-- **了解我们页**：负责人张老师详细成果（论文 276+ / 专利 34+ / 荣誉手风琴），医学楼全景背景；国际合作以印尼 / PRA 双图片轮播呈现，附 PRA 新版联盟介绍。
+- **了解我们**：负责人张老师详细成果（论文 276+ / 专利 34+ / 荣誉手风琴），医学楼全景背景；国际合作以印尼 / PRA 双图片轮播呈现。
+- 迁移：`bin/migrate-web-update-260920.php`
+
+### V3.0.2 · logo 与教育精调
+- Logo 修正、教育页分段调整、了解我们页文案精简。
+- 迁移：`bin/migrate-web-update-302.php`
+
+### V4 批 1 · SciencePal 对接与全局 CTA
+- 会员注册/改密同步 SciencePal（密钥走 `app/config.local.php` 或环境变量，见下）。
+- 引入全局 `trial-cta` 拦截 + SciencePal 试用模态框；登录/注册页支持 `?next=` / `?trial=1` 参数。
+- 富文本编辑器工具栏改 sticky 悬浮，长文中随处插图无需回滚。
+- 迁移：`bin/migrate-v4-batch1.php`
+
+### V4 批 2b · 平台页合并（技术平台 + Antibody Agent → platform.php）
+- **导航 6 → 5 项**：`technology.php` 与 `agent.php` 合并为新 `platform.php`，前两页改为 301 stub 保留历史外链兼容。
+- 屏 3「AI 平台已支撑的靶点谱系」用三张纯 SVG 数据图（GLP-1R 剂量曲线 / CXCR4 亲和力柱 / CD3 结合特异性 heatmap）替代动画占位。
+- 屏 5 干湿闭环从直线流程改为 SVG 环形五节点。
+- 平台页各屏 CTA 挂 `data-trial-cta` 接入试用模态；屏 1 hero eyebrow 品牌化。
+- 迁移：`bin/migrate-v4-batch2b1.php`（21 条 platform.* + home.hero.cta 订正）
+- 迁移：`bin/migrate-v4-batch2b2a.php`（4 条新 snippet + 36 条 orphan 清理）
 
 ## 静态资源缓存
 

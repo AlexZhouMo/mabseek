@@ -256,3 +256,17 @@ mabseek/
 - **范围边界（交互组件留代码）**：`hero-anim` / `agent-demo` / `agent-cases` / `knowledge-graph` 及各页内联筛选、弹幕等交互仍为静态 JS，不入库、不后台配置，保持 §5 既有行为与「无状态、无网络请求」语义。数字仍为示意，不杜撰。
 
 参见实施计划 `docs/superpowers/plans/2026-08-29-mabseek-p5-backend-cms.md`（及 `docs/superpowers/specs/` 下对应设计规格）。
+
+---
+
+## 12. P5 之后的演进（内容与结构迭代）
+
+本文档 §1–§11 描述项目从纯静态（P1–P4）演进到 PHP+SQLite 内容管理（P5）的**架构基线**。P5 落地后进入以内容与视觉持续打磨为主的迭代阶段（batch1 → 260920 → V3.0.2 → V4 批次），架构与安全基线保持不变，主要变化在页面组织、后台模块与展示形态上：
+
+- **页面合并**：`technology.php` + `agent.php` 合并为 `platform.php`（V4 批 2b），导航从 6 项收敛为 5 项；原两页保留为 301 stub 兼容历史外链。
+- **课程视频后台**：新增 `app/admin/edu_video.php` 上传模块（≤50MB，`assets/videos/`），并支持外链 iframe（Bilibili / YouTube 等，scheme 白名单校验）。
+- **SciencePal 合作方同步**：会员注册/改密同步 SciencePal 开通/改密（`app/sciencepal.php`），密钥走 `app/config.local.php` 或环境变量，未配置时静默跳过不影响本站。
+- **全局 CTA 拦截**：`assets/js/trial-cta.js` 全站拦截 `data-trial-cta`，弹出 SciencePal 试用申请模态框；未登录跳 `login.php?next=…&trial=1` 后自动回到原页并唤起模态。
+- **首页 logo 墙、张老师成果手风琴、国际合作轮播**（260920）；**Logo/教育分段/about 精简**（V3.0.2）；**平台屏 3 三张 SVG 数据图、屏 5 SVG 环形闭环、屏 1 hero 品牌化**（V4 批 2b）。
+
+每一批含配套的 seed 默认值更新 + 幂等迁移脚本 `bin/migrate-*.php` + `deploy/deploy-mabseek.sh` 挂载。批次清单与说明见 [README 版本迭代记录](../README.md#版本迭代记录)。
