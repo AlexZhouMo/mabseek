@@ -64,12 +64,12 @@ $news = (new Collection('news'))->published();
 <?php include __DIR__ . '/partials/nav.php'; ?>
 
 <!-- 页头 -->
-<section class="page-hero page-hero--about-v4" style="background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(120,120,120,0.71) 75%, rgba(0,0,0,0.74) 100%), url('assets/images/lab-panorama.webp') center/cover;min-height:480px;height:66vh;display:flex;flex-direction:column;justify-content:flex-end">
+<section class="page-hero page-hero--about-v4" style="background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.7) 55%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.95) 100%), url('assets/images/lab-panorama.webp') center/cover;min-height:480px;height:66vh;display:flex;flex-direction:column;justify-content:flex-end">
 <style>
-.page-hero--about-v4 h1 { color: #fff !important; text-shadow: 0 2px 6px rgba(0,0,0,.45); }
+.page-hero--about-v4 h1 { color: #fff !important; text-shadow: 0 3px 12px rgba(0,0,0,1), 0 0 32px rgba(0,0,0,.85) !important; }
 .page-hero--about-v4 h1 .grad-text { -webkit-text-fill-color: #fff !important; color: #fff !important; background: none !important; }
-.page-hero--about-v4 .lead { color: rgba(255,255,255,.9) !important; text-shadow: 0 1px 3px rgba(0,0,0,.4); }
-.page-hero--about-v4 .container { padding-bottom: 8vh; }
+.page-hero--about-v4 .lead { color: #fff !important; text-shadow: 0 2px 8px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,.75) !important; }
+.page-hero--about-v4 .container { padding-bottom: 4vh; }
 @media (max-width: 768px) {
   .page-hero--about-v4 { height: 50vh !important; min-height: 360px !important; }
   .page-hero--about-v4 .container { padding-bottom: 6vh; }
