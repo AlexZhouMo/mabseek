@@ -129,7 +129,13 @@ $videoSrc = snip_raw('edu.video.src');
         <source src="<?= e($videoSrc) ?>">您的浏览器不支持视频播放。
       </video>
 <?php else: ?>
-      <div style="aspect-ratio:16/9;background:var(--grad-brand);border-radius:var(--radius);display:grid;place-items:center;color:#fff;font-size:16px">课程视频即将上线</div>
+      <div class="edu-video-placeholder">
+        <div class="edu-video-placeholder__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5.14v13.72c0 .86.94 1.4 1.68.97l11.1-6.86a1.13 1.13 0 0 0 0-1.94L9.68 4.17A1.13 1.13 0 0 0 8 5.14Z"/></svg>
+        </div>
+        <div class="edu-video-placeholder__title">课程视频即将上线</div>
+        <div class="edu-video-placeholder__sub">敬请期待 · 后台上传后此处将自动替换为播放器</div>
+      </div>
 <?php endif; ?>
     </div>
   </div>
