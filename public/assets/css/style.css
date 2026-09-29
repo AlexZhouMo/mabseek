@@ -923,7 +923,7 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .loop-side-card { padding: 22px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); }
 .loop-side-card h4 { color: var(--green-neon, var(--green)); font-size: 17px; margin: 0 0 8px; }
 .loop-side-card p { color: var(--ink-on-dark-2, rgba(255,255,255,.72)); font-size: 14px; line-height: 1.65; margin: 0; }
-.loop-ring { position: relative; aspect-ratio: 1 / 1; max-width: 520px; margin: 0 auto; }
+.loop-ring { position: relative; width: 100%; aspect-ratio: 1 / 1; max-width: 520px; margin: 0 auto; justify-self: center; }
 .loop-ring-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 42%; aspect-ratio: 1/1; border-radius: 50%; background: linear-gradient(135deg, rgba(109,59,235,.25), rgba(0,224,164,.25)); border: 2px solid rgba(255,255,255,.15); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12px; }
 .loop-ring-center img { width: 44px; height: 44px; object-fit: contain; margin-bottom: 6px; }
 .loop-ring-center span { color: #fff; font-size: 13px; font-weight: 700; }

@@ -280,7 +280,9 @@ $ringCount = count($loopRings) ?: 5;
 foreach ($loopRings as $i => $n):
     $extra = json_decode($n['extra'] ?: '{}', true) ?: [];
     $side = $extra['side'] ?? 'dry';
-    $angle = (-90 + $i * (360 / $ringCount));
+    // rotate(--ang) 后 translateY(-165) 沿半径外推：--ang=0 时节点在 12 点方向，
+    // 起点 = 「研究目标」在 12 点，顺时针分布 5 个节点。
+    $angle = $i * (360 / $ringCount);
 ?>
         <div class="loop-ring-node loop-ring-node--<?= e($side) ?>" style="--ang:<?= $angle ?>deg">
           <h4><?= e($n['title']) ?></h4>
