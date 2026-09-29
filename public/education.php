@@ -98,45 +98,43 @@ $active = 'education'; $navOnDark = false; $navSolidDark = true; $contactHref = 
   </div>
 </section>
 
-<!-- 课程视频 -->
+<!-- 张林琦访谈《疫苗的力量》 -->
 <section class="section bg-soft" id="video">
   <div class="container">
-    <div style="margin-bottom:24px">
-      <h2 class="section-title reveal"><?= snip('edu.video.title', '课程视频') ?></h2>
-    </div>
 <?php
-$videoIframe = snip_raw('edu.video.iframe_url');
-$videoIframeOk = $videoIframe !== ''
-    && (str_starts_with($videoIframe, 'https://')
-        || str_starts_with($videoIframe, 'http://')
-        || str_starts_with($videoIframe, '//'))
-    && (str_starts_with($videoIframe, '//') || filter_var($videoIframe, FILTER_VALIDATE_URL));
-$videoIframe = $videoIframeOk ? $videoIframe : '';
-$videoSrc = snip_raw('edu.video.src');
+$talkVideoRel = snip_raw('edu.talk.video_src');
+$talkVideoAbs = $talkVideoRel !== '' ? __DIR__ . '/' . ltrim($talkVideoRel, '/') : '';
+$talkHasVideo = $talkVideoRel !== '' && $talkVideoAbs !== '' && is_file($talkVideoAbs);
+$talkPoster   = snip_raw('edu.talk.poster', 'assets/images/edu-talk-poster.webp');
 ?>
-    <div class="edu-video reveal" style="max-width:900px;margin:0 auto">
-<?php if ($videoIframe !== ''): ?>
-      <div style="position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;box-shadow:var(--sh-lg);background:#000">
-        <iframe src="<?= e($videoIframe) ?>"
-                title="<?= snip('edu.video.title', '课程视频') ?>"
-                style="position:absolute;inset:0;width:100%;height:100%;border:0"
-                sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
-                allowfullscreen loading="lazy"
-                referrerpolicy="strict-origin-when-cross-origin"></iframe>
-      </div>
-<?php elseif ($videoSrc !== ''): ?>
-      <video controls preload="metadata" style="width:100%;border-radius:var(--radius);box-shadow:var(--sh-lg);background:#000">
-        <source src="<?= e($videoSrc) ?>">您的浏览器不支持视频播放。
-      </video>
-<?php else: ?>
-      <div class="edu-video-placeholder">
-        <div class="edu-video-placeholder__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5.14v13.72c0 .86.94 1.4 1.68.97l11.1-6.86a1.13 1.13 0 0 0 0-1.94L9.68 4.17A1.13 1.13 0 0 0 8 5.14Z"/></svg>
+    <div class="edu-talk">
+      <div class="edu-talk-text reveal">
+        <span class="eyebrow"><?= snip('edu.talk.eyebrow', '与教授对话') ?></span>
+        <h2 class="section-title" style="margin-top:14px"><?= snip('edu.talk.title', '《疫苗的力量》与张林琦教授对话') ?></h2>
+        <p class="edu-talk-body" style="margin-top:16px"><?= snip('edu.talk.body') ?></p>
+        <div class="edu-talk-chips" style="margin-top:20px">
+          <span class="edu-talk-chip"><?= snip('edu.talk.kw1', '课程缘起') ?></span>
+          <span class="edu-talk-chip"><?= snip('edu.talk.kw2', '专业选择') ?></span>
+          <span class="edu-talk-chip"><?= snip('edu.talk.kw3', '课程期待') ?></span>
+          <span class="edu-talk-chip"><?= snip('edu.talk.kw4', '青年寄语') ?></span>
         </div>
-        <div class="edu-video-placeholder__title">课程视频即将上线</div>
-        <div class="edu-video-placeholder__sub">敬请期待 · 后台上传后此处将自动替换为播放器</div>
       </div>
+      <div class="edu-talk-media reveal d1">
+<?php if ($talkHasVideo): ?>
+        <div class="edu-talk-player" data-poster="<?= e($talkPoster) ?>" data-src="<?= e($talkVideoRel) ?>">
+          <img class="edu-talk-poster" src="<?= e($talkPoster) ?>" alt="张林琦教授访谈海报" onerror="this.style.display='none'">
+          <button type="button" class="edu-talk-play" aria-label="播放访谈视频">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72c0 .86.94 1.4 1.68.97l11.1-6.86a1.13 1.13 0 0 0 0-1.94L9.68 4.17A1.13 1.13 0 0 0 8 5.14Z"/></svg>
+          </button>
+        </div>
+<?php else: ?>
+        <div class="edu-talk-player edu-talk-player--missing">
+          <img class="edu-talk-poster" src="<?= e($talkPoster) ?>" alt="张林琦教授访谈海报" onerror="this.style.display='none'">
+          <div class="edu-talk-missing">视频加载中，稍后再试</div>
+        </div>
 <?php endif; ?>
+        <div class="edu-talk-speaker"><?= snip('edu.talk.speaker', '张林琦教授｜《疫苗的力量》开课人、主讲人') ?></div>
+      </div>
     </div>
   </div>
 </section>
@@ -190,6 +188,21 @@ document.querySelectorAll('.acc-head').forEach(function (h) {
   });
 });
 document.querySelectorAll('.acc-item.open .acc-body').forEach(function (b) { b.style.maxHeight = b.scrollHeight + 'px'; });
+
+// 张林琦访谈播放器：点击 poster/按钮后替换为 <video controls autoplay>
+document.querySelectorAll('.edu-talk-player[data-src]').forEach(function (p) {
+  p.addEventListener('click', function () {
+    if (p.querySelector('video')) return;
+    var src = p.getAttribute('data-src');
+    var poster = p.getAttribute('data-poster') || '';
+    var v = document.createElement('video');
+    v.controls = true; v.autoplay = true; v.preload = 'auto';
+    if (poster) v.poster = poster;
+    var s = document.createElement('source'); s.src = src; v.appendChild(s);
+    p.innerHTML = '';
+    p.appendChild(v);
+  });
+});
 </script>
 </body>
 </html>
