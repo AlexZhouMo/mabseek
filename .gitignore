@@ -4,6 +4,8 @@ public/assets/images/uploads/*
 !public/assets/images/uploads/.gitkeep
 public/assets/videos/*
 !public/assets/videos/.gitkeep
+public/assets/uploads/videos/*
+!public/assets/uploads/videos/.gitkeep
 public/assets/images/_backup/
 !data/.gitkeep
 .DS_Store
