@@ -1,322 +1,360 @@
 <?php
 require __DIR__ . '/../app/bootstrap.php';
-$active = 'platform'; $navOnDark = false; $navSolidDark = true; $contactHref = 'index.php#contact';
-$caps   = (new Collection('content_cards'))->published("grp='agent_capability'");
-$matrix = (new Collection('content_cards'))->published("grp='agent_matrix'");
+$active = 'platform';
+$navOnDark = false;
+$navSolidDark = true;
+$contactHref = 'index.php#contact';
+
+// ── content_cards 数据源 ──
+$agentMods  = (new Collection('content_cards'))->published("grp='platform_agent_module'");
+$dataCards  = (new Collection('content_cards'))->published("grp='platform_data_card'");
+$labCaps    = (new Collection('content_cards'))->published("grp='platform_lab_cap'");
+$vlpKinds   = (new Collection('content_cards'))->published("grp='platform_vlp_kind'");
+$loopSides  = (new Collection('content_cards'))->published("grp='platform_loop_side'");
+$loopRings  = (new Collection('content_cards'))->published("grp='platform_loop_ring'");
+$caseStats  = (new Collection('content_cards'))->published("grp='platform_case_stat'");
+$caseVlps   = (new Collection('content_cards'))->published("grp='platform_case_vlp'");
+
+// ── 纯展示型静态数据（不进后台）──
+$DATA_PLOTS = [
+    'hero' => [
+        'src'          => 'assets/images/platform/data-glp1r-binding.webp',
+        'title'        => 'GLP-1R (GPCR)',
+        'tags'         => ['血糖调节', '体重控制', '心血管保护'],
+        'caption'      => 'Binding to 293T-GLP-1R · 候选抗体结合曲线',
+        'detail'       => 'assets/images/platform/data-glp1r-sequences.webp',
+        'detail_label' => '抗体候选序列节选',
+    ],
+    'twin' => [
+        ['src'   => 'assets/images/platform/data-cxcr4.webp',
+         'title' => 'CXCR4 (GPCR)',
+         'tags'  => ['HIV 共受体', '肿瘤微环境', 'NHL/MM/AML 靶点']],
+        ['src'   => 'assets/images/platform/data-cd3.webp',
+         'title' => 'CD3',
+         'tags'  => ['T 细胞标志物', 'TCE 靶点', '肿瘤/自免']],
+    ],
+];
+$LAB_MICRO = [
+    ['label' => '皮升级液滴', 'items' => [
+        ['src' => 'assets/images/platform/lab-pico-generation.webp', 'caption' => '液滴生成 Droplet generation'],
+        ['src' => 'assets/images/platform/lab-pico-injection.webp',  'caption' => '微注入 Pico-injection'],
+        ['src' => 'assets/images/platform/lab-pico-fads.webp',       'caption' => '检测分选 FADS'],
+    ]],
+    ['label' => '微升级液滴', 'items' => [
+        ['src' => 'assets/images/platform/lab-micro-generation.webp','caption' => '液滴生成 Micro-droplet generation'],
+        ['src' => 'assets/images/platform/lab-micro-injection.webp', 'caption' => '微注入 Micro-injection'],
+        ['src' => 'assets/images/platform/lab-micro-sorting.webp',   'caption' => '检测分选 Micro-droplet sorting'],
+    ]],
+];
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MabSeek 平台 · AI 驱动的抗体发现全流程 | 清华大学医学院</title>
-<meta name="description" content="MabSeek 平台合并 Antibody Agent 与湿实验闭环，一句话需求驱动 AI 抗体设计、亲和力预测与实验规划，覆盖 GPCR 等复杂膜蛋白靶点。">
+<title>MabSeek 平台 · Antibody Agent 驱动的抗体发现全流程 | 清华大学医学院</title>
+<meta name="description" content="MabSeek 平台由 Antibody Agent 驱动，整合数据、算法与自动化实验，覆盖 GPCR / 离子通道 / 转运体等复杂膜蛋白靶点的抗体发现全流程。">
 <link rel="stylesheet" href="assets/css/style.css">
 <?php include __DIR__ . '/partials/head-meta.php'; ?>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
-<style>
-/* ---- Agent 页专属 ---- */
-.chat-ui { background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); box-shadow:var(--sh-lg); overflow:hidden; }
-.chat-top { display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:1px solid var(--line); }
-.chat-top .brand-dot { width:30px;height:30px;border-radius:9px;background:var(--grad-brand);display:grid;place-items:center;color:#fff;font-size:14px; }
-.chat-top .free { margin-left:auto; font-size:12px; color:var(--ink-3); background:var(--bg-soft); padding:5px 12px;border-radius:999px; }
-#chat-feed { height:360px; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#fbfbff,#fff); }
-.msg { display:flex; gap:10px; align-items:flex-start; max-width:92%; }
-.msg.user { align-self:flex-end; flex-direction:row-reverse; }
-.msg-av { width:30px;height:30px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;background:var(--grad-purple); }
-.msg.user .msg-av { background:var(--grad-green); color:#04352a; }
-.msg-bubble { background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 15px;font-size:14px;line-height:1.6;box-shadow:var(--sh-sm); min-height:20px; }
-.msg.user .msg-bubble { background:var(--grad-purple); color:#fff; border:0; }
-.msg-bubble.is-step { background:var(--purple-050); border-color:var(--purple-100); color:var(--ink-2); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; }
-.msg-bubble.is-result { background:var(--green-100); border-color:#b6f2e2; color:#065f46; font-weight:600; }
-.dots i { display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--purple-400);margin:0 2px;animation:blink 1.2s infinite; }
-.dots i:nth-child(2){animation-delay:.2s} .dots i:nth-child(3){animation-delay:.4s}
-@keyframes blink { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
-.chat-input { display:flex; align-items:center; gap:10px; padding:14px 18px; border-top:1px solid var(--line); }
-.chat-input .box { flex:1; border:1px solid var(--line); border-radius:12px; padding:11px 14px; font-size:14px; color:var(--ink-3); background:var(--bg-soft); }
-.chat-input .kb { font-size:12px; color:var(--purple); background:var(--purple-050); padding:6px 11px; border-radius:8px; font-weight:700; }
-.chat-input .send { width:38px;height:38px;border-radius:10px;background:var(--grad-purple);color:#fff;display:grid;place-items:center;cursor:pointer;flex:0 0 auto; }
-
-/* 干湿闭环流程 */
-.flow { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; align-items:stretch; }
-.flow-step { position:relative; background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 12px;text-align:center;box-shadow:var(--sh-sm); }
-.flow-step h4 { font-size:15px; white-space:nowrap; }
-.flow-step p { font-size:11px;color:var(--ink-3);margin-top:6px; white-space:nowrap; }
-.flow-step .tag-mini { font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;display:inline-block;margin-top:10px; }
-.flow-arrow { position:absolute; right:-13px; top:50%; transform:translateY(-50%); color:var(--purple-400); font-size:18px; z-index:2; }
-.flow-step:last-child .flow-arrow { display:none; }
-.dry { background:linear-gradient(180deg,#fff,#f7f4ff); }
-.wet { background:linear-gradient(180deg,#fff,#f0fbf7); }
-
-/* pinned agents */
-.agent-chip { background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--sh-sm);transition:.25s; }
-.agent-chip:hover { transform:translateY(-4px); box-shadow:var(--sh); border-color:var(--purple-100); }
-.agent-chip.active { border-color:var(--purple); box-shadow:var(--sh-purple); }
-.agent-chip .ai { width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:20px;flex:0 0 auto; }
-.agent-chip h4 { font-size:15px; } .agent-chip p { font-size:12.5px;color:var(--ink-3);margin-top:3px; }
-</style>
 </head>
 <body>
 
-<!-- 导航 -->
 <?php include __DIR__ . '/partials/nav.php'; ?>
 
-<!-- Hero + 对话演示 -->
-<section class="hero" id="try">
+<!-- ═══════════════ 屏 1 · Hero #hero（深） ═══════════════ -->
+<section class="hero" id="hero">
   <div class="hero-bg"></div>
-  <canvas id="hero-canvas"></canvas>
   <div class="container">
     <div class="hero-grid">
       <div>
-        <span class="eyebrow reveal"><?= snip('platform.hero.eyebrow', 'MabSeek 平台 · AI + 湿实验一站式') ?></span>
-        <h1 class="reveal d1"><?= snip_raw('agent.hero.title') ?></h1>
-        <p class="lead reveal d2"><?= snip('agent.hero.lead') ?></p>
+        <span class="eyebrow reveal"><?= snip('platform.hero.eyebrow', 'MabSeek Platform') ?></span>
+        <h1 class="reveal d1"><?= snip_raw('platform.hero.title', '从科学问题到<span class="txt-neon">实验验证</span>抗体') ?></h1>
+        <p class="lead reveal d2"><?= snip('platform.hero.lead', '由 Antibody Agent 驱动，整合数据、算法与自动化实验，让抗体发现更高效、更可靠。') ?></p>
         <div class="hero-cta reveal d3">
-          <a href="login.php?next=platform.php&trial=1" data-trial-cta="1" class="btn btn-purple btn-lg"><?= snip('platform.hero.cta1', '开始试用') ?></a>
-          <a href="#modules" class="btn btn-outline btn-lg"><?= snip('platform.hero.cta2', '了解详情') ?></a>
+          <a href="<?= snip('platform.hero.cta1_href', '#agent') ?>" class="btn btn-green btn-lg"><?= snip('platform.hero.cta1', '了解平台') ?></a>
+          <a href="<?= snip('platform.hero.cta2_href', 'login.php?next=platform.php&trial=1') ?>" data-trial-cta="1" class="btn btn-purple btn-lg"><?= snip('platform.hero.cta2', '开始试用') ?></a>
         </div>
-        <div class="hero-note reveal d4"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span> <?= snip('agent.hero.note') ?></div>
       </div>
-      <div class="reveal d2">
-        <div class="chat-ui">
-          <div class="chat-top">
-            <span class="brand-dot">🧬</span><b style="font-size:14px">Antibody Agent</b>
-            <span class="free">Knowledge Base · 抗体发现</span>
-          </div>
-          <div id="chat-feed"></div>
-          <div class="chat-input">
-            <span class="kb">📚 知识库</span>
-            <div class="box">@antibody_agent 描述你的靶点…</div>
-            <span class="send" data-demo="正式版将接入实时推理，本页为流程演示">↑</span>
-          </div>
+      <div class="reveal d2 hero-flow">
+        <div class="pflow">
+          <div class="pflow-node pflow-node--dry">研究问题</div>
+          <div class="pflow-arrow">→</div>
+          <div class="pflow-node pflow-node--brand">Antibody Agent</div>
+          <div class="pflow-arrow">→</div>
+          <div class="pflow-node pflow-node--dry">自动化实验</div>
+          <div class="pflow-arrow">→</div>
+          <div class="pflow-node pflow-node--brand">结果与迭代</div>
+        </div>
+        <div class="hero-photo">
+          <img src="<?= snip('platform.hero.photo', 'assets/images/platform/hero-auto-detail.webp') ?>" alt="自动化实验设备特写" loading="lazy">
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 屏 2 · Antibody Agent 四模块 -->
-<section class="section section-light" id="modules">
+<!-- ═══════════════ 屏 2 · Agent #agent（白） ═══════════════ -->
+<section class="section section-light" id="agent">
   <div class="container">
-    <div class="text-center" style="margin-bottom:44px">
-      <span class="eyebrow reveal"><?= snip('agent.cap.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('agent.cap.title') ?></h2>
-    </div>
-    <div class="grid-4">
-<?php foreach ($caps as $i => $c): $rev = $i ? ' d' . $i : ''; ?>
-      <div class="card reveal<?= $rev ?>" style="text-align:center"><h3><?= e($c['title']) ?></h3><p><?= e($c['body']) ?></p></div>
+    <div class="agent-grid">
+      <div class="agent-left">
+        <span class="eyebrow reveal"><?= snip('platform.agent.eyebrow', 'Antibody Agent') ?></span>
+        <h2 class="section-title reveal d1"><?= snip_raw('platform.agent.title', '从研究问题出发，连接<span class="txt-neon">设计、预测与实验</span>') ?></h2>
+        <p class="section-sub reveal d2"><?= snip('platform.agent.lead', 'Antibody Agent 理解研究目标，将任务拆解为可执行的研究步骤。') ?></p>
+        <div class="agent-modules reveal d3">
+<?php foreach ($agentMods as $m): ?>
+          <div class="agent-mod">
+            <span class="agent-mod-ico"><?= e($m['icon']) ?></span>
+            <div>
+              <h4><?= e($m['title']) ?></h4>
+              <p><?= e($m['body']) ?></p>
+            </div>
+          </div>
 <?php endforeach; ?>
+        </div>
+      </div>
+      <div class="agent-right reveal d1">
+        <img src="<?= snip('platform.agent.screenshot', 'assets/images/platform/agent-screen.webp') ?>" alt="Antibody Agent 运行截图" loading="lazy">
+      </div>
     </div>
   </div>
 </section>
 
-<!-- 屏 3 · 真实数据驱动（GLP-1R / CXCR4 / CD3，2b-1 用 case-anim 3 动图占位）-->
+<!-- ═══════════════ 屏 3 · Data #data（深） ═══════════════ -->
 <section class="section section-dark" id="data">
   <div class="container">
-    <div class="text-center" style="margin-bottom:8px">
+    <div class="text-center" style="margin-bottom:44px">
       <span class="eyebrow reveal"><?= snip('platform.data.eyebrow', '真实数据驱动') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('platform.data.title', 'AI 平台已支撑的靶点谱系') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('platform.data.sub', '覆盖 GPCR、T 细胞激动、免疫肿瘤等靶点类型') ?></p>
+      <h2 class="section-title reveal d1"><?= snip_raw('platform.data.title', '真实数据驱动<span class="txt-neon">抗体设计与预测</span>') ?></h2>
+      <p class="section-sub reveal d2"><?= snip('platform.data.sub', '整合抗体序列、靶点、结构与实验结果，为候选设计、筛选和优化提供依据。') ?></p>
     </div>
-    <div class="data-viz-grid">
-      <div class="data-viz-card reveal">
-        <div class="data-viz-head"><b>GLP-1R</b> · <span>GPCR / 减重靶点</span></div>
-        <svg class="data-viz-svg" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GLP-1R dose-response 示意">
-          <line x1="30" y1="115" x2="185" y2="115" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
-          <line x1="30" y1="20"  x2="30"  y2="115" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
-          <path d="M30,110 Q80,108 100,80 T170,25" stroke="#a58bff" stroke-width="2.5" fill="none"/>
-          <circle cx="105" cy="72" r="4" fill="#a58bff"/>
-          <text x="112" y="70" font-size="9" fill="#a58bff">IC50</text>
-          <text x="107" y="132" font-size="9" text-anchor="middle" fill="rgba(255,255,255,.55)">log[antibody]</text>
-          <text x="12" y="70" font-size="9" fill="rgba(255,255,255,.55)" transform="rotate(-90 12 70)">activity</text>
-        </svg>
-        <p class="data-viz-note">示意 · 具体结果按项目 NDA</p>
+
+    <div class="data-hero-grid reveal">
+      <div class="data-side">
+<?php foreach ($dataCards as $c): ?>
+        <div class="data-side-card">
+          <h4><?= e($c['title']) ?></h4>
+          <p><?= e($c['body']) ?></p>
+        </div>
+<?php endforeach; ?>
       </div>
-      <div class="data-viz-card reveal d1">
-        <div class="data-viz-head"><b>CXCR4</b> · <span>GPCR / 免疫肿瘤靶点</span></div>
-        <svg class="data-viz-svg" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CXCR4 亲和力对比示意">
-          <line x1="30" y1="115" x2="185" y2="115" stroke="rgba(255,255,255,.4)" stroke-width="1"/>
-          <rect x="55"  y="35" width="24" height="80" fill="#a58bff"/>
-          <rect x="95"  y="50" width="24" height="65" fill="#8b73ff"/>
-          <rect x="135" y="80" width="24" height="35" fill="rgba(255,255,255,.35)"/>
-          <text x="67"  y="30" font-size="9" text-anchor="middle" fill="#a58bff">候选 A</text>
-          <text x="107" y="45" font-size="9" text-anchor="middle" fill="#8b73ff">候选 B</text>
-          <text x="147" y="75" font-size="9" text-anchor="middle" fill="rgba(255,255,255,.55)">参照</text>
-          <text x="107" y="132" font-size="9" text-anchor="middle" fill="rgba(255,255,255,.55)">KD (lower = stronger)</text>
-        </svg>
-        <p class="data-viz-note">示意 · 具体结果按项目 NDA</p>
+      <div class="data-main">
+        <div class="data-flow">
+          <span class="data-flow-pill data-flow-pill--in">数据输入</span>
+          <span class="data-flow-arrow">→</span>
+          <span class="data-flow-pill data-flow-pill--ai">AI 分析</span>
+          <span class="data-flow-arrow">→</span>
+          <span class="data-flow-pill data-flow-pill--in">候选输出</span>
+        </div>
+        <div class="data-plot data-plot--hero">
+          <div class="data-plot-head">
+            <b><?= e($DATA_PLOTS['hero']['title']) ?></b>
+            <div class="data-plot-tags">
+<?php foreach ($DATA_PLOTS['hero']['tags'] as $t): ?>
+              <span class="data-plot-tag"><?= e($t) ?></span>
+<?php endforeach; ?>
+            </div>
+          </div>
+          <img src="<?= e($DATA_PLOTS['hero']['src']) ?>" alt="GLP-1R 结合曲线" loading="lazy">
+          <p class="data-plot-caption"><?= e($DATA_PLOTS['hero']['caption']) ?></p>
+          <details class="data-plot-details">
+            <summary><?= e($DATA_PLOTS['hero']['detail_label']) ?></summary>
+            <img src="<?= e($DATA_PLOTS['hero']['detail']) ?>" alt="抗体候选序列" loading="lazy">
+          </details>
+        </div>
       </div>
-      <div class="data-viz-card reveal d2">
-        <div class="data-viz-head"><b>CD3</b> · <span>T 细胞激动靶点</span></div>
-        <svg class="data-viz-svg" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CD3 结合特异性 heatmap 示意">
-<?php
-  $colors = ['#3b2b7a', '#5f4bb7', '#8b73ff', '#c5b4ff'];
-  $heatmap = [[3,2,1,0], [2,3,2,1], [1,2,3,2], [0,1,2,3]];
-  foreach ($heatmap as $ri => $row):
-    foreach ($row as $ci => $v):
-      $x = 45 + $ci * 26; $y = 20 + $ri * 26;
-?>
-          <rect x="<?= $x ?>" y="<?= $y ?>" width="24" height="24" fill="<?= $colors[$v] ?>" stroke="#0d1122" stroke-width="1"/>
-<?php endforeach; endforeach; ?>
-          <text x="107" y="132" font-size="9" text-anchor="middle" fill="rgba(255,255,255,.55)">binding specificity map</text>
-        </svg>
-        <p class="data-viz-note">示意 · 具体结果按项目 NDA</p>
+    </div>
+
+    <div class="data-twin-grid reveal d1" style="margin-top:32px">
+<?php foreach ($DATA_PLOTS['twin'] as $p): ?>
+      <div class="data-plot">
+        <div class="data-plot-head">
+          <b><?= e($p['title']) ?></b>
+          <div class="data-plot-tags">
+<?php foreach ($p['tags'] as $t): ?>
+            <span class="data-plot-tag"><?= e($t) ?></span>
+<?php endforeach; ?>
+          </div>
+        </div>
+        <img src="<?= e($p['src']) ?>" alt="<?= e($p['title']) ?>" loading="lazy">
       </div>
+<?php endforeach; ?>
     </div>
   </div>
 </section>
 
-<!-- 屏 4 · 全流程实验平台（VLP + 微流控 6 卡占位，2b-2 补实拍）-->
+<!-- ═══════════════ 屏 4a · Lab #lab 全流程实验平台（白） ═══════════════ -->
 <section class="section section-light" id="lab">
   <div class="container">
-    <div class="text-center" style="margin-bottom:36px">
-      <span class="eyebrow reveal"><?= snip('tech.p3.eyebrow', 'Wet lab to validate') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('tech.p3.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('tech.p3.sub') ?></p>
+    <div class="lab-hero-photo reveal">
+      <img src="<?= snip('platform.lab.hero_photo', 'assets/images/platform/lab-auto-room.webp') ?>" alt="自动化抗体发现实验平台全景" loading="lazy">
     </div>
-    <div class="grid-3" style="gap:20px">
-<?php
-  $labItems = [
-    ['1', '🧬'], ['2', '🧪'], ['3', '📐'],
-    ['4', '🔬'], ['5', '⚛️'], ['6', '💧'],
-  ];
-  foreach ($labItems as $i => [$n, $icon]):
-    $rev = $i ? ' d' . min($i, 4) : '';
-?>
-      <div class="card reveal<?= $rev ?>" style="text-align:center;padding:26px 20px">
-        <div style="font-size:36px;line-height:1;margin-bottom:10px"><?= $icon ?></div>
-        <h3 style="font-size:16px;font-weight:700;margin:0 0 6px"><?= snip('platform.lab.item' . $n . '.title', 'lab item ' . $n) ?></h3>
-        <p style="font-size:13px;color:var(--ink-3);margin:0;line-height:1.55"><?= snip('platform.lab.item' . $n . '.body', '') ?></p>
+
+    <div class="lab-grid" style="margin-top:36px">
+      <div>
+        <span class="eyebrow reveal"><?= snip('platform.lab.eyebrow', '全流程抗体发现实验平台') ?></span>
+        <h2 class="section-title reveal d1"><?= snip_raw('platform.lab.title', 'VLP 天然构象呈递 × <span class="txt-neon">高通量自动化筛选</span>') ?></h2>
+      </div>
+      <div class="lab-caps reveal d1">
+<?php foreach ($labCaps as $c): ?>
+        <div class="lab-cap">
+          <h4><?= e($c['title']) ?></h4>
+          <p><?= e($c['body']) ?></p>
+        </div>
+<?php endforeach; ?>
+      </div>
+    </div>
+
+    <div class="lab-mf" style="margin-top:56px">
+      <h3 class="lab-mf-title reveal"><?= snip('platform.lab.mf_title', '微流控液滴技术平台') ?></h3>
+<?php foreach ($LAB_MICRO as $row): ?>
+      <div class="lab-mf-row reveal d1">
+        <div class="lab-mf-label"><?= e($row['label']) ?></div>
+        <div class="lab-mf-items">
+<?php foreach ($row['items'] as $it): ?>
+          <figure class="lab-mf-item">
+            <img src="<?= e($it['src']) ?>" alt="<?= e($it['caption']) ?>" loading="lazy">
+            <figcaption><?= e($it['caption']) ?></figcaption>
+          </figure>
+<?php endforeach; ?>
+        </div>
       </div>
 <?php endforeach; ?>
+    </div>
+
+    <!-- ═════ 屏 4b · VLP 钓饵技术（同白，虚线接续） ═════ -->
+    <div class="subsection vlp-subsection" style="margin-top:56px">
+      <div class="vlp-grid">
+        <div class="vlp-left reveal">
+          <img src="<?= snip('platform.vlp.diagram', 'assets/images/platform/vlp-diagram.webp') ?>" alt="VLP 钓饵技术示意" loading="lazy">
+        </div>
+        <div class="vlp-right">
+          <h2 class="section-title reveal"><?= snip('platform.vlp.title', 'VLP 钓饵技术') ?></h2>
+          <p class="vlp-lead reveal d1"><?= snip('platform.vlp.lead', '让复杂抗原的展示更接近天然状态') ?></p>
+          <p class="vlp-body reveal d2"><?= snip('platform.vlp.body') ?></p>
+          <h3 class="vlp-mid reveal d3"><?= snip('platform.vlp.mid_title', '尤其适用于传统抗原制备困难的靶点') ?></h3>
+          <div class="vlp-kinds reveal d3">
+<?php foreach ($vlpKinds as $k): ?>
+            <div class="vlp-kind">
+              <h4><?= e($k['title']) ?></h4>
+              <p><?= e($k['body']) ?></p>
+            </div>
+<?php endforeach; ?>
+          </div>
+          <div class="vlp-targets reveal d3">
+            <span class="vlp-targets-label"><?= snip('platform.vlp.targets_label', '代表性靶点') ?>：</span>
+            <span class="vlp-targets-value"><?= snip('platform.vlp.targets', 'GPCR ｜ 离子通道 ｜ 转运体') ?></span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- 干湿闭环 -->
-<section class="section bg-soft" id="flow">
+<!-- ═══════════════ 屏 5 · Loop #loop 干湿闭环（深） ═══════════════ -->
+<section class="section section-dark" id="loop">
   <div class="container">
     <div class="text-center" style="margin-bottom:44px">
-      <span class="eyebrow green reveal"><?= snip('agent.flow.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('agent.flow.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('agent.flow.sub') ?></p>
+      <span class="eyebrow reveal"><?= snip('platform.loop.eyebrow', '干湿闭环') ?></span>
+      <h2 class="section-title reveal d1"><?= snip_raw('platform.loop.title', '从 <span class="txt-neon">Antibody Agent</span> 到实验验证，一条完整的<span class="txt-neon">抗体发现闭环</span>') ?></h2>
+      <p class="section-sub reveal d2"><?= snip('platform.loop.sub', 'AI 设计与实验结果双向回流，让每一轮实验结果成为下一轮设计与优化的依据。') ?></p>
     </div>
-    <svg class="ring-flow reveal" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MabSeek 干湿闭环流程">
-      <defs>
-        <marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,-5L10,0L0,5" fill="var(--purple-400)"/>
-        </marker>
-        <linearGradient id="gradBrand" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0%" stop-color="#6D3BEB"/>
-          <stop offset="55%" stop-color="#5b6bff"/>
-          <stop offset="100%" stop-color="#00E0A4"/>
-        </linearGradient>
-      </defs>
-      <circle cx="300" cy="300" r="80" fill="var(--purple-050)" stroke="var(--purple-100)" stroke-width="2"/>
-      <text x="300" y="295" text-anchor="middle" font-size="18" font-weight="700" fill="var(--purple)">MabSeek</text>
-      <text x="300" y="320" text-anchor="middle" font-size="14" fill="var(--ink-3)">干湿闭环</text>
-<?php
-  $nodes = [
-    ['一句话需求', '🎯', 'dry'],
-    ['AI 设计筛选', '🧠', 'dry'],
-    ['表达纯化',   '🧪', 'wet'],
-    ['功能验证',   '🔬', 'wet'],
-    ['结果交付',   '📊', 'brand'],
-  ];
-  $cx = 300; $cy = 300; $r = 220;
-  foreach ($nodes as $i => [$label, $icon, $kind]):
-    $angle = (-90 + $i * 72) * M_PI / 180;
-    $x = $cx + $r * cos($angle);
-    $y = $cy + $r * sin($angle);
-    $fill     = $kind === 'dry' ? 'var(--purple-050)' : ($kind === 'wet' ? 'var(--green-100)' : 'url(#gradBrand)');
-    $stroke   = $kind === 'dry' ? 'var(--purple-400)' : ($kind === 'wet' ? '#06a97c' : 'var(--purple)');
-    $textFill = $kind === 'brand' ? '#fff' : 'var(--ink)';
-?>
-      <g class="ring-node ring-node--<?= $kind ?>">
-        <circle cx="<?= round($x) ?>" cy="<?= round($y) ?>" r="54" fill="<?= $fill ?>" stroke="<?= $stroke ?>" stroke-width="2.5"/>
-        <text x="<?= round($x) ?>" y="<?= round($y - 6) ?>" text-anchor="middle" font-size="22"><?= $icon ?></text>
-        <text x="<?= round($x) ?>" y="<?= round($y + 22) ?>" text-anchor="middle" font-size="11" font-weight="700" fill="<?= $textFill ?>"><?= $label ?></text>
-      </g>
+
+    <div class="loop-grid">
+      <div class="loop-side">
+<?php foreach ($loopSides as $s): ?>
+        <div class="loop-side-card reveal">
+          <h4><?= e($s['title']) ?></h4>
+          <p><?= e($s['body']) ?></p>
+        </div>
 <?php endforeach; ?>
-<?php
-  for ($i = 0; $i < 5; $i++):
-    $a1 = (-90 + $i * 72) * M_PI / 180;
-    $a2 = (-90 + ($i + 1) * 72) * M_PI / 180;
-    $x1 = $cx + ($r - 60) * cos($a1); $y1 = $cy + ($r - 60) * sin($a1);
-    $x2 = $cx + ($r - 60) * cos($a2); $y2 = $cy + ($r - 60) * sin($a2);
-    $arc = $r - 40;
-?>
-      <path d="M<?= round($x1) ?>,<?= round($y1) ?> A<?= $arc ?>,<?= $arc ?> 0 0 1 <?= round($x2) ?>,<?= round($y2) ?>" fill="none" stroke="var(--purple-400)" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="4 3" opacity=".7"/>
-<?php endfor; ?>
-    </svg>
-    <div id="wetlab" class="reveal d1" style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;background:#0d1122;border:1px solid var(--line-dark);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--sh-lg)">
-      <div>
-        <h3 style="font-size:24px;color:#fff"><?= snip('agent.wetlab.title') ?></h3>
-        <p style="color:var(--ink-on-dark-2);margin-top:10px"><?= snip('agent.wetlab.body') ?></p>
-        <div class="tag-row" style="margin-top:16px"><span class="tag">表达纯化</span><span class="tag">亲和力测定</span><span class="tag green">功能验证</span><span class="tag">结构解析</span></div>
-        <a href="#" class="btn btn-green" style="margin-top:20px" data-demo="正式版将开放在线下单">🧪 一键下单湿实验</a>
       </div>
-      <div style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--sh)"><img src="assets/images/antibody-structure.webp" alt="抗体结构" onerror="this.parentElement.style.display='none'"></div>
-    </div>
-  </div>
-</section>
-
-<!-- 屏 6 · 临床与学术成果（左 4 条文字 + 右 agent.matrix 8 chips 占位）-->
-<section class="section section-light" id="clinical">
-  <div class="container">
-    <div class="text-center" style="margin-bottom:34px">
-      <span class="eyebrow reveal"><?= snip('platform.clinical.eyebrow', '临床与学术成果') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('platform.clinical.title', '真实世界数据 · 复杂靶点覆盖') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('platform.clinical.sub', '已支撑多个新药项目推进临床阶段，覆盖 GPCR、离子通道等复杂膜蛋白靶点。') ?></p>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr;gap:14px;max-width:760px;margin:0 auto">
-<?php for ($n = 1; $n <= 4; $n++):
-  $default = ['▸ 支撑多家药企的抗体发现 pipeline',
-              '▸ 已推进多个候选进入 IND-enabling 阶段',
-              '▸ 覆盖 GLP-1R / CXCR4 / CD3 等复杂膜蛋白',
-              '▸ Nature / Cell 系列论文（清华医学院）'][$n - 1];
+      <div class="loop-ring reveal d1">
+        <div class="loop-ring-center">
+          <img src="<?= snip('platform.loop.center_logo', 'assets/images/logo.webp') ?>" alt="MabSeek" onerror="this.style.display='none'">
+          <span><?= snip('platform.loop.center_label', 'MabSeek 抗体求索') ?></span>
+        </div>
+<?php
+$ringCount = count($loopRings) ?: 5;
+foreach ($loopRings as $i => $n):
+    $extra = json_decode($n['extra'] ?: '{}', true) ?: [];
+    $side = $extra['side'] ?? 'dry';
+    $angle = (-90 + $i * (360 / $ringCount));
 ?>
-      <div class="reveal<?= $n > 1 ? ' d' . min($n - 1, 3) : '' ?>" style="padding:14px 18px;background:var(--bg-soft);border-radius:var(--radius);font-size:15px;color:var(--ink-2)"><?= snip('platform.clinical.item' . $n, $default) ?></div>
-<?php endfor; ?>
-    </div>
-  </div>
-</section>
-
-<!-- 智能体矩阵（作为能力矩阵占位；2b-2 换为 3D 膜蛋白结构）-->
-<section class="section section-light" id="agents">
-  <div class="container">
-    <div style="margin-bottom:34px">
-      <span class="eyebrow reveal"><?= snip('agent.matrix.eyebrow') ?></span>
-      <h2 class="section-title reveal d1"><?= snip('agent.matrix.title') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('agent.matrix.sub') ?></p>
-    </div>
-<?php $rows = array_chunk($matrix, 4); foreach ($rows as $ri => $row): ?>
-    <div class="grid-4"<?= $ri === 1 ? ' style="margin-top:16px"' : '' ?>>
-<?php foreach ($row as $j => $m): $ex = json_decode($m['extra'] ?: '{}', true);
-  $cls = 'agent-chip' . (!empty($ex['active']) ? ' active' : '') . ' reveal' . ($j ? ' d' . $j : ''); ?>
-      <div class="<?= $cls ?>"><span class="ai" style="background:<?= e($ex['ai_bg'] ?? '') ?>"><?= e($m['icon']) ?></span><div><h4><?= e($m['title']) ?></h4><p><?= e($m['body']) ?></p><?php if (!empty($ex['link_href']) && preg_match('#^https?://#i', $ex['link_href'])): ?><a class="chip-link" href="<?= e($ex['link_href']) ?>" target="_blank" rel="noopener"><?= e($ex['link_text']) ?></a><?php endif; ?></div></div>
+        <div class="loop-ring-node loop-ring-node--<?= e($side) ?>" style="--ang:<?= $angle ?>deg">
+          <h4><?= e($n['title']) ?></h4>
+          <p><?= e($n['body']) ?></p>
+        </div>
 <?php endforeach; ?>
+      </div>
     </div>
-<?php endforeach; ?>
+
+    <div class="loop-tempo reveal d2" style="margin-top:44px">
+      <?= snip('platform.loop.tempo', '设计 → 验证 → 分析 → 优化') ?>
+    </div>
   </div>
 </section>
 
-<!-- 屏 7 · CTA 黑底试用 -->
-<section class="section-sm" id="cta">
+<!-- ═══════════════ 屏 6 · Case #case 代表性成果（白） ═══════════════ -->
+<section class="section section-light" id="case">
   <div class="container">
-    <div class="reveal agent-cta">
-      <h2 style="font-size:clamp(26px,3.6vw,38px);color:#fff;position:relative;z-index:1"><?= snip('agent.cta.title') ?></h2>
-      <p style="color:var(--ink-on-dark-2);font-size:17px;margin:14px auto 26px;max-width:560px;position:relative;z-index:1"><?= snip('agent.cta.sub') ?></p>
-      <a href="login.php?next=platform.php&trial=1" data-trial-cta="1" class="btn btn-green btn-lg" style="position:relative;z-index:1"><?= snip('agent.cta.btn') ?></a>
+    <div class="text-center" style="margin-bottom:44px">
+      <span class="eyebrow reveal"><?= snip('platform.case.eyebrow', '代表性成果与平台验证') ?></span>
+    </div>
+
+    <!-- 上·临床转化 -->
+    <div class="case-block case-block--clinical">
+      <div class="case-photo reveal">
+        <img src="<?= snip('platform.case.clinical_photo', 'assets/images/platform/case-clinical.webp') ?>" alt="安巴韦单抗 / 罗米司韦单抗" loading="lazy">
+      </div>
+      <div class="case-text">
+        <h3 class="reveal"><?= snip('platform.case.clinical_title', '从抗体发现到临床转化') ?></h3>
+        <div class="case-sub reveal d1"><?= snip('platform.case.clinical_sub', '安巴韦单抗 / 罗米司韦单抗') ?></div>
+        <div class="case-stats reveal d2">
+<?php foreach ($caseStats as $s): ?>
+          <div class="case-stat">
+            <div class="case-stat-num"><?= e($s['title']) ?></div>
+            <div class="case-stat-label"><?= e($s['body']) ?></div>
+          </div>
+<?php endforeach; ?>
+        </div>
+        <p class="case-note reveal d3"><?= snip('platform.case.clinical_note') ?></p>
+      </div>
+    </div>
+
+    <!-- 下·复杂膜蛋白靶点实践 -->
+    <div class="case-block case-block--vlp" style="margin-top:64px">
+      <div class="case-text">
+        <h3 class="reveal"><?= snip('platform.case.vlp_title', '复杂膜蛋白靶点的抗体发现实践') ?></h3>
+        <div class="case-vlp-rows reveal d1">
+<?php foreach ($caseVlps as $v): ?>
+          <div class="case-vlp-row">
+            <div class="case-vlp-title"><?= e($v['title']) ?></div>
+            <div class="case-vlp-body"><?= e($v['body']) ?></div>
+          </div>
+<?php endforeach; ?>
+        </div>
+      </div>
+      <div class="case-photo reveal d1">
+        <img src="<?= snip('platform.case.vlp_photo', 'assets/images/platform/case-membrane-targets.webp') ?>" alt="复杂膜蛋白靶点" loading="lazy">
+      </div>
     </div>
   </div>
 </section>
 
-<!-- 页脚 -->
+<!-- ═══════════════ 屏 7 · Try #try 试用 CTA（纯黑） ═══════════════ -->
+<section class="try-cta" id="try">
+  <div class="container">
+    <div class="try-brand reveal"><span class="try-brand-mab"><?= snip('platform.try.brand_mab', 'Mab') ?></span><span class="try-brand-seek"><?= snip('platform.try.brand_seek', 'Seek') ?></span></div>
+    <h2 class="try-title reveal d1"><?= snip('platform.try.title', '让抗体发现，从一个问题开始') ?></h2>
+    <p class="try-sub reveal d2"><?= snip('platform.try.sub', '从研究问题出发，通过 Antibody Agent 连接设计、预测与实验。') ?></p>
+    <a href="<?= snip('platform.try.cta_href', 'login.php?next=platform.php&trial=1') ?>" data-trial-cta="1" class="btn btn-green btn-lg try-btn reveal d3"><?= snip('platform.try.cta', '开始试用 →') ?></a>
+  </div>
+</section>
+
 <?php include __DIR__ . '/partials/footer.php'; ?>
 
 <script src="assets/js/main.js"></script>
-<script src="assets/js/agent-demo.js"></script>
-<script src="assets/js/agent-cases.js"></script>
 </body>
 </html>
