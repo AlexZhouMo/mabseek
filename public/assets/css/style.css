@@ -838,7 +838,9 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 /* 平台页各屏 section-title 收紧，避免视觉过大（屏 3/5/6 共用） */
 .platform-page .section-title { font-size: clamp(24px, 3vw, 36px); margin: 12px 0 10px; }
 .platform-page .section-sub { font-size: 15px; }
-.platform-page .section { padding: 72px 0; }
+.platform-page .section { padding: 64px 0; }
+.platform-page .hero { padding: calc(var(--nav-h) + 48px) 0 72px; }
+.platform-page .try-cta { padding: 88px 20px; }
 /* 窄容器（< 720px）时允许 pflow 换行，避免溢出 */
 @media (max-width: 900px) {
   .pflow { flex-wrap: wrap; gap: 8px; }
@@ -859,63 +861,63 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 /* ── 屏 3 · Data 左侧卡片 + 右侧 hero 图 + 下方双图 ── */
 .data-hero-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 24px; align-items: stretch; }
 .data-side { display: flex; flex-direction: column; gap: 14px; }
-.data-side-card { padding: 20px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); }
+.data-side-card { flex: 1; padding: 20px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); display: flex; flex-direction: column; justify-content: center; }
 .data-side-card h4 { color: var(--green-neon, var(--green)); font-size: 15px; margin: 0 0 6px; }
 .data-side-card p { color: var(--ink-on-dark-2, rgba(255,255,255,.72)); font-size: 13.5px; line-height: 1.6; margin: 0; }
-.data-main { display: flex; flex-direction: column; gap: 14px; }
-.data-flow { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 999px; align-self: center; }
+.data-main { display: flex; flex-direction: column; gap: 12px; }
+.data-flow { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 999px; align-self: center; }
 .data-flow-pill { padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; }
 .data-flow-pill--in { background: linear-gradient(135deg, var(--purple), var(--purple-600)); }
 .data-flow-pill--ai { background: linear-gradient(135deg, #12D6A0, #00E0A4); color: #04231b; }
 .data-flow-arrow { color: rgba(255,255,255,.5); font-size: 14px; }
-.data-plot { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius); padding: 16px; }
-.data-plot img { width: 100%; max-height: 320px; height: auto; display: block; border-radius: var(--radius-sm); background: #0a0d1e; object-fit: contain; }
-.data-plot--hero img { max-height: 380px; }
-.data-plot-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 10px; }
+.data-plot { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius); padding: 14px 16px; }
+.data-plot img { width: 100%; max-height: 300px; height: auto; display: block; border-radius: var(--radius-sm); background: #0a0d1e; object-fit: contain; }
+.data-plot--hero img { max-height: 320px; }
+.data-plot-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 8px; }
 .data-plot-head b { color: #fff; font-size: 16px; }
 .data-plot-tags { display: flex; flex-wrap: wrap; gap: 5px; }
 .data-plot-tag { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; background: rgba(0,224,164,.1); color: var(--green-neon, var(--green)); border: 1px solid rgba(0,224,164,.25); }
-.data-plot-caption { color: rgba(255,255,255,.55); font-size: 11.5px; margin-top: 8px; font-style: italic; }
-.data-plot-details { margin-top: 10px; }
-.data-plot-details summary { cursor: pointer; color: var(--green-neon, var(--green)); font-size: 12.5px; font-weight: 700; padding: 6px 0; user-select: none; }
-.data-plot-details[open] summary { margin-bottom: 8px; }
+.data-plot-caption { color: rgba(255,255,255,.55); font-size: 11.5px; margin-top: 6px; font-style: italic; }
+.data-plot-details { margin-top: 8px; }
+.data-plot-details summary { cursor: pointer; color: var(--green-neon, var(--green)); font-size: 12.5px; font-weight: 700; padding: 4px 0; user-select: none; }
+.data-plot-details[open] summary { margin-bottom: 6px; }
 .data-plot-details img { margin-top: 6px; }
-.data-twin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.data-twin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
 @media (max-width: 900px) { .data-hero-grid, .data-twin-grid { grid-template-columns: 1fr; } }
 
 /* ── 屏 4a · Lab 全景 + 5:7 三能力 + 微流控 6 图 ── */
 .lab-hero-photo { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh-lg); aspect-ratio: 24 / 9; background: #0a0d1e; }
 .lab-hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .lab-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: center; }
-.lab-caps { display: grid; grid-template-columns: 1fr; gap: 14px; }
-.lab-cap { padding: 18px 22px; background: var(--bg-soft); border-left: 3px solid var(--purple); border-radius: var(--radius-sm); }
-.lab-cap h4 { font-size: 16px; margin: 0 0 6px; color: var(--ink); }
-.lab-cap p { font-size: 14px; color: var(--ink-3); margin: 0; line-height: 1.6; }
-.lab-mf-title { text-align: center; font-size: 20px; color: var(--ink-2); margin: 0 0 24px; }
-.lab-mf-row { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; margin-bottom: 20px; }
-.lab-mf-label { font-size: 15px; font-weight: 700; color: var(--purple); background: var(--purple-050); padding: 10px 14px; border-radius: 10px; white-space: nowrap; }
-.lab-mf-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.lab-caps { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.lab-cap { padding: 14px 18px; background: var(--bg-soft); border-left: 3px solid var(--purple); border-radius: var(--radius-sm); }
+.lab-cap h4 { font-size: 15px; margin: 0 0 4px; color: var(--ink); }
+.lab-cap p { font-size: 13.5px; color: var(--ink-3); margin: 0; line-height: 1.55; }
+.lab-mf-title { text-align: center; font-size: 18px; color: var(--ink-2); margin: 0 0 20px; }
+.lab-mf-row { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; margin-bottom: 14px; }
+.lab-mf-label { font-size: 14px; font-weight: 700; color: var(--purple); background: var(--purple-050); padding: 8px 12px; border-radius: 10px; white-space: nowrap; }
+.lab-mf-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .lab-mf-item { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--sh-sm); }
 .lab-mf-item img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
-.lab-mf-item figcaption { padding: 8px 12px; font-size: 12px; color: var(--ink-3); text-align: center; }
+.lab-mf-item figcaption { padding: 6px 10px; font-size: 11.5px; color: var(--ink-3); text-align: center; }
 @media (max-width: 900px) { .lab-grid { grid-template-columns: 1fr; } .lab-mf-row { grid-template-columns: 1fr; } .lab-mf-items { grid-template-columns: 1fr; } }
 
 /* ── 屏 4b · VLP 钓饵技术（虚线分隔，同白背景） ── */
-.vlp-subsection { padding-top: 40px; border-top: 1px dashed var(--line); }
-.vlp-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 40px; align-items: center; }
-.vlp-left { border-radius: var(--radius); overflow: hidden; }
+.vlp-subsection { padding-top: 32px; border-top: 1px dashed var(--line); }
+.vlp-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: center; }
+.vlp-left { border-radius: var(--radius); overflow: hidden; max-width: 460px; margin-right: auto; }
 .vlp-left img { display: block; width: 100%; height: auto; }
-.vlp-lead { font-size: 18px; color: var(--purple); font-weight: 700; margin: 8px 0 14px; }
-.vlp-body { color: var(--ink-2); line-height: 1.75; margin-bottom: 22px; }
-.vlp-mid { font-size: 15px; color: var(--ink-2); margin: 0 0 14px; font-weight: 700; }
-.vlp-kinds { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 18px; }
-.vlp-kind { padding: 14px 18px; background: var(--green-100); border-left: 3px solid #06a97c; border-radius: var(--radius-sm); }
+.vlp-lead { font-size: 17px; color: var(--purple); font-weight: 700; margin: 6px 0 12px; }
+.vlp-body { color: var(--ink-2); line-height: 1.7; margin-bottom: 18px; font-size: 14.5px; }
+.vlp-mid { font-size: 14px; color: var(--ink-2); margin: 0 0 12px; font-weight: 700; }
+.vlp-kinds { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
+.vlp-kind { padding: 12px 16px; background: var(--green-100); border-left: 3px solid #06a97c; border-radius: var(--radius-sm); }
 .vlp-kind h4 { font-size: 14px; color: #06563e; margin: 0 0 4px; }
-.vlp-kind p { font-size: 13px; color: var(--ink-2); margin: 0; line-height: 1.6; }
-.vlp-targets { padding: 12px 16px; background: var(--purple-050); border-radius: var(--radius-sm); font-size: 14px; }
+.vlp-kind p { font-size: 13px; color: var(--ink-2); margin: 0; line-height: 1.55; }
+.vlp-targets { padding: 10px 14px; background: var(--purple-050); border-radius: var(--radius-sm); font-size: 13.5px; }
 .vlp-targets-label { color: var(--purple); font-weight: 700; }
 .vlp-targets-value { color: var(--ink-2); }
-@media (max-width: 900px) { .vlp-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .vlp-grid { grid-template-columns: 1fr; } .vlp-left { max-width: 320px; margin: 0 auto; } }
 
 /* ── 屏 5 · Loop 干湿闭环 5:7 分栏 + 右侧环形 5 模块 ── */
 .loop-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: center; }
@@ -939,7 +941,7 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 @media (max-width: 900px) { .loop-grid { grid-template-columns: 1fr; } .loop-ring { max-width: 380px; } .loop-ring-node { transform: translate(-50%,-50%) rotate(var(--ang)) translateY(-125px) rotate(calc(-1 * var(--ang))); width: 40%; } }
 
 /* ── 屏 6 · Case 代表性成果（上 5:7 · 下 7:5） ── */
-.case-block { display: grid; gap: 40px; align-items: center; }
+.case-block { display: grid; gap: 32px; align-items: center; }
 .case-block--clinical { grid-template-columns: 5fr 7fr; }
 .case-block--vlp { grid-template-columns: 7fr 5fr; }
 .case-photo { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh-lg); }

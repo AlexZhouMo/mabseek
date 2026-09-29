@@ -124,7 +124,7 @@ $LAB_MICRO = [
 <!-- ═══════════════ 屏 3 · Data #data（深） ═══════════════ -->
 <section class="section section-dark" id="data">
   <div class="container">
-    <div class="text-center" style="margin-bottom:44px">
+    <div class="text-center" style="margin-bottom:32px">
       <span class="eyebrow reveal"><?= snip('platform.data.eyebrow', '真实数据驱动') ?></span>
       <h2 class="section-title reveal d1"><?= snip_raw('platform.data.title', '真实数据驱动<span class="txt-neon">抗体设计与预测</span>') ?></h2>
       <p class="section-sub reveal d2"><?= snip('platform.data.sub', '整合抗体序列、靶点、结构与实验结果，为候选设计、筛选和优化提供依据。') ?></p>
@@ -166,7 +166,7 @@ $LAB_MICRO = [
       </div>
     </div>
 
-    <div class="data-twin-grid reveal d1" style="margin-top:32px">
+    <div class="data-twin-grid reveal d1">
 <?php foreach ($DATA_PLOTS['twin'] as $p): ?>
       <div class="data-plot">
         <div class="data-plot-head">
@@ -191,7 +191,7 @@ $LAB_MICRO = [
       <img src="<?= snip('platform.lab.hero_photo', 'assets/images/platform/lab-auto-room.webp') ?>" alt="自动化抗体发现实验平台全景" loading="lazy">
     </div>
 
-    <div class="lab-grid" style="margin-top:36px">
+    <div class="lab-grid" style="margin-top:28px">
       <div>
         <span class="eyebrow reveal"><?= snip('platform.lab.eyebrow', '全流程抗体发现实验平台') ?></span>
         <h2 class="section-title reveal d1"><?= snip_raw('platform.lab.title', 'VLP 天然构象呈递 × <span class="txt-neon">高通量自动化筛选</span>') ?></h2>
@@ -206,7 +206,7 @@ $LAB_MICRO = [
       </div>
     </div>
 
-    <div class="lab-mf" style="margin-top:56px">
+    <div class="lab-mf" style="margin-top:40px">
       <h3 class="lab-mf-title reveal"><?= snip('platform.lab.mf_title', '微流控液滴技术平台') ?></h3>
 <?php foreach ($LAB_MICRO as $row): ?>
       <div class="lab-mf-row reveal d1">
@@ -224,7 +224,7 @@ $LAB_MICRO = [
     </div>
 
     <!-- ═════ 屏 4b · VLP 钓饵技术（同白，虚线接续） ═════ -->
-    <div class="subsection vlp-subsection" style="margin-top:56px">
+    <div class="subsection vlp-subsection" style="margin-top:40px">
       <div class="vlp-grid">
         <div class="vlp-left reveal">
           <img src="<?= snip('platform.vlp.diagram', 'assets/images/platform/vlp-diagram.webp') ?>" alt="VLP 钓饵技术示意" loading="lazy">
@@ -255,7 +255,7 @@ $LAB_MICRO = [
 <!-- ═══════════════ 屏 5 · Loop #loop 干湿闭环（深） ═══════════════ -->
 <section class="section section-dark" id="loop">
   <div class="container">
-    <div class="text-center" style="margin-bottom:44px">
+    <div class="text-center" style="margin-bottom:32px">
       <span class="eyebrow reveal"><?= snip('platform.loop.eyebrow', '干湿闭环') ?></span>
       <h2 class="section-title reveal d1"><?= snip_raw('platform.loop.title', '从 <span class="txt-neon">Antibody Agent</span> 到实验验证，一条完整的<span class="txt-neon">抗体发现闭环</span>') ?></h2>
       <p class="section-sub reveal d2"><?= snip('platform.loop.sub', 'AI 设计与实验结果双向回流，让每一轮实验结果成为下一轮设计与优化的依据。') ?></p>
@@ -292,7 +292,7 @@ foreach ($loopRings as $i => $n):
       </div>
     </div>
 
-    <div class="loop-tempo reveal d2" style="margin-top:44px">
+    <div class="loop-tempo reveal d2" style="margin-top:28px">
       <?= snip('platform.loop.tempo', '设计 → 验证 → 分析 → 优化') ?>
     </div>
   </div>
@@ -301,7 +301,7 @@ foreach ($loopRings as $i => $n):
 <!-- ═══════════════ 屏 6 · Case #case 代表性成果（白） ═══════════════ -->
 <section class="section section-light" id="case">
   <div class="container">
-    <div class="text-center" style="margin-bottom:44px">
+    <div class="text-center" style="margin-bottom:32px">
       <span class="eyebrow reveal"><?= snip('platform.case.eyebrow', '代表性成果与平台验证') ?></span>
     </div>
 
@@ -326,7 +326,7 @@ foreach ($loopRings as $i => $n):
     </div>
 
     <!-- 下·复杂膜蛋白靶点实践 -->
-    <div class="case-block case-block--vlp" style="margin-top:64px">
+    <div class="case-block case-block--vlp" style="margin-top:48px">
       <div class="case-text">
         <h3 class="reveal"><?= snip('platform.case.vlp_title', '复杂膜蛋白靶点的抗体发现实践') ?></h3>
         <div class="case-vlp-rows reveal d1">
