@@ -117,33 +117,60 @@ $S = [
     ['home.contact.title','与顶尖机构<span class="txt-neon">共建生态</span>','home','联系 标题(含标记)','textarea'],
     ['home.contact.h3','有建议或遇到了问题？欢迎告诉我们','home','联系 小标题','text'],
     // 首页近况横滚卡（结构固定，文字可编辑）——沿用 news 集合渲染？否：首页卡片文案与 about 不同，用 snippet
-    // ── batch 2b-1 · MabSeek 平台页新 snippet ──
-    ['platform.hero.cta1',        '开始试用',                                                       'platform_hero',     '平台 Hero·主 CTA', 'text'],
-    ['platform.hero.cta2',        '了解详情',                                                       'platform_hero',     '平台 Hero·副 CTA', 'text'],
-    ['platform.clinical.eyebrow', '临床与学术成果',                                                 'platform_clinical', '临床成果·小标签',  'text'],
-    ['platform.clinical.title',   '真实世界数据 · 复杂靶点覆盖',                                    'platform_clinical', '临床成果·标题',    'html'],
-    ['platform.clinical.sub',     '已支撑多个新药项目推进临床阶段，覆盖 GPCR、离子通道等复杂膜蛋白靶点。', 'platform_clinical', '临床成果·副标题',  'text'],
-    ['platform.clinical.item1',   '▸ 支撑 XX 家药企的抗体发现 pipeline',                            'platform_clinical', '临床成果·条目 1',  'text'],
-    ['platform.clinical.item2',   '▸ 已推进 X 个候选进入 IND-enabling 阶段',                        'platform_clinical', '临床成果·条目 2',  'text'],
-    ['platform.clinical.item3',   '▸ 覆盖 GLP-1R / CXCR4 / CD3 等复杂膜蛋白',                       'platform_clinical', '临床成果·条目 3',  'text'],
-    ['platform.clinical.item4',   '▸ Nature / Cell 系列论文 X 篇（清华医学院）',                    'platform_clinical', '临床成果·条目 4',  'text'],
-    ['platform.lab.item1.title',  'VLP 类病毒颗粒',                                                 'platform_lab',      '实验·VLP 标题',    'text'],
-    ['platform.lab.item1.body',   '类病毒颗粒展示 · 真核 / 原核表达',                               'platform_lab',      '实验·VLP 描述',    'text'],
-    ['platform.lab.item2.title',  '表达纯化',                                                       'platform_lab',      '实验·纯化 标题',   'text'],
-    ['platform.lab.item2.body',   'HEK293 / CHO 表达 · 亲和层析纯化',                               'platform_lab',      '实验·纯化 描述',   'text'],
-    ['platform.lab.item3.title',  '亲和力测定',                                                     'platform_lab',      '实验·亲和力 标题', 'text'],
-    ['platform.lab.item3.body',   'SPR / BLI / ELISA 多平台并行',                                   'platform_lab',      '实验·亲和力 描述', 'text'],
-    ['platform.lab.item4.title',  '功能验证',                                                       'platform_lab',      '实验·功能 标题',   'text'],
-    ['platform.lab.item4.body',   '细胞水平活性 · 报告基因 · FACS',                                 'platform_lab',      '实验·功能 描述',   'text'],
-    ['platform.lab.item5.title',  '结构解析',                                                       'platform_lab',      '实验·结构 标题',   'text'],
-    ['platform.lab.item5.body',   'Cryo-EM / X-ray · 抗原抗体复合物',                               'platform_lab',      '实验·结构 描述',   'text'],
-    ['platform.lab.item6.title',  '微流控筛选',                                                     'platform_lab',      '实验·微流控 标题', 'text'],
-    ['platform.lab.item6.body',   '单细胞液滴 · 高通量克隆筛选',                                    'platform_lab',      '实验·微流控 描述', 'text'],
-    // ── batch 2b-2a · 平台页视觉升级 ──
-    ['platform.hero.eyebrow',     'MabSeek 平台 · AI + 湿实验一站式',                               'platform_hero',     '平台 Hero·眉题',   'text'],
-    ['platform.data.eyebrow',     '真实数据驱动',                                                   'platform_data',     '数据驱动·眉题',    'text'],
-    ['platform.data.title',       'AI 平台已支撑的靶点谱系',                                        'platform_data',     '数据驱动·标题',    'text'],
-    ['platform.data.sub',         '覆盖 GPCR、T 细胞激动、免疫肿瘤等靶点类型',                      'platform_data',     '数据驱动·副标题',  'text'],
+    // ── V4.3 · 平台页 7 屏（Hero/Agent/Data/Lab/VLP/Loop/Case/Try）──
+    // 屏 1 · Hero
+    ['platform.hero.eyebrow',    'MabSeek Platform',                                                'platform_hero',  '平台 Hero·眉题', 'text'],
+    ['platform.hero.title',      '从科学问题到<span class="txt-neon">实验验证</span>抗体',           'platform_hero',  '平台 Hero·标题(含标记)', 'textarea'],
+    ['platform.hero.lead',       '由 Antibody Agent 驱动，整合数据、算法与自动化实验，让抗体发现更高效、更可靠。', 'platform_hero', '平台 Hero·说明', 'textarea'],
+    ['platform.hero.cta1',       '了解平台',                                                        'platform_hero',  '平台 Hero·主 CTA', 'text'],
+    ['platform.hero.cta1_href',  '#agent',                                                          'platform_hero',  '平台 Hero·主 CTA 链接', 'text'],
+    ['platform.hero.cta2',       '开始试用',                                                        'platform_hero',  '平台 Hero·副 CTA', 'text'],
+    ['platform.hero.cta2_href',  'login.php?next=platform.php&trial=1',                             'platform_hero',  '平台 Hero·副 CTA 链接', 'text'],
+    ['platform.hero.photo',      'assets/images/platform/hero-auto-detail.webp',                    'platform_hero',  '平台 Hero·实拍图路径', 'text'],
+    // 屏 2 · Agent
+    ['platform.agent.eyebrow',   'Antibody Agent',                                                  'platform_agent', '智能体·眉题', 'text'],
+    ['platform.agent.title',     '从研究问题出发，连接<span class="txt-neon">设计、预测与实验</span>', 'platform_agent', '智能体·标题(含标记)', 'textarea'],
+    ['platform.agent.lead',      'Antibody Agent 理解研究目标，将任务拆解为可执行的研究步骤，并连接文献检索、抗体设计、预测分析与实验验证。', 'platform_agent', '智能体·说明', 'textarea'],
+    ['platform.agent.screenshot','assets/images/platform/agent-screen.webp',                        'platform_agent', '智能体·截图路径', 'text'],
+    // 屏 3 · Data
+    ['platform.data.eyebrow',    '真实数据驱动',                                                    'platform_data',  '数据驱动·眉题', 'text'],
+    ['platform.data.title',      '真实数据驱动<span class="txt-neon">抗体设计与预测</span>',         'platform_data',  '数据驱动·标题(含标记)', 'textarea'],
+    ['platform.data.sub',        '整合抗体序列、靶点、结构与实验结果，为候选设计、筛选和优化提供依据。', 'platform_data', '数据驱动·副标题', 'textarea'],
+    // 屏 4a · Lab
+    ['platform.lab.eyebrow',     '全流程抗体发现实验平台',                                          'platform_lab',   '实验平台·眉题', 'text'],
+    ['platform.lab.title',       'VLP 天然构象呈递 × <span class="txt-neon">高通量自动化筛选</span>', 'platform_lab',   '实验平台·标题(含标记)', 'textarea'],
+    ['platform.lab.mf_title',    '微流控液滴技术平台',                                              'platform_lab',   '实验平台·微流控小标', 'text'],
+    ['platform.lab.hero_photo',  'assets/images/platform/lab-auto-room.webp',                       'platform_lab',   '实验平台·全景图路径', 'text'],
+    // 屏 4b · VLP
+    ['platform.vlp.title',       'VLP 钓饵技术',                                                    'platform_vlp',   'VLP·标题', 'text'],
+    ['platform.vlp.lead',        '让复杂抗原的展示更接近天然状态',                                  'platform_vlp',   'VLP·副题', 'text'],
+    ['platform.vlp.body',        '通过 Virus-like Particle 在膜环境中呈递靶蛋白，更好地保留抗原的天然构象、跨膜拓扑及多聚体组装状态，为传统蛋白制备和抗原展示困难的复杂靶点提供更合适的抗原形式。', 'platform_vlp', 'VLP·正文', 'textarea'],
+    ['platform.vlp.mid_title',   '尤其适用于传统抗原制备困难的靶点',                                'platform_vlp',   'VLP·中标', 'text'],
+    ['platform.vlp.targets_label','代表性靶点',                                                     'platform_vlp',   'VLP·靶点标签', 'text'],
+    ['platform.vlp.targets',     'GPCR ｜ 离子通道 ｜ 转运体',                                       'platform_vlp',   'VLP·代表性靶点', 'text'],
+    ['platform.vlp.diagram',     'assets/images/platform/vlp-diagram.webp',                         'platform_vlp',   'VLP·示意图路径', 'text'],
+    // 屏 5 · Loop 干湿闭环
+    ['platform.loop.eyebrow',    '干湿闭环',                                                        'platform_loop',  '干湿闭环·眉题', 'text'],
+    ['platform.loop.title',      '从 <span class="txt-neon">Antibody Agent</span> 到实验验证，一条完整的<span class="txt-neon">抗体发现闭环</span>', 'platform_loop', '干湿闭环·标题(含标记)', 'textarea'],
+    ['platform.loop.sub',        'AI 设计与实验结果双向回流，让每一轮实验结果成为下一轮设计与优化的依据。', 'platform_loop', '干湿闭环·副标题', 'textarea'],
+    ['platform.loop.tempo',      '设计 → 验证 → 分析 → 优化',                                       'platform_loop',  '干湿闭环·节奏', 'text'],
+    ['platform.loop.center_logo','assets/images/logo.webp',                                         'platform_loop',  '干湿闭环·中心 logo 路径', 'text'],
+    ['platform.loop.center_label','MabSeek 抗体求索',                                               'platform_loop',  '干湿闭环·中心标签', 'text'],
+    // 屏 6 · Case
+    ['platform.case.eyebrow',       '代表性成果与平台验证',                                         'platform_case',  '成果·眉题', 'text'],
+    ['platform.case.clinical_title','从抗体发现到临床转化',                                         'platform_case',  '临床成果·标题', 'text'],
+    ['platform.case.clinical_sub',  '安巴韦单抗 / 罗米司韦单抗',                                    'platform_case',  '临床成果·副标题', 'text'],
+    ['platform.case.clinical_note', '体现团队从基础研究、抗体发现到临床应用的长期转化经验。',       'platform_case',  '临床成果·注解', 'textarea'],
+    ['platform.case.clinical_photo','assets/images/platform/case-clinical.webp',                    'platform_case',  '临床成果·图片路径', 'text'],
+    ['platform.case.vlp_title',     '复杂膜蛋白靶点的抗体发现实践',                                 'platform_case',  '膜蛋白实践·标题', 'text'],
+    ['platform.case.vlp_photo',     'assets/images/platform/case-membrane-targets.webp',            'platform_case',  '膜蛋白实践·图片路径', 'text'],
+    // 屏 7 · Try
+    ['platform.try.brand_mab',   'Mab',                                                             'platform_try',   'Try·品牌白色部分', 'text'],
+    ['platform.try.brand_seek',  'Seek',                                                            'platform_try',   'Try·品牌绿色部分', 'text'],
+    ['platform.try.title',       '让抗体发现，从一个问题开始',                                      'platform_try',   'Try·标题', 'text'],
+    ['platform.try.sub',         '从研究问题出发，通过 Antibody Agent 连接设计、预测与实验。',      'platform_try',   'Try·副标题', 'textarea'],
+    ['platform.try.cta',         '开始试用 →',                                                      'platform_try',   'Try·CTA 文案', 'text'],
+    ['platform.try.cta_href',    'login.php?next=platform.php&trial=1',                             'platform_try',   'Try·CTA 链接', 'text'],
 ];
 foreach ($S as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(home/common): " . count($S) . " seeded (idempotent)\n";
@@ -187,54 +214,7 @@ $S_tech = [
 foreach ($S_tech as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
 echo "  + snippets(tech): " . count($S_tech) . " seeded (idempotent)\n";
 
-// ── agent 页 snippets（逐字，取自 agent.html）──
-$S_agent = [
-    ['agent.hero.eyebrow','🤖 专属领域 AI 智能体','agent','Agent 页 Hero 眉题','text'],
-    ['agent.hero.title','一句话出方案<br><span class="grad-text">干湿闭环</span>一站交付','agent','Agent 页 Hero 标题(含标记)','textarea'],
-    ['agent.hero.lead','Antibody Agent 集文献检索问答、抗体序列设计、亲和力预测、结构分析于一体，更打通 MabSeek 湿实验平台——从 AI 设计到表达纯化、功能验证一站式下单，线下实验室直接交付结果。','agent','Agent 页 Hero 说明','textarea'],
-    ['agent.hero.cta1','查看干湿闭环 →','agent','Agent 页 Hero 按钮1','text'],
-    ['agent.hero.cta2','探索智能体矩阵','agent','Agent 页 Hero 按钮2','text'],
-    ['agent.hero.note','免费额度：今日剩余 100 / 100 次提问','agent','Agent 页 Hero 额度提示','text'],
-    ['agent.cap.eyebrow','核心能力','agent','核心能力 眉题','text'],
-    ['agent.cap.title','四大能力，<span class="txt-green">贯穿抗体发现全流程</span>','agent','核心能力 标题(含标记)','textarea'],
-    ['agent.case.eyebrow','案例示范','agent','案例示范 眉题','text'],
-    ['agent.case.title','看 Antibody Agent <span class="txt-neon">怎么工作</span>','agent','案例示范 标题(含标记)','textarea'],
-    ['agent.case.sub','三段循环演示，直观呈现从需求到候选、筛选与结构理解的过程（示意动效，非真实结果数据）。','agent','案例示范 说明','textarea'],
-    ['agent.flow.eyebrow','干湿闭环 · Dry-to-Wet','agent','干湿闭环 眉题','text'],
-    ['agent.flow.title','从 AI 设计到线下交付，<span class="grad-text">一条闭环</span>','agent','干湿闭环 标题(含标记)','textarea'],
-    ['agent.flow.sub','AI 设计与湿实验结果双向溯源，每一步都可追踪、可下单、可复现。','agent','干湿闭环 说明','textarea'],
-    ['agent.wetlab.title','湿实验平台，直接下单','agent','湿实验卡 标题','text'],
-    ['agent.wetlab.body','AI 生成方案后无需切换系统，在同一界面下单表达纯化与功能验证，线下实验室执行并交付结果——真正打通「设计即交付」。','agent','湿实验卡 正文','textarea'],
-    ['agent.matrix.eyebrow','智能体矩阵','agent','智能体矩阵 眉题','text'],
-    ['agent.matrix.title','Antibody Agent 领衔的科研智能体家族','agent','智能体矩阵 标题','text'],
-    ['agent.matrix.sub','按科研场景细分的专属智能体，共享同一知识库与湿实验平台。','agent','智能体矩阵 说明','textarea'],
-    ['agent.cta.title','现在就把你的靶点交给 Antibody Agent','agent','CTA 标题','text'],
-    ['agent.cta.sub','从一句话到可下单方案，干湿闭环全程陪伴。','agent','CTA 说明','textarea'],
-    ['agent.cta.btn','免费试用 Antibody Agent','agent','CTA 按钮','text'],
-];
-foreach ($S_agent as $s) Snippets::seed($s[0], $s[1], $s[2], $s[3], $s[4] ?? 'text');
-echo "  + snippets(agent): " . count($S_agent) . " seeded (idempotent)\n";
-
-// ── agent 页 content_cards（分组幂等，逐字）──
-// 核心能力四卡（agent.html .grid-4）
-seed_cards_group('agent_capability', [
-    ['grp'=>'agent_capability','icon'=>'🔍','title'=>'文献检索问答','body'=>'接入领域知识库与全文文献，秒级定位机制、方法与前沿进展，答案可溯源。','extra'=>json_encode(['ico_class'=>''], JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
-    ['grp'=>'agent_capability','icon'=>'🧬','title'=>'抗体序列设计','body'=>'基于靶点一句话生成候选序列，自动完成人源化与可开发性优化。','extra'=>json_encode(['ico_class'=>'green'], JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
-    ['grp'=>'agent_capability','icon'=>'📈','title'=>'亲和力预测','body'=>'结合能计算 + 机器学习打分，动手实验前完成虚拟筛选与排序。','extra'=>json_encode(['ico_class'=>''], JSON_UNESCAPED_UNICODE),'sort'=>3,'published'=>1],
-    ['grp'=>'agent_capability','icon'=>'🧩','title'=>'结构分析','body'=>'结构建模、表位识别与对接分析，理解「为什么结合、结合在哪里」。','extra'=>json_encode(['ico_class'=>'green'], JSON_UNESCAPED_UNICODE),'sort'=>4,'published'=>1],
-]);
-
-// 智能体矩阵八卡（agent.html .agent-chip）
-seed_cards_group('agent_matrix', [
-    ['grp'=>'agent_matrix','icon'=>'🧬','title'=>'Antibody Agent','body'=>'抗体发现与抗体工程 · 主力','extra'=>json_encode(['ai_bg'=>'var(--purple-050)','active'=>true,'link_href'=>'','link_text'=>''], JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
-    ['grp'=>'agent_matrix','icon'=>'🧠','title'=>'General Agent','body'=>'通用科学问答','extra'=>json_encode(['ai_bg'=>'var(--green-100)','active'=>false], JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
-    ['grp'=>'agent_matrix','icon'=>'🧫','title'=>'Biology Agent','body'=>'计算生物学与生信','extra'=>json_encode(['ai_bg'=>'var(--purple-050)','active'=>false], JSON_UNESCAPED_UNICODE),'sort'=>3,'published'=>1],
-    ['grp'=>'agent_matrix','icon'=>'📖','title'=>'Survey Agent','body'=>'学术综述与文献调研','extra'=>json_encode(['ai_bg'=>'var(--green-100)','active'=>false], JSON_UNESCAPED_UNICODE),'sort'=>4,'published'=>1],
-    ['grp'=>'agent_matrix','icon'=>'⚗️','title'=>'Material Agent','body'=>'材料科学与计算化学','extra'=>json_encode(['ai_bg'=>'var(--purple-050)','active'=>false], JSON_UNESCAPED_UNICODE),'sort'=>5,'published'=>1],
-    ['grp'=>'agent_matrix','icon'=>'🏥','title'=>'MIMIC Agent','body'=>'临床研究数据分析','extra'=>json_encode(['ai_bg'=>'var(--green-100)','active'=>false], JSON_UNESCAPED_UNICODE),'sort'=>6,'published'=>1],
-    ['grp'=>'agent_matrix','icon'=>'🎓','title'=>'SciencePal Agent','body'=>'生成式 AI 课程助手','extra'=>json_encode(['ai_bg'=>'var(--purple-050)','active'=>false,'link_href'=>'https://sciencepal.ai','link_text'=>'了解 SciencePal ↗'], JSON_UNESCAPED_UNICODE),'sort'=>7,'published'=>1],
-    ['grp'=>'agent_matrix','icon'=>'➕','title'=>'更多智能体','body'=>'持续接入新场景','extra'=>json_encode(['ai_bg'=>'var(--green-100)','active'=>false], JSON_UNESCAPED_UNICODE),'sort'=>8,'published'=>1],
-]);
+// ── agent 页 snippets：V4.3 已合并入 platform.php，agent.php 变 301 stub，历史 snippet 由 migrate-v43 清理 ──
 
 // ── education 页 snippets（逐字，取自 education.html）──
 $S_edu = [
@@ -245,10 +225,17 @@ $S_edu = [
     ['edu.banner.tag','精品课程','education','课程 Banner 标签','text'],
     ['edu.banner.title','《疫苗的力量》','education','课程 Banner 标题','text'],
     ['edu.banner.sub','元视频课程体系 · 精准适配学生、疫苗研发从业者、接种人群与新手父母','education','课程 Banner 副标题','textarea'],
-    ['edu.video.eyebrow','课时播放专区','education','课时播放 眉题','text'],
-    ['edu.video.title','课程视频','education','视频区 标题','text'],
-    ['edu.video.iframe_url','','education','视频外链嵌入 URL（优先于本地视频，如 //player.bilibili.com/player.html?bvid=xxx 或 https://www.youtube.com/embed/xxx）','text'],
-    ['edu.video.src','','education','课程视频文件路径（后台上传后自动填入）','text'],
+    // V4.3 · 张林琦访谈《疫苗的力量》
+    ['edu.talk.eyebrow','与教授对话','education','访谈 眉题','text'],
+    ['edu.talk.title','《疫苗的力量》与张林琦教授对话','education','访谈 标题','text'],
+    ['edu.talk.body','作为《疫苗的力量》的开课人和主讲人，张林琦教授分享课程开设的初衷、自己的专业选择，以及对青年学生的期待与寄语。','education','访谈 正文','textarea'],
+    ['edu.talk.kw1','课程缘起','education','访谈 关键词1','text'],
+    ['edu.talk.kw2','专业选择','education','访谈 关键词2','text'],
+    ['edu.talk.kw3','课程期待','education','访谈 关键词3','text'],
+    ['edu.talk.kw4','青年寄语','education','访谈 关键词4','text'],
+    ['edu.talk.speaker','张林琦教授｜《疫苗的力量》开课人、主讲人','education','访谈 讲者标注','text'],
+    ['edu.talk.video_src','assets/uploads/videos/zhang-linqi-vaccine-talk.mp4','education','访谈 视频路径（生产手动 scp 上传）','text'],
+    ['edu.talk.poster','assets/images/edu-talk-poster.webp','education','访谈 海报路径','text'],
     ['edu.course.intro',"本课程立足清华科研一线，以真实案例为切入点，深度解析疫苗的历史演变、科学逻辑与全球治理。\n课程融合理论教学、案例剖析、企业调研与实验实践，旨在点亮抗体与疫苗研发兴趣，培养兼具家国情怀与国际视野的复合型领军人才。",'education','课程简介 正文（换行分段）','textarea'],
     ['edu.teachers.intro',"课程组将邀请疫苗研发一线的专家教授参与授课，介绍其所在专业领域中真实的疫苗研发历程和真实的科研经历故事。\n同时授课教师还包括从事疫苗监管、政策制定和疫苗治理的专家，帮助学生充分了解疫苗如何从实验室走向人群普遍接种的艰苦心路历程，以及科学家们在利用疫苗实现人类健康这一目标上的矢志追求。",'education','主讲团队 正文（换行分段）','textarea'],
 ];
@@ -449,4 +436,54 @@ seed_cards_group('intl_pra', [
     ['grp'=>'intl_pra','icon'=>'','title'=>'广州实验室','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-4.webp'],JSON_UNESCAPED_UNICODE),'sort'=>4,'published'=>1],
     ['grp'=>'intl_pra','icon'=>'','title'=>'下一代大流行病防治疗法研讨','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-5.webp'],JSON_UNESCAPED_UNICODE),'sort'=>5,'published'=>1],
     ['grp'=>'intl_pra','icon'=>'','title'=>'全球视角专题论坛','body'=>'','extra'=>json_encode(['img'=>'assets/images/intl/pra-6.webp'],JSON_UNESCAPED_UNICODE),'sort'=>6,'published'=>1],
+]);
+
+// ── V4.3 · 平台页 content_cards（8 组，分组幂等）──
+seed_cards_group('platform_agent_module', [
+    ['grp'=>'platform_agent_module','icon'=>'📚','title'=>'文献研究','body'=>'文献检索、靶点信息与研究背景理解','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_agent_module','icon'=>'🧬','title'=>'抗体设计','body'=>'抗体生成、优化与人源化','extra'=>'','sort'=>2,'published'=>1],
+    ['grp'=>'platform_agent_module','icon'=>'🔬','title'=>'预测分析','body'=>'结构、亲和力与成药性分析','extra'=>'','sort'=>3,'published'=>1],
+    ['grp'=>'platform_agent_module','icon'=>'📋','title'=>'实验规划','body'=>'候选排序与实验方案规划','extra'=>'','sort'=>4,'published'=>1],
+]);
+
+seed_cards_group('platform_data_card', [
+    ['grp'=>'platform_data_card','icon'=>'','title'=>'真实数据','body'=>'抗体序列 ｜ 靶点结构 ｜ 结合亲和力 ｜ 实验结果','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_data_card','icon'=>'','title'=>'AI 分析','body'=>'候选设计 ｜ 结构预测 ｜ 亲和力/成药性评估 ｜ 排序筛选','extra'=>'','sort'=>2,'published'=>1],
+]);
+
+seed_cards_group('platform_lab_cap', [
+    ['grp'=>'platform_lab_cap','icon'=>'','title'=>'高通量','body'=>'支持大规模抗体候选的并行筛选，提高抗体发现效率','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_lab_cap','icon'=>'','title'=>'自动化','body'=>'将实验操作与数据采集整合为标准化流程，减少人工干预，提高实验重复性','extra'=>'','sort'=>2,'published'=>1],
+    ['grp'=>'platform_lab_cap','icon'=>'','title'=>'微量化','body'=>'覆盖皮升级至微升级液滴操作，在提升实验通量的同时降低样本与试剂消耗','extra'=>'','sort'=>3,'published'=>1],
+]);
+
+seed_cards_group('platform_vlp_kind', [
+    ['grp'=>'platform_vlp_kind','icon'=>'','title'=>'多聚体 / 蛋白复合物','body'=>'尤其适合需要多个不同亚基共同组装、单独表达难以还原天然结构的异源多聚体蛋白','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_vlp_kind','icon'=>'','title'=>'多次跨膜蛋白','body'=>'依赖膜环境维持正确拓扑与构象，脱离膜环境后天然状态往往难以稳定保持','extra'=>'','sort'=>2,'published'=>1],
+]);
+
+seed_cards_group('platform_loop_side', [
+    ['grp'=>'platform_loop_side','icon'=>'','title'=>'设计更精准','body'=>'结合数据与模型进行候选设计与筛选','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_loop_side','icon'=>'','title'=>'验证更高效','body'=>'自动化实验平台支持标准化验证流程','extra'=>'','sort'=>2,'published'=>1],
+    ['grp'=>'platform_loop_side','icon'=>'','title'=>'迭代更快速','body'=>'实验结果回流分析，持续优化候选抗体','extra'=>'','sort'=>3,'published'=>1],
+]);
+
+seed_cards_group('platform_loop_ring', [
+    ['grp'=>'platform_loop_ring','icon'=>'','title'=>'研究目标','body'=>'明确靶点、应用场景与关键指标','extra'=>json_encode(['side'=>'dry'],JSON_UNESCAPED_UNICODE),'sort'=>1,'published'=>1],
+    ['grp'=>'platform_loop_ring','icon'=>'','title'=>'Antibody Agent','body'=>'任务理解、候选设计、结构与亲和力预测','extra'=>json_encode(['side'=>'dry'],JSON_UNESCAPED_UNICODE),'sort'=>2,'published'=>1],
+    ['grp'=>'platform_loop_ring','icon'=>'','title'=>'实验验证','body'=>'抗体表达、结合活性与功能验证','extra'=>json_encode(['side'=>'wet'],JSON_UNESCAPED_UNICODE),'sort'=>3,'published'=>1],
+    ['grp'=>'platform_loop_ring','icon'=>'','title'=>'数据分析','body'=>'结果整理、候选比较与多维评估','extra'=>json_encode(['side'=>'wet'],JSON_UNESCAPED_UNICODE),'sort'=>4,'published'=>1],
+    ['grp'=>'platform_loop_ring','icon'=>'','title'=>'迭代优化','body'=>'基于实验反馈优化候选，并进入下一轮设计','extra'=>json_encode(['side'=>'dry'],JSON_UNESCAPED_UNICODE),'sort'=>5,'published'=>1],
+]);
+
+seed_cards_group('platform_case_stat', [
+    ['grp'=>'platform_case_stat','icon'=>'','title'=>'80%','body'=>'降低住院和死亡率','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_case_stat','icon'=>'','title'=>'837','body'=>'例患者临床试验','extra'=>'','sort'=>2,'published'=>1],
+    ['grp'=>'platform_case_stat','icon'=>'','title'=>'0','body'=>'治疗后 28 天死亡','extra'=>'','sort'=>3,'published'=>1],
+]);
+
+seed_cards_group('platform_case_vlp', [
+    ['grp'=>'platform_case_vlp','icon'=>'','title'=>'VLP 抗原呈递','body'=>'保持复杂膜蛋白天然构象','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_case_vlp','icon'=>'','title'=>'涉及疾病','body'=>'肿瘤、病毒感染（如 HIV）、糖尿病/肥胖等代谢性疾病、免疫相关疾病','extra'=>'','sort'=>2,'published'=>1],
+    ['grp'=>'platform_case_vlp','icon'=>'','title'=>'代表靶点','body'=>'GPCR、转运体、CD3/TCR、NKG2A/CD94 等','extra'=>'','sort'=>3,'published'=>1],
 ]);
