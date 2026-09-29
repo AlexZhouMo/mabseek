@@ -263,10 +263,10 @@ mabseek/
 
 本文档 §1–§11 描述项目从纯静态（P1–P4）演进到 PHP+SQLite 内容管理（P5）的**架构基线**。P5 落地后进入以内容与视觉持续打磨为主的迭代阶段（batch1 → 260920 → V3.0.2 → V4 批次），架构与安全基线保持不变，主要变化在页面组织、后台模块与展示形态上：
 
-- **页面合并**：`technology.php` + `agent.php` 合并为 `platform.php`（V4 批 2b），导航从 6 项收敛为 5 项；原两页保留为 301 stub 兼容历史外链。
-- **课程视频后台**：新增 `app/admin/edu_video.php` 上传模块（≤50MB，`assets/videos/`），并支持外链 iframe（Bilibili / YouTube 等，scheme 白名单校验）。
+- **页面合并**：`technology.php` + `agent.php` 合并为 `platform.php`（V4 批 2b），导航从 6 项收敛为 5 项；原两页保留为 301 stub 兼容历史外链。V4.3 将 `platform.php` 进一步重写为 **7 屏纵向单页**（Hero / Agent / Data / Lab 全流程+VLP / Loop 干湿闭环 / Case 代表性成果 / Try 试用 CTA），深-浅-深-浅-深-浅-黑色节奏。
+- **课程视频后台**：新增 `app/admin/edu_video.php` 上传模块（≤50MB，`assets/videos/`），并支持外链 iframe（Bilibili / YouTube 等，scheme 白名单校验）。V4.3 后教育页 `#video` 改造为张林琦访谈《疫苗的力量》专用模块：44.5MB MP4 手动 scp 到生产 `assets/uploads/videos/zhang-linqi-vaccine-talk.mp4`，视频缺失时优雅降级为海报 + 提示。
 - **SciencePal 合作方同步**：会员注册/改密同步 SciencePal 开通/改密（`app/sciencepal.php`），密钥走 `app/config.local.php` 或环境变量，未配置时静默跳过不影响本站。
 - **全局 CTA 拦截**：`assets/js/trial-cta.js` 全站拦截 `data-trial-cta`，弹出 SciencePal 试用申请模态框；未登录跳 `login.php?next=…&trial=1` 后自动回到原页并唤起模态。
-- **首页 logo 墙、张老师成果手风琴、国际合作轮播**（260920）；**Logo/教育分段/about 精简**（V3.0.2）；**平台屏 3 三张 SVG 数据图、屏 5 SVG 环形闭环、屏 1 hero 品牌化**（V4 批 2b）。
+- **首页 logo 墙、张老师成果手风琴、国际合作轮播**（260920）；**Logo/教育分段/about 精简**（V3.0.2）；**平台屏 3 三张 SVG 数据图、屏 5 SVG 环形闭环、屏 1 hero 品牌化**（V4 批 2b）；**首页题眉清空 / 教育 15 讲字段瘦身 / 关于国际合作两段刷新 / 教育访谈模块 / 平台 7 屏重构**（V4.3）。
 
 每一批含配套的 seed 默认值更新 + 幂等迁移脚本 `bin/migrate-*.php` + `deploy/deploy-mabseek.sh` 挂载。批次清单与说明见 [README 版本迭代记录](../README.md#版本迭代记录)。

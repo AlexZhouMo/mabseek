@@ -67,7 +67,8 @@ mabseek/
 │   ├── migrate-web-update-302.php      V3.0.2 网页更新
 │   ├── migrate-v4-batch1.php           V4 批 1 网页更新（合并平台与 Agent）
 │   ├── migrate-v4-batch2b1.php         V4 批 2b-1 平台页（21 条 platform.* + home.hero.cta 订正）
-│   └── migrate-v4-batch2b2a.php        V4 批 2b-2a 平台页视觉升级（4 条新 snippet + 36 孤儿清理）
+│   ├── migrate-v4-batch2b2a.php        V4 批 2b-2a 平台页视觉升级（4 条新 snippet + 36 孤儿清理）
+│   └── migrate-v43.php                 V4.3 网页更新（首页题眉/教育15讲/关于国际合作/教育访谈/平台7屏）
 ├── data/              ← SQLite 数据库文件所在（git 忽略，运行时生成）
 ├── deploy/            ← 部署脚本与样例（见「部署」）
 ├── docs/              ← 架构文档、UI 规范
@@ -91,7 +92,7 @@ php -S localhost:8778 -t public
 ## 管理后台
 
 - 入口 `public/admin.php`，登录后可管理各页面内容。
-- **内容模块**：仪表盘 · 新闻 · 团队成员（支持头像上传，无头像时用文字头像）· 合作伙伴 · 内容卡片 · 文案片段（snippets）· 会员管理 · 论坛帖子治理 · 教育往期回顾 · **课程视频上传**（`edu_video`，≤50MB，存 `assets/videos/`，自动写 snippet `edu.video.src`）· 联系反馈查看 · 修改密码。
+- **内容模块**：仪表盘 · 新闻 · 团队成员（支持头像上传，无头像时用文字头像）· 合作伙伴 · 内容卡片 · 文案片段（snippets）· 会员管理 · 论坛帖子治理 · 教育往期回顾 · **课程视频上传**（`edu_video`，≤50MB，存 `assets/videos/`；V4.3 后教育页 `#video` 改为张林琦访谈专用模块，视频文件手动 scp 到 `assets/uploads/videos/zhang-linqi-vaccine-talk.mp4`）· 联系反馈查看 · 修改密码。
 - 初始管理员账号由 `bin/seed.php` 依据 `app/config.php` 中的 `SEED_ADMIN_USER` / `SEED_ADMIN_PASS` 创建（默认 `admin` / `mabseek2026`），**首次登录强制修改密码**。生产环境请在 seed 前改掉默认值，或改后立即修改。
 
 ### 安全措施
@@ -113,8 +114,8 @@ php -S localhost:8778 -t public
 
 ## 教育与反馈
 
-- 教育页除课程视频与往期回顾外，展示 `edu_reviews` 卡片，点击进入 `edu-review.php` 详情。
-- 课程视频区支持两种源：后台上传的本地视频（写入 `edu.video.src`）或外链 iframe（`edu.video.iframe_url`，Bilibili / YouTube 等，scheme 白名单校验，优先级高于本地视频）。两者都为空时展示克制的品牌色占位块。
+- 教育页除张林琦访谈模块与往期回顾外，展示 `edu_reviews` 卡片，点击进入 `edu-review.php` 详情。
+- 张林琦访谈《疫苗的力量》：`#video` 区左文（eyebrow + 标题 + 正文 + 四关键词 chip）右视频（16:9，poster + 播放按钮，点击后加载 `<video controls autoplay>`）；视频文件缺失时降级为海报 + 「视频加载中」提示，不阻塞首屏。视频 44.5MB MP4 由用户手动 scp 到生产 `/var/www/html/public/assets/uploads/videos/`，不进 git、不进 tar 包。
 - 访客可通过页面的联系反馈表单（`public/feedback.php`，CSRF 校验）提交需求/合作意向，后台「联系反馈」模块查看。
 
 ## 全局试用 CTA（trial-cta）
@@ -155,6 +156,14 @@ php -S localhost:8778 -t public
 - 平台页各屏 CTA 挂 `data-trial-cta` 接入试用模态；屏 1 hero eyebrow 品牌化。
 - 迁移：`bin/migrate-v4-batch2b1.php`（21 条 platform.* + home.hero.cta 订正）
 - 迁移：`bin/migrate-v4-batch2b2a.php`（4 条新 snippet + 36 条 orphan 清理）
+
+### V4.3 · 网页迭代（首页题眉 · 教育大纲 · 国际合作 · 教育访谈 · 平台 7 屏）
+- **首页 Hero**：清空 `home.hero.eyebrow`（删「清华团队 * AI大模型」）。
+- **教育页 15 讲**：折叠区字段瘦身为「第 N 讲 · 标题 / 授课：XX」，不含课程队长与日期。
+- **关于我们·国际合作**：中印尼中心 / PRA 两段正文强制刷新为需求文档新文案。
+- **教育页 `#video` 改造**：由「课程视频上传」占位改为「《疫苗的力量》与张林琦教授对话」访谈模块（左文右视频，四关键词 chip），44.5MB MP4 手动上传到生产。
+- **平台页 `platform.php` 全文件重写为 7 屏纵向单页**：Hero / Agent / Data / Lab（4a 全流程 + 4b VLP）/ Loop 干湿闭环 / Case 代表性成果 / Try 试用 CTA。深-浅-深-浅-深-浅-黑节奏。删 `agent-demo.js` / `agent-cases.js` legacy 脚本。
+- 迁移：`bin/migrate-v43.php`（幂等 A/B/C/D/E 五块 · 二次运行 0 行变更）
 
 ## 静态资源缓存
 
