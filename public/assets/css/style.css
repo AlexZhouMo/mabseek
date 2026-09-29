@@ -835,6 +835,10 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .hero-photo img { display: block; width: 100%; height: auto; }
 /* 平台页 Hero 专用：H1 字号收紧，让「从科学问题到实验验证抗体」一行显示 */
 .platform-page .hero h1 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.2; }
+/* 平台页各屏 section-title 收紧，避免视觉过大（屏 3/5/6 共用） */
+.platform-page .section-title { font-size: clamp(24px, 3vw, 36px); margin: 12px 0 10px; }
+.platform-page .section-sub { font-size: 15px; }
+.platform-page .section { padding: 72px 0; }
 /* 窄容器（< 720px）时允许 pflow 换行，避免溢出 */
 @media (max-width: 900px) {
   .pflow { flex-wrap: wrap; gap: 8px; }
@@ -853,29 +857,30 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 @media (max-width: 900px) { .agent-grid { grid-template-columns: 1fr; } .agent-modules { grid-template-columns: 1fr; } }
 
 /* ── 屏 3 · Data 左侧卡片 + 右侧 hero 图 + 下方双图 ── */
-.data-hero-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 32px; align-items: stretch; }
-.data-side { display: flex; flex-direction: column; gap: 16px; }
-.data-side-card { padding: 22px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); }
-.data-side-card h4 { color: var(--green-neon, var(--green)); font-size: 16px; margin: 0 0 8px; }
-.data-side-card p { color: var(--ink-on-dark-2, rgba(255,255,255,.72)); font-size: 14px; line-height: 1.65; margin: 0; }
-.data-main { display: flex; flex-direction: column; gap: 16px; }
-.data-flow { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 999px; align-self: center; }
-.data-flow-pill { padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; color: #fff; }
+.data-hero-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 24px; align-items: stretch; }
+.data-side { display: flex; flex-direction: column; gap: 14px; }
+.data-side-card { padding: 20px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); }
+.data-side-card h4 { color: var(--green-neon, var(--green)); font-size: 15px; margin: 0 0 6px; }
+.data-side-card p { color: var(--ink-on-dark-2, rgba(255,255,255,.72)); font-size: 13.5px; line-height: 1.6; margin: 0; }
+.data-main { display: flex; flex-direction: column; gap: 14px; }
+.data-flow { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 999px; align-self: center; }
+.data-flow-pill { padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; }
 .data-flow-pill--in { background: linear-gradient(135deg, var(--purple), var(--purple-600)); }
 .data-flow-pill--ai { background: linear-gradient(135deg, #12D6A0, #00E0A4); color: #04231b; }
-.data-flow-arrow { color: rgba(255,255,255,.5); font-size: 16px; }
-.data-plot { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius); padding: 20px; }
-.data-plot img { width: 100%; height: auto; display: block; border-radius: var(--radius-sm); background: #0a0d1e; }
-.data-plot-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 12px; }
-.data-plot-head b { color: #fff; font-size: 17px; }
-.data-plot-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.data-plot-tag { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(0,224,164,.1); color: var(--green-neon, var(--green)); border: 1px solid rgba(0,224,164,.25); }
-.data-plot-caption { color: rgba(255,255,255,.55); font-size: 12px; margin-top: 10px; font-style: italic; }
-.data-plot-details { margin-top: 12px; }
-.data-plot-details summary { cursor: pointer; color: var(--green-neon, var(--green)); font-size: 13px; font-weight: 700; padding: 8px 0; user-select: none; }
-.data-plot-details[open] summary { margin-bottom: 10px; }
-.data-plot-details img { margin-top: 8px; }
-.data-twin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.data-flow-arrow { color: rgba(255,255,255,.5); font-size: 14px; }
+.data-plot { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius); padding: 16px; }
+.data-plot img { width: 100%; max-height: 320px; height: auto; display: block; border-radius: var(--radius-sm); background: #0a0d1e; object-fit: contain; }
+.data-plot--hero img { max-height: 380px; }
+.data-plot-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 10px; }
+.data-plot-head b { color: #fff; font-size: 16px; }
+.data-plot-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.data-plot-tag { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; background: rgba(0,224,164,.1); color: var(--green-neon, var(--green)); border: 1px solid rgba(0,224,164,.25); }
+.data-plot-caption { color: rgba(255,255,255,.55); font-size: 11.5px; margin-top: 8px; font-style: italic; }
+.data-plot-details { margin-top: 10px; }
+.data-plot-details summary { cursor: pointer; color: var(--green-neon, var(--green)); font-size: 12.5px; font-weight: 700; padding: 6px 0; user-select: none; }
+.data-plot-details[open] summary { margin-bottom: 8px; }
+.data-plot-details img { margin-top: 6px; }
+.data-twin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 @media (max-width: 900px) { .data-hero-grid, .data-twin-grid { grid-template-columns: 1fr; } }
 
 /* ── 屏 4a · Lab 全景 + 5:7 三能力 + 微流控 6 图 ── */
