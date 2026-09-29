@@ -165,6 +165,17 @@ php -S localhost:8778 -t public
 - **平台页 `platform.php` 全文件重写为 7 屏纵向单页**：Hero / Agent / Data / Lab（4a 全流程 + 4b VLP）/ Loop 干湿闭环 / Case 代表性成果 / Try 试用 CTA。深-浅-深-浅-深-浅-黑节奏。删 `agent-demo.js` / `agent-cases.js` legacy 脚本。
 - 迁移：`bin/migrate-v43.php`（幂等 A/B/C/D/E 五块 · 二次运行 0 行变更）
 
+### V4.3.1 · 平台页视觉打磨（6 项 UI fix，纯样式无数据库改动）
+- **屏 1 Hero**：H1「从科学问题到实验验证抗体」与右侧 4 节点流程条强制单行显示（H1 字号 clamp 上限 60→46，流程条 `flex-wrap: nowrap` 加节点内边距/字号收紧）。`body` 加 `platform-page` class 作为平台页样式 scope。
+- **屏 3 Data 布局收紧**：左侧 `data-side` 两卡片加 `flex: 1` 撑满右侧主图高度，消除左下大片空白；GLP-1R hero 图 `max-height` 380→320，CXCR4/CD3 twin 图限高 300，`object-fit: contain` 长条不再被拉大。
+- **屏 4a Lab 全景横幅**：`lab-hero-photo` 加 `aspect-ratio: 24/9` + `object-fit: cover`，从原图 1.58 比例的高图收成横幅（1200×432 而非 1200×760），滚到屏 4a 能与下方三能力卡片同视口显示。
+- **屏 4b VLP 左图收窄**：`vlp-grid` 分栏从 `7fr 5fr` 反转为 `5fr 7fr`，`vlp-left` 加 `max-width: 460px`，图从 649px 缩到 460px（-30%）。
+- **屏 5 Loop 环形塌陷修复**：`loop-ring` 缺 `width: 100%` 导致 grid item 收缩到 0，5 节点塌成竖条 30px + 中心 logo 压成竖椭圆；补 `width: 100%` + `justify-self: center`。节点起点角度公式 `(-90 + i*72)` → `(i*72)`，让「研究目标」落在 12 点方向顺时针分布。
+- **全页间距统一**：`.platform-page .section` padding 96→64（原基类 96 太宽），`.hero` 上下 -22/-18，`.try-cta` 120→88，所有屏"标题居中区" margin-bottom 44→32；Lab 各段 margin 收紧 8-16px。实测 1440×900 桌面总页高 6574→6075（-500px / -7.6%）。
+
+### V4.3 补丁 · 忽略新视频路径
+- `.gitignore` 补规则 `public/assets/uploads/videos/*` + `!.gitkeep`，防止本地放 44.5MB MP4 后 `git add .` 不慎入库。目录内 `.gitkeep` 入库让克隆后目录直接存在。
+
 ## 静态资源缓存
 
 - CSS/JS 引用统一经 `asset()`（`app/helpers.php`）输出，按文件 `mtime` 追加 `?v=` 版本号。改动前端资源后浏览器会自动拉取新版，避免部署更新后命中旧强缓存。新增前端资源引用时优先用 `asset('assets/...')` 而非写死路径。

@@ -267,6 +267,6 @@ mabseek/
 - **课程视频后台**：新增 `app/admin/edu_video.php` 上传模块（≤50MB，`assets/videos/`），并支持外链 iframe（Bilibili / YouTube 等，scheme 白名单校验）。V4.3 后教育页 `#video` 改造为张林琦访谈《疫苗的力量》专用模块：44.5MB MP4 手动 scp 到生产 `assets/uploads/videos/zhang-linqi-vaccine-talk.mp4`，视频缺失时优雅降级为海报 + 提示。
 - **SciencePal 合作方同步**：会员注册/改密同步 SciencePal 开通/改密（`app/sciencepal.php`），密钥走 `app/config.local.php` 或环境变量，未配置时静默跳过不影响本站。
 - **全局 CTA 拦截**：`assets/js/trial-cta.js` 全站拦截 `data-trial-cta`，弹出 SciencePal 试用申请模态框；未登录跳 `login.php?next=…&trial=1` 后自动回到原页并唤起模态。
-- **首页 logo 墙、张老师成果手风琴、国际合作轮播**（260920）；**Logo/教育分段/about 精简**（V3.0.2）；**平台屏 3 三张 SVG 数据图、屏 5 SVG 环形闭环、屏 1 hero 品牌化**（V4 批 2b）；**首页题眉清空 / 教育 15 讲字段瘦身 / 关于国际合作两段刷新 / 教育访谈模块 / 平台 7 屏重构**（V4.3）。
+- **首页 logo 墙、张老师成果手风琴、国际合作轮播**（260920）；**Logo/教育分段/about 精简**（V3.0.2）；**平台屏 3 三张 SVG 数据图、屏 5 SVG 环形闭环、屏 1 hero 品牌化**（V4 批 2b）；**首页题眉清空 / 教育 15 讲字段瘦身 / 关于国际合作两段刷新 / 教育访谈模块 / 平台 7 屏重构**（V4.3）；**平台 7 屏视觉打磨 · Hero 单行 · Data 布局平衡 · Lab 24:9 横幅 · VLP 图收窄 · Loop 环形修复 · 整体 -7.6% 高度**（V4.3.1，纯 CSS/HTML 无数据库改动）。
 
 每一批含配套的 seed 默认值更新 + 幂等迁移脚本 `bin/migrate-*.php` + `deploy/deploy-mabseek.sh` 挂载。批次清单与说明见 [README 版本迭代记录](../README.md#版本迭代记录)。
