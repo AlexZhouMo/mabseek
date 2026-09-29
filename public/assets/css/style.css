@@ -826,13 +826,19 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 
 /* ── 屏 1 · Hero 右侧流程图 + 实拍图 ── */
 .hero-flow { display: flex; flex-direction: column; gap: 18px; }
-.pflow { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; padding: 20px 16px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); }
-.pflow-node { padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; color: #fff; letter-spacing: .02em; }
+.pflow { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 6px; padding: 14px 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); }
+.pflow-node { padding: 9px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; color: #fff; letter-spacing: .02em; white-space: nowrap; }
 .pflow-node--dry { background: linear-gradient(135deg, var(--purple), var(--purple-600)); box-shadow: 0 6px 16px rgba(109,59,235,.28); }
 .pflow-node--brand { background: linear-gradient(135deg, var(--purple), var(--green)); box-shadow: 0 6px 16px rgba(0,224,164,.24); }
-.pflow-arrow { color: var(--green-neon, var(--green)); font-size: 18px; font-weight: 700; }
+.pflow-arrow { color: var(--green-neon, var(--green)); font-size: 15px; font-weight: 700; flex-shrink: 0; }
 .hero-photo { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh-lg); }
 .hero-photo img { display: block; width: 100%; height: auto; }
+/* 平台页 Hero 专用：H1 字号收紧，让「从科学问题到实验验证抗体」一行显示 */
+.platform-page .hero h1 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.2; }
+/* 窄容器（< 720px）时允许 pflow 换行，避免溢出 */
+@media (max-width: 900px) {
+  .pflow { flex-wrap: wrap; gap: 8px; }
+}
 
 /* ── 屏 2 · Agent 5:7 分栏 ── */
 .agent-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: center; }
