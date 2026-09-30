@@ -912,22 +912,44 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
   .data-card-imgs[data-count="2"] { grid-template-columns: 1fr; }
 }
 
-/* ── 屏 4a · Lab 全景 + 5:7 三能力 + 微流控 6 图 ── */
-.lab-hero-photo { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh-lg); aspect-ratio: 24 / 9; background: #0a0d1e; }
-.lab-hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.lab-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: center; }
-.lab-caps { display: grid; grid-template-columns: 1fr; gap: 12px; }
-.lab-cap { padding: 14px 18px; background: var(--bg-soft); border-left: 3px solid var(--purple); border-radius: var(--radius-sm); }
-.lab-cap h4 { font-size: 15px; margin: 0 0 4px; color: var(--ink); }
-.lab-cap p { font-size: 13.5px; color: var(--ink-3); margin: 0; line-height: 1.55; }
-.lab-mf-title { text-align: center; font-size: 18px; color: var(--ink-2); margin: 0 0 20px; }
-.lab-mf-row { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; margin-bottom: 14px; }
-.lab-mf-label { font-size: 14px; font-weight: 700; color: var(--purple); background: var(--purple-050); padding: 8px 12px; border-radius: 10px; white-space: nowrap; }
-.lab-mf-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.lab-mf-item { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--sh-sm); }
-.lab-mf-item img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
-.lab-mf-item figcaption { padding: 6px 10px; font-size: 11.5px; color: var(--ink-3); text-align: center; }
-@media (max-width: 900px) { .lab-grid { grid-template-columns: 1fr; } .lab-mf-row { grid-template-columns: 1fr; } .lab-mf-items { grid-template-columns: 1fr; } }
+/* ── 屏 4a Lab · V4.4 三段重排 ── */
+.lab-head { text-align: center; margin-bottom: 32px; }
+.lab-title { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--ink); margin: 0 0 10px; line-height: 1.2; }
+.lab-sub { font-size: clamp(15px, 1.6vw, 20px); font-weight: 500; color: var(--ink-3); margin: 0; line-height: 1.5; }
+
+.lab-hero-row { display: grid; grid-template-columns: 7fr 5fr; gap: 32px; align-items: stretch; }
+.lab-hero-photo-v44 { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh-lg); }
+.lab-hero-photo-v44 img { display: block; width: 100%; height: 100%; aspect-ratio: 16/10; object-fit: cover; }
+.lab-cap-list { display: flex; flex-direction: column; gap: 14px; }
+.lab-cap { padding: 18px 20px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); box-shadow: var(--sh-sm); }
+.lab-cap h4 { font-size: 16px; margin: 0 0 6px; color: var(--purple); }
+.lab-cap p { font-size: 13.5px; color: var(--ink-3); margin: 0; line-height: 1.6; }
+
+.lab-mf-title { font-size: clamp(20px, 2.2vw, 26px); font-weight: 700; color: var(--ink); text-align: center; margin: 0 0 20px; }
+.lab-micro-body { display: grid; grid-template-columns: 4fr 8fr; gap: 24px; align-items: start; }
+.lab-scale-list { display: flex; flex-direction: column; gap: 18px; padding-right: 8px; border-right: 1px solid var(--line); }
+.lab-scale { padding: 12px 0; }
+.lab-scale h4 { font-size: 15px; color: var(--green); margin: 0 0 8px; font-weight: 700; }
+.lab-scale ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
+.lab-scale li { color: var(--ink-3); font-size: 13px; line-height: 1.5; padding-left: 14px; position: relative; }
+.lab-scale li::before { content: '▸'; position: absolute; left: 0; color: var(--purple); }
+
+.lab-micro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.lab-micro-grid img { width: 100%; aspect-ratio: 3/2; object-fit: cover; border-radius: 8px; display: block; }
+
+@media (max-width: 1199px) {
+  .lab-hero-row { grid-template-columns: 6fr 6fr; }
+  .lab-micro-body { grid-template-columns: 5fr 7fr; }
+}
+@media (max-width: 900px) {
+  .lab-hero-row, .lab-micro-body { grid-template-columns: 1fr; }
+  .lab-scale-list { border-right: none; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: 16px; flex-direction: row; flex-wrap: wrap; gap: 20px; }
+  .lab-scale { flex: 1 1 45%; }
+  .lab-micro-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .lab-micro-grid { grid-template-columns: 1fr; }
+}
 
 /* ── 屏 4b · VLP 钓饵技术（虚线分隔，同白背景） ── */
 .vlp-subsection { padding-top: 32px; border-top: 1px dashed var(--line); }

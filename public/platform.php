@@ -15,6 +15,7 @@ $loopRings  = (new Collection('content_cards'))->published("grp='platform_loop_r
 $caseStats  = (new Collection('content_cards'))->published("grp='platform_case_stat'");
 $caseVlps   = (new Collection('content_cards'))->published("grp='platform_case_vlp'");
 $dataFlow   = (new Collection('content_cards'))->published("grp='platform_data_flow'");
+$labScales  = (new Collection('content_cards'))->published("grp='platform_lab_scale'");
 
 // ── 屏 3 数据卡：V4.4 扁平数组，GLP-1R 大卡跨列内含 A+B 并排 ──
 $DATA_PLOTS = [
@@ -48,17 +49,14 @@ $DATA_PLOTS = [
         ],
     ],
 ];
+// ── 屏 4a 微流控 6 图：V4.4 扁平数组，图上自带英文 label ──
 $LAB_MICRO = [
-    ['label' => '皮升级液滴', 'items' => [
-        ['src' => 'assets/images/platform/lab-pico-generation.webp', 'caption' => '液滴生成 Droplet generation'],
-        ['src' => 'assets/images/platform/lab-pico-injection.webp',  'caption' => '微注入 Pico-injection'],
-        ['src' => 'assets/images/platform/lab-pico-fads.webp',       'caption' => '检测分选 FADS'],
-    ]],
-    ['label' => '微升级液滴', 'items' => [
-        ['src' => 'assets/images/platform/lab-micro-generation.webp','caption' => '液滴生成 Micro-droplet generation'],
-        ['src' => 'assets/images/platform/lab-micro-injection.webp', 'caption' => '微注入 Micro-injection'],
-        ['src' => 'assets/images/platform/lab-micro-sorting.webp',   'caption' => '检测分选 Micro-droplet sorting'],
-    ]],
+    ['src' => 'assets/images/platform/lab-pico-generation.webp',  'alt' => '皮升级液滴生成 · Droplet generation'],
+    ['src' => 'assets/images/platform/lab-pico-injection.webp',   'alt' => '皮升级微注入 · Pico-injection'],
+    ['src' => 'assets/images/platform/lab-pico-fads.webp',        'alt' => '皮升级检测分选 · FADS'],
+    ['src' => 'assets/images/platform/lab-micro-generation.webp', 'alt' => '微升级液滴生成 · Micro-droplet generation'],
+    ['src' => 'assets/images/platform/lab-micro-injection.webp',  'alt' => '微升级微注入 · Micro-droplet injection'],
+    ['src' => 'assets/images/platform/lab-micro-sorting.webp',    'alt' => '微升级检测分选 · Micro-droplet sorting'],
 ];
 ?>
 <!DOCTYPE html>
@@ -198,19 +196,21 @@ $LAB_MICRO = [
   </div>
 </section>
 
-<!-- ═══════════════ 屏 4a · Lab #lab 全流程实验平台（白） ═══════════════ -->
+<!-- ═══════════════ 屏 4a · Lab #lab 全流程实验平台（白 · V4.4 三段重排）═══════════════ -->
 <section class="section section-light" id="lab">
   <div class="container">
-    <div class="lab-hero-photo reveal">
-      <img src="<?= snip('platform.lab.hero_photo', 'assets/images/platform/lab-auto-room.webp') ?>" alt="自动化抗体发现实验平台全景" loading="lazy">
-    </div>
+    <!-- 顶部标题带 -->
+    <header class="lab-head reveal">
+      <h2 class="lab-title"><?= snip('platform.lab.title', '全流程抗体发现实验平台') ?></h2>
+      <p class="lab-sub"><?= snip('platform.lab.sub', 'VLP 天然构象呈递 × 高通量自动化筛选') ?></p>
+    </header>
 
-    <div class="lab-grid" style="margin-top:28px">
-      <div>
-        <span class="eyebrow reveal"><?= snip('platform.lab.eyebrow', '全流程抗体发现实验平台') ?></span>
-        <h2 class="section-title reveal d1"><?= snip_raw('platform.lab.title', 'VLP 天然构象呈递 × <span class="txt-neon">高通量自动化筛选</span>') ?></h2>
+    <!-- 中部 7:5 左实拍图 + 右三能力 -->
+    <div class="lab-hero-row reveal d1">
+      <div class="lab-hero-photo-v44">
+        <img src="<?= snip('platform.lab.hero_photo', 'assets/images/platform/lab-hero-photo.webp') ?>" alt="自动化抗体发现实验室" loading="lazy">
       </div>
-      <div class="lab-caps reveal d1">
+      <div class="lab-cap-list">
 <?php foreach ($labCaps as $c): ?>
         <div class="lab-cap">
           <h4><?= e($c['title']) ?></h4>
@@ -220,24 +220,31 @@ $LAB_MICRO = [
       </div>
     </div>
 
-    <div class="lab-mf" style="margin-top:40px">
+    <!-- 底部 4:8 微流控：左规格 + 右 6 图 -->
+    <div class="lab-micro-v44" style="margin-top:40px">
       <h3 class="lab-mf-title reveal"><?= snip('platform.lab.mf_title', '微流控液滴技术平台') ?></h3>
-<?php foreach ($LAB_MICRO as $row): ?>
-      <div class="lab-mf-row reveal d1">
-        <div class="lab-mf-label"><?= e($row['label']) ?></div>
-        <div class="lab-mf-items">
-<?php foreach ($row['items'] as $it): ?>
-          <figure class="lab-mf-item">
-            <img src="<?= e($it['src']) ?>" alt="<?= e($it['caption']) ?>" loading="lazy">
-            <figcaption><?= e($it['caption']) ?></figcaption>
-          </figure>
+      <div class="lab-micro-body reveal d1">
+        <div class="lab-scale-list">
+<?php foreach ($labScales as $s): ?>
+          <div class="lab-scale">
+            <h4><?= e($s['title']) ?></h4>
+            <ul>
+<?php foreach (array_filter(array_map('trim', explode('·', $s['body']))) as $item): ?>
+              <li><?= e($item) ?></li>
+<?php endforeach; ?>
+            </ul>
+          </div>
+<?php endforeach; ?>
+        </div>
+        <div class="lab-micro-grid">
+<?php foreach ($LAB_MICRO as $img): ?>
+          <img src="<?= e($img['src']) ?>" alt="<?= e($img['alt']) ?>" loading="lazy">
 <?php endforeach; ?>
         </div>
       </div>
-<?php endforeach; ?>
     </div>
 
-    <!-- ═════ 屏 4b · VLP 钓饵技术（同白，虚线接续） ═════ -->
+    <!-- ═════ 屏 4b · VLP 钓饵技术（同白，虚线接续）═════ -->
     <div class="subsection vlp-subsection" style="margin-top:40px">
       <div class="vlp-grid">
         <div class="vlp-left reveal">
