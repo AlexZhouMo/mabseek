@@ -128,8 +128,8 @@ $S = [
     ['platform.hero.cta2_href',  'login.php?next=platform.php&trial=1',                             'platform_hero',  '平台 Hero·副 CTA 链接', 'text'],
     ['platform.hero.photo',      'assets/images/platform/hero-auto-detail.webp',                    'platform_hero',  '平台 Hero·实拍图路径', 'text'],
     // 屏 2 · Agent
-    ['platform.agent.eyebrow',   'Antibody Agent',                                                  'platform_agent', '智能体·眉题', 'text'],
-    ['platform.agent.title',     '从研究问题出发，连接<span class="txt-neon">设计、预测与实验</span>', 'platform_agent', '智能体·标题(含标记)', 'textarea'],
+    ['platform.agent.brand',     'Antibody Agent',                                                  'platform_agent', '智能体·品牌大标', 'text'],
+    ['platform.agent.title',     '从研究问题出发，连接设计、预测与实验',                             'platform_agent', '智能体·副标', 'textarea'],
     ['platform.agent.lead',      'Antibody Agent 理解研究目标，将任务拆解为可执行的研究步骤，并连接文献检索、抗体设计、预测分析与实验验证。', 'platform_agent', '智能体·说明', 'textarea'],
     ['platform.agent.screenshot','assets/images/platform/agent-screen.webp',                        'platform_agent', '智能体·截图路径', 'text'],
     // 屏 3 · Data
@@ -137,10 +137,10 @@ $S = [
     ['platform.data.title',      '真实数据驱动<span class="txt-neon">抗体设计与预测</span>',         'platform_data',  '数据驱动·标题(含标记)', 'textarea'],
     ['platform.data.sub',        '整合抗体序列、靶点、结构与实验结果，为候选设计、筛选和优化提供依据。', 'platform_data', '数据驱动·副标题', 'textarea'],
     // 屏 4a · Lab
-    ['platform.lab.eyebrow',     '全流程抗体发现实验平台',                                          'platform_lab',   '实验平台·眉题', 'text'],
-    ['platform.lab.title',       'VLP 天然构象呈递 × <span class="txt-neon">高通量自动化筛选</span>', 'platform_lab',   '实验平台·标题(含标记)', 'textarea'],
+    ['platform.lab.title',       '全流程抗体发现实验平台',                                          'platform_lab',   '实验平台·主标', 'text'],
+    ['platform.lab.sub',         'VLP 天然构象呈递 × 高通量自动化筛选',                             'platform_lab',   '实验平台·副标', 'textarea'],
     ['platform.lab.mf_title',    '微流控液滴技术平台',                                              'platform_lab',   '实验平台·微流控小标', 'text'],
-    ['platform.lab.hero_photo',  'assets/images/platform/lab-auto-room.webp',                       'platform_lab',   '实验平台·全景图路径', 'text'],
+    ['platform.lab.hero_photo',  'assets/images/platform/lab-hero-photo.webp',                      'platform_lab',   '实验平台·中部实拍图路径', 'text'],
     // 屏 4b · VLP
     ['platform.vlp.title',       'VLP 钓饵技术',                                                    'platform_vlp',   'VLP·标题', 'text'],
     ['platform.vlp.lead',        '让复杂抗原的展示更接近天然状态',                                  'platform_vlp',   'VLP·副题', 'text'],
@@ -153,9 +153,7 @@ $S = [
     ['platform.loop.eyebrow',    '干湿闭环',                                                        'platform_loop',  '干湿闭环·眉题', 'text'],
     ['platform.loop.title',      '从 <span class="txt-neon">Antibody Agent</span> 到实验验证，一条完整的<span class="txt-neon">抗体发现闭环</span>', 'platform_loop', '干湿闭环·标题(含标记)', 'textarea'],
     ['platform.loop.sub',        'AI 设计与实验结果双向回流，让每一轮实验结果成为下一轮设计与优化的依据。', 'platform_loop', '干湿闭环·副标题', 'textarea'],
-    ['platform.loop.tempo',      '设计 → 验证 → 分析 → 优化',                                       'platform_loop',  '干湿闭环·节奏', 'text'],
     ['platform.loop.center_logo','assets/images/logo.webp',                                         'platform_loop',  '干湿闭环·中心 logo 路径', 'text'],
-    ['platform.loop.center_label','MabSeek 抗体求索',                                               'platform_loop',  '干湿闭环·中心标签', 'text'],
     // 屏 6 · Case
     ['platform.case.eyebrow',       '代表性成果与平台验证',                                         'platform_case',  '成果·眉题', 'text'],
     ['platform.case.clinical_title','从抗体发现到临床转化',                                         'platform_case',  '临床成果·标题', 'text'],
@@ -447,14 +445,25 @@ seed_cards_group('platform_agent_module', [
 ]);
 
 seed_cards_group('platform_data_card', [
-    ['grp'=>'platform_data_card','icon'=>'','title'=>'真实数据','body'=>'抗体序列 ｜ 靶点结构 ｜ 结合亲和力 ｜ 实验结果','extra'=>'','sort'=>1,'published'=>1],
-    ['grp'=>'platform_data_card','icon'=>'','title'=>'AI 分析','body'=>'候选设计 ｜ 结构预测 ｜ 亲和力/成药性评估 ｜ 排序筛选','extra'=>'','sort'=>2,'published'=>1],
+    ['grp'=>'platform_data_card','icon'=>'📊','title'=>'真实数据','body'=>'正/负结合数据｜抗体序列与靶点信息｜结合与功能实验结果','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_data_card','icon'=>'🤖','title'=>'AI 分析','body'=>'抗体生成与优化｜结构与亲和力预测｜候选排序与成药性评估','extra'=>'','sort'=>2,'published'=>1],
+]);
+
+seed_cards_group('platform_data_flow', [
+    ['grp'=>'platform_data_flow','icon'=>'📥','title'=>'数据输入','body'=>'序列 · 结构 · 靶点','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_data_flow','icon'=>'🧠','title'=>'AI 分析','body'=>'结构预测 · 亲和力预测 · 候选排序','extra'=>'','sort'=>2,'published'=>1],
+    ['grp'=>'platform_data_flow','icon'=>'⭐','title'=>'候选输出','body'=>'优先候选（高亲和力、高成药性）','extra'=>'','sort'=>3,'published'=>1],
 ]);
 
 seed_cards_group('platform_lab_cap', [
     ['grp'=>'platform_lab_cap','icon'=>'','title'=>'高通量','body'=>'支持大规模抗体候选的并行筛选，提高抗体发现效率','extra'=>'','sort'=>1,'published'=>1],
     ['grp'=>'platform_lab_cap','icon'=>'','title'=>'自动化','body'=>'将实验操作与数据采集整合为标准化流程，减少人工干预，提高实验重复性','extra'=>'','sort'=>2,'published'=>1],
     ['grp'=>'platform_lab_cap','icon'=>'','title'=>'微量化','body'=>'覆盖皮升级至微升级液滴操作，在提升实验通量的同时降低样本与试剂消耗','extra'=>'','sort'=>3,'published'=>1],
+]);
+
+seed_cards_group('platform_lab_scale', [
+    ['grp'=>'platform_lab_scale','icon'=>'','title'=>'皮升级液滴','body'=>'液滴生成 10⁷⁻⁸ 个/h · 10¹⁻² pL','extra'=>'','sort'=>1,'published'=>1],
+    ['grp'=>'platform_lab_scale','icon'=>'','title'=>'微升级液滴','body'=>'液滴生成 10³⁻⁴ 个/h · 1–3 μL','extra'=>'','sort'=>2,'published'=>1],
 ]);
 
 seed_cards_group('platform_vlp_kind', [
