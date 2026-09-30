@@ -14,24 +14,38 @@ $loopSides  = (new Collection('content_cards'))->published("grp='platform_loop_s
 $loopRings  = (new Collection('content_cards'))->published("grp='platform_loop_ring'");
 $caseStats  = (new Collection('content_cards'))->published("grp='platform_case_stat'");
 $caseVlps   = (new Collection('content_cards'))->published("grp='platform_case_vlp'");
+$dataFlow   = (new Collection('content_cards'))->published("grp='platform_data_flow'");
 
-// ── 纯展示型静态数据（不进后台）──
+// ── 屏 3 数据卡：V4.4 扁平数组，GLP-1R 大卡跨列内含 A+B 并排 ──
 $DATA_PLOTS = [
-    'hero' => [
-        'src'          => 'assets/images/platform/data-glp1r-binding.webp',
-        'title'        => 'GLP-1R (GPCR)',
-        'tags'         => ['血糖调节', '体重控制', '心血管保护'],
-        'caption'      => 'Binding to 293T-GLP-1R · 候选抗体结合曲线',
-        'detail'       => 'assets/images/platform/data-glp1r-sequences.webp',
-        'detail_label' => '抗体候选序列节选',
+    [
+        'span'  => 2,
+        'title' => 'GLP-1R (GPCR)',
+        'tags'  => ['血糖调节', '体重控制', '心血管保护'],
+        'imgs'  => [
+            ['src' => 'assets/images/platform/data-glp1r-binding.webp',
+             'caption' => 'Binding to 293T-GLP-1R · 候选抗体结合曲线'],
+            ['src' => 'assets/images/platform/data-glp1r-sequences.webp',
+             'caption' => '抗体候选序列节选 · EC₅₀ · V-Gene · CDR3 · SHM'],
+        ],
     ],
-    'twin' => [
-        ['src'   => 'assets/images/platform/data-cxcr4.webp',
-         'title' => 'CXCR4 (GPCR)',
-         'tags'  => ['HIV 共受体', '肿瘤微环境', 'NHL/MM/AML 靶点']],
-        ['src'   => 'assets/images/platform/data-cd3.webp',
-         'title' => 'CD3',
-         'tags'  => ['T 细胞标志物', 'TCE 靶点', '肿瘤/自免']],
+    [
+        'span'  => 1,
+        'title' => 'CXCR4 (GPCR)',
+        'tags'  => ['HIV 共受体', '肿瘤微环境', 'NHL/MM/AML 靶点'],
+        'imgs'  => [
+            ['src' => 'assets/images/platform/data-cxcr4.webp',
+             'caption' => 'CXCR4 结合与功能表征'],
+        ],
+    ],
+    [
+        'span'  => 1,
+        'title' => 'CD3',
+        'tags'  => ['T 细胞标志物', 'TCE 靶点', '肿瘤/自免'],
+        'imgs'  => [
+            ['src' => 'assets/images/platform/data-cd3.webp',
+             'caption' => 'CD3 结合与激活谱'],
+        ],
     ],
 ];
 $LAB_MICRO = [
@@ -121,65 +135,65 @@ $LAB_MICRO = [
   </div>
 </section>
 
-<!-- ═══════════════ 屏 3 · Data #data（深） ═══════════════ -->
+<!-- ═══════════════ 屏 3 · Data #data（深 · V4.4 L 形四象限）═══════════════ -->
 <section class="section section-dark" id="data">
   <div class="container">
-    <div class="text-center" style="margin-bottom:32px">
-      <span class="eyebrow reveal"><?= snip('platform.data.eyebrow', '真实数据驱动') ?></span>
-      <h2 class="section-title reveal d1"><?= snip_raw('platform.data.title', '真实数据驱动<span class="txt-neon">抗体设计与预测</span>') ?></h2>
-      <p class="section-sub reveal d2"><?= snip('platform.data.sub', '整合抗体序列、靶点、结构与实验结果，为候选设计、筛选和优化提供依据。') ?></p>
-    </div>
-
-    <div class="data-hero-grid reveal">
-      <div class="data-side">
+    <div class="data-quad">
+      <!-- 左 3/12 竖栏 -->
+      <aside class="data-quad-side reveal">
+        <span class="eyebrow"><?= snip('platform.data.eyebrow', '真实数据驱动') ?></span>
+        <h2 class="section-title"><?= snip_raw('platform.data.title', '真实数据驱动<span class="txt-neon">抗体设计与预测</span>') ?></h2>
+        <p class="section-sub"><?= snip('platform.data.sub', '整合抗体序列、靶点、结构与实验结果，为候选设计、筛选和优化提供依据。') ?></p>
+        <div class="data-side-cards">
 <?php foreach ($dataCards as $c): ?>
-        <div class="data-side-card">
-          <h4><?= e($c['title']) ?></h4>
-          <p><?= e($c['body']) ?></p>
-        </div>
+          <div class="data-side-card">
+            <h4><?= e($c['icon']) ?> <?= e($c['title']) ?></h4>
+            <ul>
+<?php foreach (array_filter(array_map('trim', explode('｜', $c['body']))) as $item): ?>
+              <li><?= e($item) ?></li>
 <?php endforeach; ?>
-      </div>
-      <div class="data-main">
-        <div class="data-flow">
-          <span class="data-flow-pill data-flow-pill--in">数据输入</span>
-          <span class="data-flow-arrow">→</span>
-          <span class="data-flow-pill data-flow-pill--ai">AI 分析</span>
-          <span class="data-flow-arrow">→</span>
-          <span class="data-flow-pill data-flow-pill--in">候选输出</span>
+            </ul>
+          </div>
+<?php endforeach; ?>
         </div>
-        <div class="data-plot data-plot--hero">
-          <div class="data-plot-head">
-            <b><?= e($DATA_PLOTS['hero']['title']) ?></b>
-            <div class="data-plot-tags">
-<?php foreach ($DATA_PLOTS['hero']['tags'] as $t): ?>
-              <span class="data-plot-tag"><?= e($t) ?></span>
+      </aside>
+
+      <!-- 右上 9/12 流程条 -->
+      <div class="data-quad-flow reveal d1">
+<?php foreach ($dataFlow as $i => $f): ?>
+        <div class="data-flow-card data-flow-card--<?= $i === count($dataFlow) - 1 ? 'out' : ($i === 0 ? 'in' : 'ai') ?>">
+          <span class="data-flow-icon"><?= e($f['icon']) ?></span>
+          <h4><?= e($f['title']) ?></h4>
+          <p><?= e($f['body']) ?></p>
+        </div>
+<?php if ($i < count($dataFlow) - 1): ?>
+        <span class="data-flow-sep">→</span>
+<?php endif; endforeach; ?>
+      </div>
+
+      <!-- 右下 9/12 数据卡 2 行网格 -->
+      <div class="data-quad-grid reveal d2">
+<?php foreach ($DATA_PLOTS as $p): ?>
+        <article class="data-card" style="grid-column: span <?= (int)$p['span'] ?>">
+          <header class="data-card-head">
+            <b><?= e($p['title']) ?></b>
+            <div class="data-card-tags">
+<?php foreach ($p['tags'] as $t): ?>
+              <span class="data-card-tag"><?= e($t) ?></span>
 <?php endforeach; ?>
             </div>
-          </div>
-          <img src="<?= e($DATA_PLOTS['hero']['src']) ?>" alt="GLP-1R 结合曲线" loading="lazy">
-          <p class="data-plot-caption"><?= e($DATA_PLOTS['hero']['caption']) ?></p>
-          <details class="data-plot-details">
-            <summary><?= e($DATA_PLOTS['hero']['detail_label']) ?></summary>
-            <img src="<?= e($DATA_PLOTS['hero']['detail']) ?>" alt="抗体候选序列" loading="lazy">
-          </details>
-        </div>
-      </div>
-    </div>
-
-    <div class="data-twin-grid reveal d1">
-<?php foreach ($DATA_PLOTS['twin'] as $p): ?>
-      <div class="data-plot">
-        <div class="data-plot-head">
-          <b><?= e($p['title']) ?></b>
-          <div class="data-plot-tags">
-<?php foreach ($p['tags'] as $t): ?>
-            <span class="data-plot-tag"><?= e($t) ?></span>
+          </header>
+          <div class="data-card-imgs" data-count="<?= count($p['imgs']) ?>">
+<?php foreach ($p['imgs'] as $img): ?>
+            <figure>
+              <img src="<?= e($img['src']) ?>" alt="<?= e($p['title']) ?>" loading="lazy">
+              <figcaption><?= e($img['caption']) ?></figcaption>
+            </figure>
 <?php endforeach; ?>
           </div>
-        </div>
-        <img src="<?= e($p['src']) ?>" alt="<?= e($p['title']) ?>" loading="lazy">
-      </div>
+        </article>
 <?php endforeach; ?>
+      </div>
     </div>
   </div>
 </section>

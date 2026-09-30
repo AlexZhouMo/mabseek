@@ -861,32 +861,56 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .agent-mod p { font-size: 13px; color: var(--ink-3); margin: 0; line-height: 1.55; }
 @media (max-width: 900px) { .agent-grid, .agent-grid--flip { grid-template-columns: 1fr; } .agent-modules { grid-template-columns: 1fr; } }
 
-/* ── 屏 3 · Data 左侧卡片 + 右侧 hero 图 + 下方双图 ── */
-.data-hero-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 24px; align-items: stretch; }
-.data-side { display: flex; flex-direction: column; gap: 14px; }
-.data-side-card { flex: 1; padding: 20px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); display: flex; flex-direction: column; justify-content: center; }
-.data-side-card h4 { color: var(--green-neon, var(--green)); font-size: 15px; margin: 0 0 6px; }
-.data-side-card p { color: var(--ink-on-dark-2, rgba(255,255,255,.72)); font-size: 13.5px; line-height: 1.6; margin: 0; }
-.data-main { display: flex; flex-direction: column; gap: 12px; }
-.data-flow { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 14px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 999px; align-self: center; }
-.data-flow-pill { padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; }
-.data-flow-pill--in { background: linear-gradient(135deg, var(--purple), var(--purple-600)); }
-.data-flow-pill--ai { background: linear-gradient(135deg, #12D6A0, #00E0A4); color: #04231b; }
-.data-flow-arrow { color: rgba(255,255,255,.5); font-size: 14px; }
-.data-plot { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius); padding: 14px 16px; }
-.data-plot img { width: 100%; max-height: 300px; height: auto; display: block; border-radius: var(--radius-sm); background: #0a0d1e; object-fit: contain; }
-.data-plot--hero img { max-height: 320px; }
-.data-plot-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 8px; }
-.data-plot-head b { color: #fff; font-size: 16px; }
-.data-plot-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-.data-plot-tag { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; background: rgba(0,224,164,.1); color: var(--green-neon, var(--green)); border: 1px solid rgba(0,224,164,.25); }
-.data-plot-caption { color: rgba(255,255,255,.55); font-size: 11.5px; margin-top: 6px; font-style: italic; }
-.data-plot-details { margin-top: 8px; }
-.data-plot-details summary { cursor: pointer; color: var(--green-neon, var(--green)); font-size: 12.5px; font-weight: 700; padding: 4px 0; user-select: none; }
-.data-plot-details[open] summary { margin-bottom: 6px; }
-.data-plot-details img { margin-top: 6px; }
-.data-twin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
-@media (max-width: 900px) { .data-hero-grid, .data-twin-grid { grid-template-columns: 1fr; } }
+/* ── 屏 3 Data · V4.4 L 形四象限 ── */
+.data-quad { display: grid; grid-template-columns: 3fr 9fr; gap: 28px; align-items: stretch; }
+.data-quad-side { display: flex; flex-direction: column; gap: 14px; padding-right: 8px; border-right: 1px solid rgba(255,255,255,.08); }
+.data-quad-side .eyebrow { color: var(--green); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.data-quad-side .section-title { color: #fff; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.25; margin: 6px 0 8px; text-align: left; }
+.data-quad-side .section-sub { color: rgba(255,255,255,.66); font-size: 13.5px; line-height: 1.6; text-align: left; margin: 0 0 8px; }
+.data-side-cards { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+.data-side-card { padding: 14px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); }
+.data-side-card h4 { color: var(--green); font-size: 14px; margin: 0 0 8px; }
+.data-side-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
+.data-side-card li { color: rgba(255,255,255,.78); font-size: 12.5px; line-height: 1.5; padding-left: 14px; position: relative; }
+.data-side-card li::before { content: '·'; position: absolute; left: 4px; color: var(--green); font-weight: 700; }
+
+.data-quad-flow { display: flex; align-items: stretch; gap: 8px; justify-content: space-between; }
+.data-flow-card { flex: 1; padding: 14px 16px; border-radius: var(--radius-sm); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12); text-align: left; display: flex; flex-direction: column; gap: 4px; }
+.data-flow-card--in { background: linear-gradient(135deg, rgba(139,92,246,.18), rgba(139,92,246,.06)); border-color: rgba(139,92,246,.4); }
+.data-flow-card--ai { background: linear-gradient(135deg, rgba(0,224,164,.16), rgba(0,224,164,.05)); border-color: rgba(0,224,164,.4); }
+.data-flow-card--out { background: linear-gradient(135deg, rgba(0,224,164,.2), rgba(139,92,246,.2)); border-color: rgba(0,224,164,.5); }
+.data-flow-icon { font-size: 22px; line-height: 1; }
+.data-flow-card h4 { color: #fff; font-size: 14px; margin: 4px 0 2px; }
+.data-flow-card p { color: rgba(255,255,255,.75); font-size: 12px; line-height: 1.5; margin: 0; }
+.data-flow-sep { color: rgba(255,255,255,.4); font-size: 20px; align-self: center; padding: 0 2px; }
+
+.data-quad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+.data-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius); padding: 14px 16px; }
+.data-card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.data-card-head b { color: #fff; font-size: 15px; }
+.data-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.data-card-tag { padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.06); color: rgba(255,255,255,.7); font-size: 11px; border: 1px solid rgba(255,255,255,.08); }
+.data-card-imgs { display: grid; gap: 10px; }
+.data-card-imgs[data-count="1"] { grid-template-columns: 1fr; }
+.data-card-imgs[data-count="2"] { grid-template-columns: 1fr 1fr; }
+.data-card-imgs figure { margin: 0; }
+.data-card-imgs img { width: 100%; height: auto; border-radius: 8px; background: rgba(255,255,255,.04); display: block; }
+.data-card-imgs figcaption { color: rgba(255,255,255,.55); font-size: 11px; margin-top: 6px; line-height: 1.4; }
+
+@media (max-width: 1199px) {
+  .data-quad { grid-template-columns: 4fr 8fr; }
+}
+@media (max-width: 900px) {
+  .data-quad { grid-template-columns: 1fr; }
+  .data-quad-side { border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); padding-right: 0; padding-bottom: 20px; }
+  .data-quad-flow { flex-direction: column; }
+  .data-flow-sep { transform: rotate(90deg); align-self: center; }
+  .data-quad-grid { grid-template-columns: 1fr; }
+  .data-card { grid-column: span 1 !important; }
+}
+@media (max-width: 480px) {
+  .data-card-imgs[data-count="2"] { grid-template-columns: 1fr; }
+}
 
 /* ── 屏 4a · Lab 全景 + 5:7 三能力 + 微流控 6 图 ── */
 .lab-hero-photo { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh-lg); aspect-ratio: 24 / 9; background: #0a0d1e; }
