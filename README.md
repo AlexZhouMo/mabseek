@@ -68,7 +68,8 @@ mabseek/
 │   ├── migrate-v4-batch1.php           V4 批 1 网页更新（合并平台与 Agent）
 │   ├── migrate-v4-batch2b1.php         V4 批 2b-1 平台页（21 条 platform.* + home.hero.cta 订正）
 │   ├── migrate-v4-batch2b2a.php        V4 批 2b-2a 平台页视觉升级（4 条新 snippet + 36 孤儿清理）
-│   └── migrate-v43.php                 V4.3 网页更新（首页题眉/教育15讲/关于国际合作/教育访谈/平台7屏）
+│   ├── migrate-v43.php                 V4.3 网页更新（首页题眉/教育15讲/关于国际合作/教育访谈/平台7屏）
+│   └── migrate-v44.php                 V4.4 网页更新（平台页屏 2/3/4a/5 微调：Agent 翻转 · Data L 形四象限 · Lab 三段 · Loop 清理）
 ├── data/              ← SQLite 数据库文件所在（git 忽略，运行时生成）
 ├── deploy/            ← 部署脚本与样例（见「部署」）
 ├── docs/              ← 架构文档、UI 规范
@@ -175,6 +176,19 @@ php -S localhost:8778 -t public
 
 ### V4.3 补丁 · 忽略新视频路径
 - `.gitignore` 补规则 `public/assets/uploads/videos/*` + `!.gitkeep`，防止本地放 44.5MB MP4 后 `git add .` 不慎入库。目录内 `.gitkeep` 入库让克隆后目录直接存在。
+
+### V4.4 · 平台页四屏微调（Agent 翻转 · Data L 形四象限 · Lab 三段 · Loop 清理）
+- **屏 2 Agent 左右翻转 + 主标重构**：HTML 顺序改为图左文右（`.agent-grid--flip` 栅格 `7fr 5fr`），与屏 1 Hero「图右文左」形成上下交叉节奏。删 eyebrow `<span>` 元素，新增大字号品牌绿 `<h2 class="agent-brand">` 承载「Antibody Agent」（clamp 30-44px、uppercase、`var(--green)`）；原 title「从研究问题出发，连接设计、预测与实验」降格 h3 副标、去 `<span class="txt-neon">` 高亮。
+- **屏 3 Data L 形四象限**：`.data-quad` 顶层 grid（3fr + 9fr），左 1/4 竖栏（eyebrow + 主标 + 副标 + 两栏 3 条项说明📊/🤖）跨两行；右上 1/5 三段流程 pill（📥 数据输入 → 🧠 AI 分析 → ⭐ 候选输出，紫/绿/绿紫渐变三色）；右下 4/5 数据卡 2 行网格（GLP-1R 大卡跨列内含数据 A/B 并排、CXCR4/CD3 下方各半）。展平 V4.3 `<details>` 折叠区；新增 `platform_data_flow` cards 组（3 条）。
+- **屏 4a Lab 三段重排**：拆除 V4.3.1 的 24:9 顶部横幅（`git rm lab-auto-room.webp` + migrate-v44 `@unlink` 兜底生产端）。三段布局 = 顶部大主标 + 小副标 → 中部 7:5 左实拍图（新 `lab-hero-photo.webp`）+ 右三能力（高通量/自动化/微量化，白底卡+紫色圆点标记）→ 底部 4:8 左液滴规格（皮升级 10⁷⁻⁸ 个/h · 10¹⁻² pL / 微升级 10³⁻⁴ 个/h · 1–3 μL，白底卡+绿色圆点标记）+ 右 6 图 3×2 网格（图上自带英文 label，无外部 caption）。`$LAB_MICRO` 从 `label + items` 嵌套改扁平 6 项；新增 `platform_lab_scale` cards 组（2 条）。
+- **屏 5 Loop 干湿闭环清理**：`.loop-ring-center--lg` modifier 让中心 logo 从内圆 40% 放大到 65%（<900px 60%）；删除中心文字 `<span>MabSeek 抗体求索</span>` 与底部节奏行「设计 → 验证 → 分析 → 优化」。DB 删除 `platform.loop.center_label` / `platform.loop.tempo` 两条 snippet。
+- **11 张新素材**：屏 3 数据 A-D（`data-glp1r-{binding,sequences}.webp` + `data-cxcr4/cd3.webp`）+ 屏 4a 图片 A（新 `lab-hero-photo.webp`）+ 图片 B-G（`lab-pico-{generation,injection,fads}.webp` + `lab-micro-{generation,injection,sorting}.webp`）经 cwebp 入盘（其中 3 张 pico 图与 V4.3 hash 一致被 git 跳过、实入 8 files）。
+- 迁移：`bin/migrate-v44.php`（`m44_*` 前缀辅助函数与 `m43_*` 独立，避免函数重定义 · 实测第一次 15+ 行、第二次 0 行幂等 · 含 `@unlink` 兜底旧顶部横幅）。
+
+### V4.4.1 · 平台页视觉打磨（3 项 UI fix，纯样式无数据库改动）
+- **屏 3 Data grid 定位修正**：`.data-quad` 追加 `grid-template-rows: auto 1fr`，显式指定 `.data-quad-side` 跨两行、`.data-quad-flow`/`.data-quad-grid` 分别占右上右下 —— 修复第 3 个子元素（`.data-quad-grid`）在只有 2 列 grid 里自动掉到第 2 行第 1 列的错位（GLP-1R 大卡被压到左栏下方的 bug）。
+- **屏 4a 液滴规格美化**：`.lab-scale` 底色从 `linear-gradient` 淡渐变改为纯白 `#fff` + `var(--line)` 细边 + `var(--sh-sm)` 淡阴影，与 `.lab-cap` 三能力卡样式统一；标题保持绿色 + 绿色带光环小圆点前缀；数字启用 `tabular-nums` 等宽渲染。
+- **屏 4a 三能力卡标题加圆点**：`.lab-cap h4` 加紫色带光环小圆点前缀（呼应 `.lab-scale h4` 的绿色圆点），三能力与两规格视觉层级统一。
 
 ## 静态资源缓存
 
