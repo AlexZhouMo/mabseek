@@ -279,6 +279,7 @@ MIGRATIONS=(
   "migrate-v4-batch2b1.php|5k/9 V4 批 2b-1 平台页迁移（幂等，21 条 platform.* + home.hero.cta 订正）|V4 批 2b-1 平台页迁移"
   "migrate-v4-batch2b2a.php|5l/9 V4 批 2b-2a 平台页视觉升级（幂等，4 条新 snippet + 36 孤儿清理）|V4 批 2b-2a 平台页视觉升级"
   "migrate-v43.php|5m/9 V4.3 网页更新（首页题眉 / 教育 15 讲 / 关于国际合作 / 教育访谈 / 平台 7 屏，幂等）|V4.3 网页更新迁移"
+  "migrate-v44.php|5n/9 V4.4 网页更新（平台页屏 2/3/4a/5 微调，幂等，含 lab-auto-room.webp 清理）|V4.4 网页更新迁移"
 )
 for m in "${MIGRATIONS[@]}"; do
   IFS='|' read -r m_script m_step m_label <<< "$m"
