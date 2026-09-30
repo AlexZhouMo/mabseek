@@ -292,9 +292,8 @@ $LAB_MICRO = [
 <?php endforeach; ?>
       </div>
       <div class="loop-ring reveal d1">
-        <div class="loop-ring-center">
+        <div class="loop-ring-center loop-ring-center--lg">
           <img src="<?= snip('platform.loop.center_logo', 'assets/images/logo.webp') ?>" alt="MabSeek" onerror="this.style.display='none'">
-          <span><?= snip('platform.loop.center_label', 'MabSeek 抗体求索') ?></span>
         </div>
 <?php
 $ringCount = count($loopRings) ?: 5;
@@ -313,9 +312,6 @@ foreach ($loopRings as $i => $n):
       </div>
     </div>
 
-    <div class="loop-tempo reveal d2" style="margin-top:28px">
-      <?= snip('platform.loop.tempo', '设计 → 验证 → 分析 → 优化') ?>
-    </div>
   </div>
 </section>
 

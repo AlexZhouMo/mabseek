@@ -978,6 +978,9 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .loop-ring-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 42%; aspect-ratio: 1/1; border-radius: 50%; background: linear-gradient(135deg, rgba(109,59,235,.25), rgba(0,224,164,.25)); border: 2px solid rgba(255,255,255,.15); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12px; }
 .loop-ring-center img { width: 44px; height: 44px; object-fit: contain; margin-bottom: 6px; }
 .loop-ring-center span { color: #fff; font-size: 13px; font-weight: 700; }
+.loop-ring-center--lg img { max-width: 65%; height: auto; }
+.loop-ring-center--lg span { display: none; }
+@media (max-width: 900px) { .loop-ring-center--lg img { max-width: 60%; } }
 .loop-ring-node { position: absolute; left: 50%; top: 50%; width: 34%; padding: 12px 14px; border-radius: 14px; text-align: center; transform: translate(-50%,-50%) rotate(var(--ang)) translateY(-165px) rotate(calc(-1 * var(--ang))); }
 .loop-ring-node h4 { font-size: 14px; margin: 0 0 4px; color: #fff; font-weight: 700; }
 .loop-ring-node p { font-size: 11px; margin: 0; line-height: 1.4; }
@@ -986,7 +989,6 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .loop-ring-node--wet { background: linear-gradient(135deg, rgba(0,224,164,.85), rgba(18,214,160,.85)); border: 1px solid rgba(79,233,196,.6); box-shadow: 0 8px 24px rgba(0,224,164,.32); }
 .loop-ring-node--wet h4 { color: #04231b; }
 .loop-ring-node--wet p { color: rgba(4,35,27,.75); }
-.loop-tempo { text-align: center; color: var(--green-neon, var(--green)); font-size: 15px; font-weight: 700; letter-spacing: .05em; padding: 14px 20px; background: rgba(0,224,164,.06); border: 1px solid rgba(0,224,164,.2); border-radius: 999px; display: inline-block; margin: 0 auto; position: relative; left: 50%; transform: translateX(-50%); }
 @media (max-width: 900px) { .loop-grid { grid-template-columns: 1fr; } .loop-ring { max-width: 380px; } .loop-ring-node { transform: translate(-50%,-50%) rotate(var(--ang)) translateY(-125px) rotate(calc(-1 * var(--ang))); width: 40%; } }
 
 /* ── 屏 6 · Case 代表性成果（上 5:7 · 下 7:5） ── */
