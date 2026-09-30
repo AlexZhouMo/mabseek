@@ -267,6 +267,21 @@ mabseek/
 - **课程视频后台**：新增 `app/admin/edu_video.php` 上传模块（≤50MB，`assets/videos/`），并支持外链 iframe（Bilibili / YouTube 等，scheme 白名单校验）。V4.3 后教育页 `#video` 改造为张林琦访谈《疫苗的力量》专用模块：44.5MB MP4 手动 scp 到生产 `assets/uploads/videos/zhang-linqi-vaccine-talk.mp4`，视频缺失时优雅降级为海报 + 提示。
 - **SciencePal 合作方同步**：会员注册/改密同步 SciencePal 开通/改密（`app/sciencepal.php`），密钥走 `app/config.local.php` 或环境变量，未配置时静默跳过不影响本站。
 - **全局 CTA 拦截**：`assets/js/trial-cta.js` 全站拦截 `data-trial-cta`，弹出 SciencePal 试用申请模态框；未登录跳 `login.php?next=…&trial=1` 后自动回到原页并唤起模态。
-- **首页 logo 墙、张老师成果手风琴、国际合作轮播**（260920）；**Logo/教育分段/about 精简**（V3.0.2）；**平台屏 3 三张 SVG 数据图、屏 5 SVG 环形闭环、屏 1 hero 品牌化**（V4 批 2b）；**首页题眉清空 / 教育 15 讲字段瘦身 / 关于国际合作两段刷新 / 教育访谈模块 / 平台 7 屏重构**（V4.3）；**平台 7 屏视觉打磨 · Hero 单行 · Data 布局平衡 · Lab 24:9 横幅 · VLP 图收窄 · Loop 环形修复 · 整体 -7.6% 高度**（V4.3.1，纯 CSS/HTML 无数据库改动）。
+- **首页 logo 墙、张老师成果手风琴、国际合作轮播**（260920）；**Logo/教育分段/about 精简**（V3.0.2）；**平台屏 3 三张 SVG 数据图、屏 5 SVG 环形闭环、屏 1 hero 品牌化**（V4 批 2b）；**首页题眉清空 / 教育 15 讲字段瘦身 / 关于国际合作两段刷新 / 教育访谈模块 / 平台 7 屏重构**（V4.3）；**平台 7 屏视觉打磨 · Hero 单行 · Data 布局平衡 · Lab 24:9 横幅 · VLP 图收窄 · Loop 环形修复 · 整体 -7.6% 高度**（V4.3.1，纯 CSS/HTML 无数据库改动）；**平台屏 2/3/4a/5 四屏微调**（V4.4，见下节）。
+
+### 12.1 平台页 7 屏 · V4.4 微调（2026-09-30）
+
+在 V4.3 / V4.3.1 建立的 7 屏骨架上，对屏 2 / 3 / 4a / 5 做四处结构与视觉补丁；屏 1 Hero、屏 6 Case、屏 7 Try 保持不变。
+
+- **屏 2 Agent**：改为图左文右（`.agent-grid--flip`）；新增大字号品牌绿主标 `Antibody Agent`（`.agent-brand`）承载定位；副标改为原 title 去掉 span 高亮后的纯净版；移除 eyebrow。
+- **屏 3 Data**：改为 L 形四象限（左 1/4 竖栏纵向叙事 + 右上 1/5 三段流程 cards + 右下 4/5 数据卡 2 行网格）；GLP-1R 大卡跨列，内含数据 A/B 并排；CXCR4 / CD3 于其下方各占一半；新增 `platform_data_flow` cards 组（3 项流程）。
+- **屏 4a Lab**：拆除 V4.3.1 24:9 顶部横幅；改为三段布局——顶部标题带 + 中部 7:5 左实拍图右三能力 + 底部 4:8 左液滴规格右 6 图 2×3；实拍图 `lab-hero-photo.webp` 替换旧的 `lab-auto-room.webp`（迁移脚本 `@unlink` 兜底清理）；新增 `platform_lab_scale` cards 组（2 项规格）；移除 eyebrow。
+- **屏 5 Loop**：中心 logo 放大至内圆 65%（`.loop-ring-center--lg`）；删除中心文字 `MabSeek 抗体求索`（`center_label`）与底部节奏行「设计 → 验证 → 分析 → 优化」（`tempo`）。
+
+**数据库侧变动**（seed + 幂等迁移双写，`bin/migrate-v44.php` 已挂入 `deploy/deploy-mabseek.sh`）：
+
+- 新增 snippets：`platform.agent.brand`、`platform.lab.sub`
+- 删除 snippets：`platform.agent.eyebrow`、`platform.lab.eyebrow`、`platform.loop.center_label`、`platform.loop.tempo`
+- 新增 content_cards 组：`platform_data_flow`（3）、`platform_lab_scale`（2）
 
 每一批含配套的 seed 默认值更新 + 幂等迁移脚本 `bin/migrate-*.php` + `deploy/deploy-mabseek.sh` 挂载。批次清单与说明见 [README 版本迭代记录](../README.md#版本迭代记录)。
