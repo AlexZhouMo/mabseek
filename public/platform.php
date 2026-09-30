@@ -94,13 +94,16 @@ $LAB_MICRO = [
   </div>
 </section>
 
-<!-- ═══════════════ 屏 2 · Agent #agent（白） ═══════════════ -->
+<!-- ═══════════════ 屏 2 · Agent #agent（白 · V4.4 图左文右）═══════════════ -->
 <section class="section section-light" id="agent">
   <div class="container">
-    <div class="agent-grid">
-      <div class="agent-left">
-        <span class="eyebrow reveal"><?= snip('platform.agent.eyebrow', 'Antibody Agent') ?></span>
-        <h2 class="section-title reveal d1"><?= snip_raw('platform.agent.title', '从研究问题出发，连接<span class="txt-neon">设计、预测与实验</span>') ?></h2>
+    <div class="agent-grid agent-grid--flip">
+      <div class="agent-visual reveal d1">
+        <img src="<?= snip('platform.agent.screenshot', 'assets/images/platform/agent-screen.webp') ?>" alt="Antibody Agent 运行截图" loading="lazy">
+      </div>
+      <div class="agent-copy">
+        <h2 class="agent-brand reveal"><?= snip('platform.agent.brand', 'Antibody Agent') ?></h2>
+        <h3 class="agent-title reveal d1"><?= snip('platform.agent.title', '从研究问题出发，连接设计、预测与实验') ?></h3>
         <p class="section-sub reveal d2"><?= snip('platform.agent.lead', 'Antibody Agent 理解研究目标，将任务拆解为可执行的研究步骤。') ?></p>
         <div class="agent-modules reveal d3">
 <?php foreach ($agentMods as $m): ?>
@@ -113,9 +116,6 @@ $LAB_MICRO = [
           </div>
 <?php endforeach; ?>
         </div>
-      </div>
-      <div class="agent-right reveal d1">
-        <img src="<?= snip('platform.agent.screenshot', 'assets/images/platform/agent-screen.webp') ?>" alt="Antibody Agent 运行截图" loading="lazy">
       </div>
     </div>
   </div>

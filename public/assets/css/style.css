@@ -848,15 +848,18 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 
 /* ── 屏 2 · Agent 5:7 分栏 ── */
 .agent-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: center; }
+.agent-grid--flip { grid-template-columns: 7fr 5fr; }  /* V4.4 · 图左文右 */
+.agent-visual { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh-lg); }
+.agent-visual img { display: block; width: 100%; height: auto; }
+.agent-brand { font-size: clamp(30px, 4vw, 44px); font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: var(--green); margin: 0 0 8px; line-height: 1.1; }
+.agent-title { font-size: clamp(16px, 1.6vw, 22px); font-weight: 500; color: var(--ink-3); margin: 0 0 12px; line-height: 1.5; }
 .agent-modules { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 26px; }
 .agent-mod { display: flex; gap: 12px; padding: 18px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); box-shadow: var(--sh-sm); transition: .25s; }
 .agent-mod:hover { border-color: var(--purple-100); box-shadow: var(--sh); transform: translateY(-2px); }
 .agent-mod-ico { width: 40px; height: 40px; flex: 0 0 auto; border-radius: 10px; background: var(--purple-050); color: var(--purple); display: grid; place-items: center; font-size: 20px; }
 .agent-mod h4 { font-size: 15px; margin: 0 0 4px; color: var(--ink); }
 .agent-mod p { font-size: 13px; color: var(--ink-3); margin: 0; line-height: 1.55; }
-.agent-right { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh-lg); }
-.agent-right img { display: block; width: 100%; height: auto; }
-@media (max-width: 900px) { .agent-grid { grid-template-columns: 1fr; } .agent-modules { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .agent-grid, .agent-grid--flip { grid-template-columns: 1fr; } .agent-modules { grid-template-columns: 1fr; } }
 
 /* ── 屏 3 · Data 左侧卡片 + 右侧 hero 图 + 下方双图 ── */
 .data-hero-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 24px; align-items: stretch; }
