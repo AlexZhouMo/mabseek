@@ -668,7 +668,8 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 }
 .auth-card.wide { max-width: 560px; }
 .auth-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; font-weight: 800; color: var(--ink); }
-.auth-brand .logo { width: 36px; height: 36px; border-radius: 10px; background: var(--grad-purple); display: grid; place-items: center; color: #fff; }
+.auth-brand-logo { height: 38px; width: auto; display: block; }
+.auth-brand--dark .auth-brand-logo { filter: brightness(0) invert(1); }
 .auth-title { font-size: 24px; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
 .auth-sub { font-size: 14px; color: var(--ink-3); margin-bottom: 26px; }
 .auth-card .field { margin-bottom: 16px; }
@@ -863,13 +864,13 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 
 /* ── 屏 3 Data · V4.4 L 形四象限 ── */
 .data-quad { display: grid; grid-template-columns: 3fr 9fr; grid-template-rows: auto 1fr; gap: 28px 28px; align-items: stretch; }
-.data-quad-side { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 14px; padding-right: 8px; border-right: 1px solid rgba(255,255,255,.08); }
+.data-quad-side { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 14px; padding-right: 8px; border-right: 1px solid rgba(255,255,255,.08); justify-content: space-between; }
 .data-quad-flow { grid-column: 2; grid-row: 1; }
 .data-quad-grid { grid-column: 2; grid-row: 2; }
 .data-quad-side .eyebrow { color: var(--green); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
 .data-quad-side .section-title { color: #fff; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.25; margin: 6px 0 8px; text-align: left; }
 .data-quad-side .section-sub { color: rgba(255,255,255,.66); font-size: 13.5px; line-height: 1.6; text-align: left; margin: 0 0 8px; }
-.data-side-cards { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+.data-side-cards { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
 .data-side-card { padding: 14px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); }
 .data-side-card h4 { color: var(--green); font-size: 14px; margin: 0 0 8px; }
 .data-side-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
@@ -877,12 +878,12 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .data-side-card li::before { content: '·'; position: absolute; left: 4px; color: var(--green); font-weight: 700; }
 
 .data-quad-flow { display: flex; align-items: stretch; gap: 8px; justify-content: space-between; }
-.data-flow-card { flex: 1; padding: 14px 16px; border-radius: var(--radius-sm); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12); text-align: left; display: flex; flex-direction: column; gap: 4px; }
+.data-flow-card { flex: 1; padding: 14px 16px; border-radius: var(--radius-sm); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .data-flow-card--in { background: linear-gradient(135deg, rgba(139,92,246,.18), rgba(139,92,246,.06)); border-color: rgba(139,92,246,.4); }
 .data-flow-card--ai { background: linear-gradient(135deg, rgba(0,224,164,.16), rgba(0,224,164,.05)); border-color: rgba(0,224,164,.4); }
 .data-flow-card--out { background: linear-gradient(135deg, rgba(0,224,164,.2), rgba(139,92,246,.2)); border-color: rgba(0,224,164,.5); }
-.data-flow-icon { font-size: 22px; line-height: 1; }
-.data-flow-card h4 { color: #fff; font-size: 14px; margin: 4px 0 2px; }
+.data-flow-icon { display: block; font-size: 24px; margin: 0 auto 2px; }
+.data-flow-card h4 { color: #fff; font-size: 14px; margin: 0; }
 .data-flow-card p { color: rgba(255,255,255,.75); font-size: 12px; line-height: 1.5; margin: 0; }
 .data-flow-sep { color: rgba(255,255,255,.4); font-size: 20px; align-self: center; padding: 0 2px; }
 
@@ -894,7 +895,9 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .data-card-tag { padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.06); color: rgba(255,255,255,.7); font-size: 11px; border: 1px solid rgba(255,255,255,.08); }
 .data-card-imgs { display: grid; gap: 10px; }
 .data-card-imgs[data-count="1"] { grid-template-columns: 1fr; }
-.data-card-imgs[data-count="2"] { grid-template-columns: 1fr 1fr; }
+.data-card-imgs[data-count="2"] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; }
+.data-card-imgs[data-count="2"] figure { align-self: center; margin: 0; display: flex; flex-direction: column; }
+.data-card-imgs[data-count="2"] figure img { width: 100%; height: 100%; object-fit: contain; }
 .data-card-imgs figure { margin: 0; }
 .data-card-imgs img { width: 100%; height: auto; border-radius: 8px; background: rgba(255,255,255,.04); display: block; }
 .data-card-imgs figcaption { color: rgba(255,255,255,.55); font-size: 11px; margin-top: 6px; line-height: 1.4; }
@@ -980,11 +983,12 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .loop-side-card h4 { color: var(--green-neon, var(--green)); font-size: 17px; margin: 0 0 8px; }
 .loop-side-card p { color: var(--ink-on-dark-2, rgba(255,255,255,.72)); font-size: 14px; line-height: 1.65; margin: 0; }
 .loop-ring { position: relative; width: 100%; aspect-ratio: 1 / 1; max-width: 520px; margin: 0 auto; justify-self: center; }
-.loop-ring-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 42%; aspect-ratio: 1/1; border-radius: 50%; background: linear-gradient(135deg, rgba(109,59,235,.25), rgba(0,224,164,.25)); border: 2px solid rgba(255,255,255,.15); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12px; }
+.loop-ring-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 48%; aspect-ratio: 1/1; border-radius: 50%; background: linear-gradient(135deg, rgba(109,59,235,.25), rgba(0,224,164,.25)); border: 2px solid rgba(255,255,255,.15); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
 .loop-ring-center img { width: 44px; height: 44px; object-fit: contain; margin-bottom: 6px; }
 .loop-ring-center span { color: #fff; font-size: 13px; font-weight: 700; }
-.loop-ring-center--lg img { max-width: 65%; height: auto; }
+.loop-ring-center--lg img { width: auto; max-width: 100%; height: auto; padding: 10px; }
 .loop-ring-center--lg span { display: none; }
+@media (max-width: 1100px) { .loop-ring-center { width: 44%; } .loop-ring-center--lg img { max-width: 90%; } }
 @media (max-width: 900px) { .loop-ring-center--lg img { max-width: 60%; } }
 .loop-ring-node { position: absolute; left: 50%; top: 50%; width: 34%; padding: 12px 14px; border-radius: 14px; text-align: center; transform: translate(-50%,-50%) rotate(var(--ang)) translateY(-165px) rotate(calc(-1 * var(--ang))); }
 .loop-ring-node h4 { font-size: 14px; margin: 0 0 4px; color: #fff; font-weight: 700; }
@@ -1039,3 +1043,8 @@ main article img { max-width: 100%; height: auto; border-radius: 6px; }
 .edu-talk-missing { position: absolute; left: 0; right: 0; bottom: 20px; text-align: center; color: rgba(255,255,255,.85); font-size: 14px; font-weight: 600; background: rgba(0,0,0,.55); padding: 10px; }
 .edu-talk-speaker { color: var(--ink-3); font-size: 14px; text-align: right; }
 @media (max-width: 900px) { .edu-talk { grid-template-columns: 1fr; } .edu-talk-speaker { text-align: left; } }
+
+/* V5.0 · 教育页课程 banner —— 新图自然宽高比 1821×745(≈2.44)，比容器 1152×460(≈2.50)窄
+   原规则里的 max-height:460 + object-fit:contain 会在两侧留 ~14px 深色底色；
+   新素材本身边缘已填满，这里取消高度上限、让图像以自然比例贴满容器宽度即可 */
+.course-banner img { max-height: none !important; object-fit: fill !important; }

@@ -69,7 +69,7 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
 <?php include __DIR__ . '/partials/nav.php'; ?>
 <div class="auth-wrap">
   <div class="auth-card">
-    <div class="auth-brand"><span class="logo">🧬</span><span>MabSeek</span></div>
+    <div class="auth-brand"><img class="auth-brand-logo" src="assets/images/logo.webp" alt="MabSeek 抗体求索"></div>
     <div class="auth-title">注册会员</div>
     <div class="auth-sub">加入 MabSeek 社区，参与论坛讨论与分享。</div>
     <form method="post" action="register.php" autocomplete="off">
