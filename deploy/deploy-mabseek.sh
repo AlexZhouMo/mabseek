@@ -38,6 +38,7 @@ CODE_DIRS=(app bin public deploy)    # 每次部署要整体替换的代码目�
 DATA_DIR="$ROOT/data"                # 数据库目录（保留）
 UPLOAD_REL="public/assets/images/uploads"   # 上传目录（保留）
 CONFIG_LOCAL_REL="app/config.local.php"     # 本地私密配置（SciencePal 密钥等；不入 git，跨部署保留）
+SEEDS_LOCAL_REL="deploy/seeds"              # V5.0 外挂名单 *.local.php（含 PII；不入 git，跨部署保留）
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)" # 本脚本所在目录（纯文件名离线包在此查找）
 
 # ─────────────────────────── 日志 ───────────────────────────
@@ -61,6 +62,7 @@ cleanup_tmp() {
   if [ "$mode" = "full" ]; then
     [ -n "${PRESERVE_UPLOADS:-}" ] && rm -rf "$PRESERVE_UPLOADS" 2>/dev/null || true
     [ -n "${PRESERVE_CONFIG:-}" ] && rm -rf "$PRESERVE_CONFIG" 2>/dev/null || true
+    [ -n "${PRESERVE_SEEDS:-}" ] && rm -rf "$PRESERVE_SEEDS" 2>/dev/null || true
   fi
 }
 
@@ -71,6 +73,7 @@ on_err() {
   printf '\n%s✘ 失败：第 %s 行命令返回非零，部署已中止%s\n' "$CE" "$ln" "$C0" >&2
   [ -n "${PRESERVE_UPLOADS:-}" ] && [ -d "${PRESERVE_UPLOADS:-/nonexistent}" ] && printf '%s  上传图暂存副本（未删，可手工恢复）：%s%s\n' "$CW" "$PRESERVE_UPLOADS" "$C0" >&2
   [ -n "${PRESERVE_CONFIG:-}" ]  && [ -d "${PRESERVE_CONFIG:-/nonexistent}" ]  && printf '%s  私密配置暂存副本（未删）：%s%s\n' "$CW" "$PRESERVE_CONFIG" "$C0" >&2
+  [ -n "${PRESERVE_SEEDS:-}" ]   && [ -d "${PRESERVE_SEEDS:-/nonexistent}" ]   && printf '%s  V5.0 外挂名单暂存副本（未删）：%s%s\n' "$CW" "$PRESERVE_SEEDS" "$C0" >&2
   [ -n "${BACKUP:-}" ] && [ -d "${BACKUP:-/nonexistent}" ] && printf '%s  完整数据备份：%s%s\n' "$CW" "$BACKUP" "$C0" >&2
   exit 1
 }
@@ -205,6 +208,15 @@ if [ -f "$ROOT/$CONFIG_LOCAL_REL" ]; then
   ok "已暂存本地配置 $CONFIG_LOCAL_REL"
 fi
 
+# V5.0 · 把外挂名单文件暂存出来（旧 deploy 即将删除；*.local.php 不入 git，须跨部署保留）
+PRESERVE_SEEDS="$(mktemp -d /tmp/mabseek-seeds.XXXXXX)"
+if [ -d "$ROOT/$SEEDS_LOCAL_REL" ]; then
+  # 只备份 .local.php（含 PII 的真实名单），其它 git 追踪的文件由新代码覆盖
+  find "$ROOT/$SEEDS_LOCAL_REL" -maxdepth 1 -name '*.local.php' -exec cp -a {} "$PRESERVE_SEEDS/" \; 2>/dev/null || true
+  SEEDS_N=$(find "$PRESERVE_SEEDS" -maxdepth 1 -name '*.local.php' | wc -l | tr -d ' ')
+  [ "$SEEDS_N" -gt 0 ] && ok "已暂存 V5.0 外挂名单 $SEEDS_N 个文件（PRESERVE_SEEDS）"
+fi
+
 # ─────────────────── 4. 铺开新代码（保留 data/ 与上传） ───────────────────
 step "4/9 替换代码（从暂存区复制，保留 data/）"
 run mkdir -p "$ROOT"
@@ -227,8 +239,18 @@ if [ -f "$PRESERVE_CONFIG/config.local.php" ]; then
   cp -a "$PRESERVE_CONFIG/config.local.php" "$ROOT/$CONFIG_LOCAL_REL" 2>/dev/null || true
   ok "已恢复本地配置 $CONFIG_LOCAL_REL"
 fi
-cleanup_tmp full                       # 上传图/配置已恢复，安全删除全部暂存（git 工作副本保留）
-STAGE=""; CLEAN_STAGE=0; PRESERVE_UPLOADS=""; PRESERVE_CONFIG=""
+# V5.0 · 恢复外挂名单文件（新 deploy 来自 git 不含 .local.php，必须从暂存副本回填）
+run mkdir -p "$ROOT/$SEEDS_LOCAL_REL"
+SEEDS_RESTORED=$(find "$PRESERVE_SEEDS" -maxdepth 1 -name '*.local.php' 2>/dev/null | wc -l | tr -d ' ')
+if [ "$SEEDS_RESTORED" -gt 0 ]; then
+  cp -a "$PRESERVE_SEEDS/"*.local.php "$ROOT/$SEEDS_LOCAL_REL/" 2>/dev/null || true
+  ok "已恢复 V5.0 外挂名单 $SEEDS_RESTORED 个文件到 $SEEDS_LOCAL_REL/"
+else
+  warn "未发现外挂名单（$SEEDS_LOCAL_REL/*.local.php）：V5.0 迁移会降级为仅 legacy 回灌，白名单初始为空"
+  warn "  首次部署请在跑脚本前把 students-emails.local.php / zhang-lab-emails.local.php scp 到 $ROOT/$SEEDS_LOCAL_REL/"
+fi
+cleanup_tmp full                       # 上传图/配置/名单已恢复，安全删除全部暂存（git 工作副本保留）
+STAGE=""; CLEAN_STAGE=0; PRESERVE_UPLOADS=""; PRESERVE_CONFIG=""; PRESERVE_SEEDS=""
 
 # ─────────────────── 5. 初始化 / 迁移数据库 ───────────────────
 step "5/9 数据库 seed（幂等：建表+补缺，绝不删历史数据）"
