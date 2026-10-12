@@ -285,3 +285,39 @@ mabseek/
 - 新增 content_cards 组：`platform_data_flow`（3）、`platform_lab_scale`（2）
 
 每一批含配套的 seed 默认值更新 + 幂等迁移脚本 `bin/migrate-*.php` + `deploy/deploy-mabseek.sh` 挂载。批次清单与说明见 [README 版本迭代记录](../README.md#版本迭代记录)。
+
+### 12.2 V5.0 注册准入白名单（2026-10-12）
+
+自由注册 → 仅三类人群邮箱可注册：Mabseek 项目团队 / 张老师实验室成员 / 《疫苗的力量》课程成员。配套新表 `allowed_emails`、后台「准入名单」模块、外挂名单文件机制。
+
+**注册流程（V5.0 后）**：
+
+```
+用户填表 (register.php)
+  ↓ csrf · 蜜罐 · captcha · 字段格式
+  ↓ 【白名单准入校验】   ← V5.0 新增
+      allowed_email_can_register($email)：
+      - 不在名单 / 非 active 态 → 400「该邮箱暂无注册权限」+ audit('member_register_blocked')
+      - active 命中 → 放行
+  ↓ 唯一性检查（username / email / phone）
+  ↓ member_register (写 users 表)
+  ↓ 【mark allowed_emails as provisioned】  ← V5.0 新增
+      allowed_email_mark_provisioned($id, $newUserId)
+  ↓ sciencepal_provision (异步同步 SP, 失败不阻断)
+  ↓ auth_login_user (自动登录)
+  ↓ 跳转 account.php / ?next=...
+```
+
+**数据模型**：新表 `allowed_emails`（`app/db.php` 的 `migrate_schema()` 内幂等建）
+- 字段：`id · email · category · name · student_id · status · provisioned_user_id · note · created_at · updated_at`
+- 四态 `status`：`active`（可注册）· `pending`（空邮箱待补录）· `provisioned`（已有账号）· `disabled`（临时停用）
+- 四类 `category`：`project_team` · `zhang_lab` · `course_vaccine` · `legacy`
+- 部分唯一索引 `WHERE email <> ''` 让 pending 条目（空邮箱）共存不去重
+
+**外挂名单文件**：`deploy/seeds/students-emails.local.php` 和 `zhang-lab-emails.local.php` 由 `.gitignore` 排除（PII 不入公开仓库）。离线部署通过 `pack-mac.sh` 的 `-C "$ROOT" app bin public deploy` 自动打进 tar；在线部署（git clone 模式）首次需管理员手工 scp 到 `/var/www/html/deploy/seeds/`。
+
+**后台「准入名单」模块**：`app/admin/allowed_emails.php`，挂在侧边栏「系统」分组。单文件实现筛选 + 单条增删 + 批量导入（纯邮箱 / CSV 两种格式）+ 一键建号（12 位 CSPRNG 临时密码 + flash 一次性展示，不入日志）+ 补录邮箱（pending → active）+ 停用/启用。所有写走 CSRF + audit。
+
+**sciencepal 零协同**：张老师实验室学生走白名单路径（张老师给邮箱列表 → 导 `.local.php`），`app/sciencepal.php` 既有下行同步接口不动。SP 已有账号的学生注册时 `sciencepal_provision` 返回 `exists`，`scp_sync_upsert` 原逻辑正常处理。
+
+**部署**：`bin/migrate-v50-allowed-emails.php` 挂进 `deploy-mabseek.sh` 的 `MIGRATIONS` 数组（5p/9）。迁移脚本幂等：建表 + legacy 回灌（users.email → allowed_emails，category=legacy，status=provisioned）+ 读 `.local.php` 导入三类人群。名单文件缺失仅 warn 不 fail。

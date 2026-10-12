@@ -69,7 +69,9 @@ mabseek/
 │   ├── migrate-v4-batch2b1.php         V4 批 2b-1 平台页（21 条 platform.* + home.hero.cta 订正）
 │   ├── migrate-v4-batch2b2a.php        V4 批 2b-2a 平台页视觉升级（4 条新 snippet + 36 孤儿清理）
 │   ├── migrate-v43.php                 V4.3 网页更新（首页题眉/教育15讲/关于国际合作/教育访谈/平台7屏）
-│   └── migrate-v44.php                 V4.4 网页更新（平台页屏 2/3/4a/5 微调：Agent 翻转 · Data L 形四象限 · Lab 三段 · Loop 清理）
+│   ├── migrate-v44.php                 V4.4 网页更新（平台页屏 2/3/4a/5 微调：Agent 翻转 · Data L 形四象限 · Lab 三段 · Loop 清理）
+│   ├── migrate-v50-about-polish.php    V5.0 about 页收尾（三条 eyebrow 去数字前缀）
+│   └── migrate-v50-allowed-emails.php  V5.0 注册准入白名单（建 allowed_emails 表 + legacy 回灌 + 外挂名单导入）
 ├── data/              ← SQLite 数据库文件所在（git 忽略，运行时生成）
 ├── deploy/            ← 部署脚本与样例（见「部署」）
 ├── docs/              ← 架构文档、UI 规范
@@ -189,6 +191,31 @@ php -S localhost:8778 -t public
 - **屏 3 Data grid 定位修正**：`.data-quad` 追加 `grid-template-rows: auto 1fr`，显式指定 `.data-quad-side` 跨两行、`.data-quad-flow`/`.data-quad-grid` 分别占右上右下 —— 修复第 3 个子元素（`.data-quad-grid`）在只有 2 列 grid 里自动掉到第 2 行第 1 列的错位（GLP-1R 大卡被压到左栏下方的 bug）。
 - **屏 4a 液滴规格美化**：`.lab-scale` 底色从 `linear-gradient` 淡渐变改为纯白 `#fff` + `var(--line)` 细边 + `var(--sh-sm)` 淡阴影，与 `.lab-cap` 三能力卡样式统一；标题保持绿色 + 绿色带光环小圆点前缀；数字启用 `tabular-nums` 等宽渲染。
 - **屏 4a 三能力卡标题加圆点**：`.lab-cap h4` 加紫色带光环小圆点前缀（呼应 `.lab-scale h4` 的绿色圆点），三能力与两规格视觉层级统一。
+
+### V5.0 · 注册准入白名单改造 + 四处视觉微调
+
+两条独立产线并行：
+
+**产线 B · 视觉微调（Commit c8f244a + 374d1b6）**
+- **平台屏 3 Data**：`.data-card-imgs[data-count="2"]` 用 `minmax(0,1fr) minmax(0,1fr)` 让 GLP-1R binding/sequences 两张子图严格等宽；`.data-flow-card` 从 `text-align:left` → `center`，图标块级居中；`.data-quad-side` 加 `justify-content: space-between` + `.data-side-cards { margin-top: auto }`，让左栏「真实数据/AI 分析」两张文字卡底边与右栏数据网格对齐。
+- **平台屏 5 Loop**：`.loop-ring-center` 容器 42% → 48%，内图 `max-width` 65% → 100% + `width: auto`（否则基础规则 `.loop-ring-center img { width: 44px }` 会卡住 max-width）+ `padding: 10px`。新增 `@media (max-width: 1100px)` 回落到 44%/90% 防止小屏压节点，900px 媒体查询保留。实际视觉放大 ≈ 2.3 倍。
+- **教育 banner**：用需求文档 image3（1821×745 宽图）cwebp 覆盖 `education-banner.webp`，原图 94186→87058 B；由于 education.php 内嵌 `<style>` 定义 `max-height:460; object-fit:contain` 后到胜，追加 `.course-banner img { max-height: none !important; object-fit: fill !important }` 覆盖（内嵌 `<style>` 本身不动）。原图进 `_backup/`。
+- **登录/注册 Logo**：`.auth-brand` 内紫色方块+🧬 emoji 换成 `<img class="auth-brand-logo" src="assets/images/logo.webp" alt="MabSeek 抗体求索">`；新增 `.auth-brand-logo { height: 38px; width: auto }` 和 `.auth-brand--dark .auth-brand-logo { filter: brightness(0) invert(1) }`（深色版通过 CSS 滤镜生成，不加新文件）。删除旧 `.auth-brand .logo` 紫色方块样式。
+- **about 页收尾**：三条 eyebrow 去数字前缀（`1·实验室与核心团队` → `实验室与核心团队`，news/intl 同样处理），走 `bin/migrate-v50-about-polish.php` 幂等订正存量 + seed.php 同步默认值。
+- **全局 section 间距**：`.section` 上下 padding 96px → 72px，section 间距 192 → 144，全站整体收紧（home/platform/education/about 一致应用）。
+
+**产线 A · 注册准入白名单（Commit 97928de）**
+- **新表 `allowed_emails`**：schema 落在 `app/db.php` 的 `migrate_schema()` 函数内，首次 `db()` 调用即幂等建表；字段 `email · category · name · student_id · status · provisioned_user_id · note · created_at · updated_at`；部分唯一索引 `idx_allowed_emails_email` 用 `WHERE email <> ''` 让 pending 条目（空邮箱）可共存；辅助索引 `(category, status)`。
+- **四态语义**：`active`（可注册）/ `pending`（空邮箱待补录）/ `provisioned`（已有账号 · 包含 legacy 回灌 / 一键建号 / 自助注册完成三源）/ `disabled`（临时停用）。注册闸门 `can_register` 仅放行 `active`。
+- **新仓储 `app/allowed_emails.php`**：函数式（照 members.php 风格），`can_register / find / get / upsert / mark_provisioned / set_status / delete / list / gen_username`。`gen_username` 规则：邮箱 `@` 前缀 → 过滤非 `[a-zA-Z0-9_]` → 截断 20 位 → < 3 位时 fallback 到 `u_学号` 或随机后缀 → 冲突追加 `_N`。
+- **幂等迁移 `bin/migrate-v50-allowed-emails.php`**：建表 + legacy 回灌（users.email → allowed_emails · category=legacy · status=provisioned）+ 读 `deploy/seeds/*.local.php` 导入疫苗课 / 张老师实验室。名单文件缺失仅 warn 不 fail（降级）。二次运行 0 改动。
+- **外挂名单文件**：`deploy/seeds/students-emails.local.php`（疫苗课学员 32 条，含 5 条空邮箱 pending）和 `deploy/seeds/zhang-lab-emails.local.php`（张老师实验室，初始空数组）。两文件由 `.gitignore` 排除（PII 不入公开仓库）；离线部署通过 `pack-mac.sh` 的 `-C "$ROOT" app bin public deploy` 自动打进 tar；在线部署（git clone 模式）首次需管理员手工 scp 这两个文件到服务器 `/var/www/html/deploy/seeds/`，之后新成员直接走后台 UI 添加。
+- **`register.php` 白名单校验**：插在字段格式之后、唯一性之前。拒绝文案统一回「该邮箱暂无注册权限，请联系管理员加入准入名单」（不区分 `not_in_whitelist` / `status_disabled` / `status_provisioned` 避免泄露名单构成）；审计日志 `member_register_blocked` 记详细 reason 便于管理员排查。注册成功后 `allowed_email_mark_provisioned` 关联白名单条目 ↔ 新 user id。subtitle 走 snippet `register.notice`。
+- **后台「准入名单」模块**：挂在侧边栏「系统」分组，`admin.php?m=allowed_emails`。单文件 `app/admin/allowed_emails.php` 实现：筛选（分类/状态/搜索）+ 单条添加 + 批量导入（纯邮箱列表 / `email,name,student_id` CSV / 首行表头自动识别 / 部分成功语义）+ 一键建号（12 位 CSPRNG 临时密码 + `must_change_password=1` 强改密 + flash 一次性展示凭据，不入日志不入 session 持久层）+ 补录邮箱（pending → active）+ 停用/启用/删除。所有写操作走 CSRF 和 audit。
+- **零 SP 协同**：张老师实验室走白名单路径（张老师给邮箱列表 → 导 .local.php），`app/sciencepal.php` 不动。
+- **测试覆盖**：新增 42 条断言（`test_allowed_emails` + `test_migrate_v50` + `test_register_whitelist`），覆盖四态 can_register、upsert 幂等、空邮箱 pending 查重、gen_username 规则（含学号 fallback 和冲突追加）、迁移首跑/幂等/缺文件降级、端到端 mark provisioned。总 276 passed / 0 failed。
+
+**部署**：`deploy-mabseek.sh` 的 `MIGRATIONS` 数组追加 `migrate-v50-about-polish.php` (5o/9) 和 `migrate-v50-allowed-emails.php` (5p/9)；`pack-mac.sh` 无需改（既有 tar 命令已覆盖 `deploy/` 整目录）。在线模式首次部署前须人工 scp 两个 `.local.php` 文件到服务器，否则迁移会 warn 跳过（不炸）但白名单只有 legacy 回灌。
 
 ## 静态资源缓存
 

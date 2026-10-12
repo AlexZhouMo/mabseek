@@ -281,6 +281,7 @@ MIGRATIONS=(
   "migrate-v43.php|5m/9 V4.3 网页更新（首页题眉 / 教育 15 讲 / 关于国际合作 / 教育访谈 / 平台 7 屏，幂等）|V4.3 网页更新迁移"
   "migrate-v44.php|5n/9 V4.4 网页更新（平台页屏 2/3/4a/5 微调，幂等，含 lab-auto-room.webp 清理）|V4.4 网页更新迁移"
   "migrate-v50-about-polish.php|5o/9 V5.0 about 页收尾（幂等，三条 eyebrow 去数字前缀）|V5.0 about 页收尾迁移"
+  "migrate-v50-allowed-emails.php|5p/9 V5.0 注册准入白名单（幂等，建 allowed_emails 表 + legacy 回灌 + 读 deploy/seeds/*.local.php 导入三类人群）|V5.0 注册准入白名单迁移"
 )
 for m in "${MIGRATIONS[@]}"; do
   IFS='|' read -r m_script m_step m_label <<< "$m"
