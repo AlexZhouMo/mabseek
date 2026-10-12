@@ -142,7 +142,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     redirect('admin.php?m=allowed_emails');
 }
 
-// ── GET：读列表 + 筛选 ──
+// GET：读列表 + 筛选
 $filter = [
     'category' => (string)($_GET['cat'] ?? ''),
     'status'   => (string)($_GET['st']  ?? ''),
@@ -163,6 +163,13 @@ $statusLabels = [
     'disabled'    => '已停用',
 ];
 ?>
+<style>
+/* V5.0 准入名单：防止横向滚动 */
+.card .data-table td code { word-break: break-all; font-size: 12px; }
+.card .data-table td.col-actions .row-actions { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
+.card .data-table td.col-actions .row-actions form { margin: 0; }
+.card .data-table td.col-actions input[type="email"] { width: 140px; }
+</style>
 <div class="card">
   <div class="page-head">
     <h3>准入名单</h3>
@@ -244,7 +251,7 @@ $statusLabels = [
   <div class="table-wrap">
   <table class="data-table">
     <thead><tr>
-      <th>ID</th><th>邮箱</th><th>分类</th><th>姓名</th><th>学号</th><th>状态</th><th>备注</th><th class="col-actions">操作</th>
+      <th>ID</th><th>邮箱</th><th>分类</th><th>姓名</th><th>学号</th><th>状态</th><th class="col-actions">操作</th>
     </tr></thead>
     <tbody>
 <?php foreach ($rows as $r): ?>
@@ -267,7 +274,6 @@ $stTag = ['active' => 'tag', 'pending' => 'tag tag-warn', 'provisioned' => 'tag 
           <small style="color:var(--ink-3)">→ user #<?= (int)$r['provisioned_user_id'] ?></small>
 <?php endif; ?>
         </td>
-        <td><?= e($r['note']) ?></td>
         <td class="col-actions">
           <span class="row-actions">
 <?php if ($st === 'pending'): ?>
@@ -301,7 +307,7 @@ $stTag = ['active' => 'tag', 'pending' => 'tag tag-warn', 'provisioned' => 'tag 
       </tr>
 <?php endforeach; ?>
 <?php if (!$rows): ?>
-      <tr><td colspan="8" class="empty">暂无条目，点击「+ 添加」或「⇅ 批量导入」开始</td></tr>
+      <tr><td colspan="7" class="empty">暂无条目，点击「+ 添加」或「⇅ 批量导入」开始</td></tr>
 <?php endif; ?>
     </tbody>
   </table>
