@@ -70,7 +70,7 @@ h1, h2, h3, h4 { line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
 
 /* ---------- 布局工具 ---------- */
 .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
-.section { padding: 96px 0; }
+.section { padding: 72px 0; }
 .section-sm { padding: 64px 0; }
 .bg-soft { background: var(--bg-soft); }
 .text-center { text-align: center; }

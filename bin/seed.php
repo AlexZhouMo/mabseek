@@ -268,7 +268,7 @@ $S_about = [
     ['about.hero.tag_news','新闻活动','about','Hero 标签 新闻活动','text'],
     ['about.hero.tag_intl','国际合作','about','Hero 标签 国际合作','text'],
     // 实验室与核心团队
-    ['about.team.eyebrow','1 · 实验室与核心团队','about','核心团队 眉题','text'],
+    ['about.team.eyebrow','实验室与核心团队','about','核心团队 眉题','text'],
     ['about.team.title','实验室与核心团队','about','核心团队 标题','text'],
     ['about.team.sub','MabSeek 依托抗体工程、疫苗研发与病毒免疫的深厚科学积累，结合 AI 与大模型能力，打通从抗体设计到湿实验验证的完整闭环。','about','核心团队 说明','textarea'],
     ['about.team.disclaimer','注：以上为门户展示模板，详细简历与成果列表参考清华大学医学院官网张林琦主页，正式上线时同步更新。','about','核心团队 免责说明','textarea'],
@@ -290,7 +290,7 @@ $S_about = [
     ['about.platform.li3','数据双向溯源，AI 预测与实验结果持续迭代','about','平台介绍 要点(环)','textarea'],
     ['about.platform.btn','进入 Antibody Agent →','about','平台介绍 按钮','text'],
     // 新闻与活动
-    ['about.news.eyebrow','2 · 新闻与活动分享','about','新闻活动 眉题','text'],
+    ['about.news.eyebrow','新闻与活动分享','about','新闻活动 眉题','text'],
     ['about.news.title','实验室动态一览','about','新闻活动 标题','text'],
     ['about.news.chip_all','全部','about','新闻筛选 全部','text'],
     ['about.news.chip_edu','团队动态','about','新闻筛选 团队动态','text'],
@@ -298,7 +298,7 @@ $S_about = [
     ['about.news.chip_daily','产品发布','about','新闻筛选 产品发布','text'],
     ['about.news.more','了解更多 →','about','新闻活动 按钮','text'],
     // 国际科研合作
-    ['about.intl.eyebrow','3 · 国际科研合作','about','国际合作 眉题','text'],
+    ['about.intl.eyebrow','国际科研合作','about','国际合作 眉题','text'],
     ['about.intl.title','立足<span class="grad-text">北京市国合基地</span>，联通全球','about','国际合作 标题(含标记)','textarea'],
     ['about.intl.sub','以中印尼深度合作为核心专项，联动 PRA 国际大会与各国合作实验室，推动联合科研与公共卫生合作。','about','国际合作 说明','textarea'],
     ['about.intl.cn_id_title','中印尼疫苗与基因组联合研发中心','about','中印尼合作 标题','text'],
