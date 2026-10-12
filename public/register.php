@@ -28,6 +28,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!member_validate_nickname($in['nickname']))           $errors['nickname'] = '昵称最多 30 字';
 
     if (!$errors) {
+        // V5.0 · 白名单准入校验：仅三类人群邮箱允许注册
+        $check = allowed_email_can_register($in['email']);
+        if (!$check['ok']) {
+            $errors['email'] = '该邮箱暂无注册权限，请联系管理员加入准入名单。';
+            audit('member_register_blocked', 'email', $in['email'] . ' · reason=' . $check['reason']);
+        }
+    }
+
+    if (!$errors) {
         if (member_username_taken($in['username'])) $errors['username'] = '该用户名已被注册';
         if (member_email_taken($in['email']))       $errors['email']    = '该邮箱已被注册';
         if (member_phone_taken($in['phone']))       $errors['phone']    = '该手机号已被注册';
@@ -35,6 +44,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     if (!$errors) {
         $newId = member_register($in['username'], $pass, $in['email'], $in['phone'], $in['nickname']);
+        // V5.0 · 关联白名单条目 → provisioned
+        $allowedRow = allowed_email_find($in['email']);
+        if ($allowedRow) {
+            allowed_email_mark_provisioned((int)$allowedRow['id'], $newId);
+        }
         auth_login_user($in['username']);            // 注册成功自动登录
         $_SESSION['nick']  = $in['nickname'] !== '' ? $in['nickname'] : $in['username'];
         $_SESSION['email'] = $in['email'];
@@ -71,7 +85,7 @@ $active = ''; $navOnDark = false; $navSolidDark = true;
   <div class="auth-card">
     <div class="auth-brand"><img class="auth-brand-logo" src="assets/images/logo.webp" alt="MabSeek 抗体求索"></div>
     <div class="auth-title">注册会员</div>
-    <div class="auth-sub">加入 MabSeek 社区，参与论坛讨论与分享。</div>
+    <div class="auth-sub"><?= snip('register.notice', '注册需加入准入名单。Mabseek 团队 / 张老师实验室 / 疫苗课程成员请联系管理员申请。') ?></div>
     <form method="post" action="register.php" autocomplete="off">
       <?= csrf_field() ?>
 <?php $nextVal = auth_safe_next($_POST['next'] ?? $_GET['next'] ?? null); $trialFlag = ((string)($_POST['trial'] ?? $_GET['trial'] ?? '') === '1'); ?>

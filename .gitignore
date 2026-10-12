@@ -16,3 +16,6 @@ docs/superpowers/
 CLAUDE.md
 app/config.local.php
 _thumbnails/
+
+# V5.0 外挂名单文件（含 PII，仅通过 pack-mac.sh 带入离线包或手工 scp 到服务器）
+deploy/seeds/*.local.php

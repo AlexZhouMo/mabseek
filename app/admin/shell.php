@@ -6,7 +6,7 @@ $adminMenu = [
     '内容' => ['news' => '新闻与活动', 'cards' => '内容卡片', 'snippets' => '文案片段', 'team' => '团队成员', 'partners' => '合作伙伴'],
     '教育' => ['edu_reviews' => '往期回顾', 'edu_video' => '课程视频'],
     '论坛' => ['threads' => '帖子管理'],
-    '系统' => ['members' => '会员管理', 'feedback' => '联系反馈', 'password' => '修改密码'],
+    '系统' => ['allowed_emails' => '准入名单', 'members' => '会员管理', 'feedback' => '联系反馈', 'password' => '修改密码'],
 ];
 ?>
 <!DOCTYPE html>
